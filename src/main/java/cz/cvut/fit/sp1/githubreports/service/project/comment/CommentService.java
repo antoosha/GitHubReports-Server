@@ -1,2 +1,5 @@
-package cz.cvut.fit.sp1.githubreports.service.project.comment;public class CommentService {
+package cz.cvut.fit.sp1.githubreports.service.project.comment;
+
+public class CommentService implements CommentSPI {
+
 }

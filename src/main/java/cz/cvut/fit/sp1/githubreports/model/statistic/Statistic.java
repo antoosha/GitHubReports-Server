@@ -1,5 +1,6 @@
-package cz.cvut.fit.sp1.githubreports.model.project;
+package cz.cvut.fit.sp1.githubreports.model.statistic;
 
+import cz.cvut.fit.sp1.githubreports.model.project.Project;
 import cz.cvut.fit.sp1.githubreports.model.user.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -12,22 +13,25 @@ import java.time.LocalDateTime;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Comment {
+public class Statistic {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long commentId;
-
-    private String text;
+    private Long statisticId;
 
     private LocalDateTime createdDate;
+
+    @ManyToOne
+    @JoinColumn(name = "statisticName", nullable = false)
+    private StatisticType statisticType;
 
     @ManyToOne
     @JoinColumn(name = "userId", nullable = false)
     private User author;
 
     @ManyToOne
-    @JoinColumn(name = "commitId", nullable = false)
-    private Commit commit;
+    @JoinColumn(name = "projectId")
+    private Project project;
 
+    private String generatedData;
 }
