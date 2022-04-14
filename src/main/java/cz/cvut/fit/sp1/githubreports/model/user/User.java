@@ -29,6 +29,8 @@ public class User {
     @Column(nullable = false)
     private String password;
 
+    private String pathToFileWithPhoto;
+
     @OneToMany(mappedBy = "commentId")
     private List<Comment> comments;
 

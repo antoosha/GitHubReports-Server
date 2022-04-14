@@ -34,5 +34,5 @@ public class Statistic {
     private Project project;
 
     @Column(nullable = false)
-    private String generatedData;
+    private String pathToFileWithGeneratedStat;
 }
