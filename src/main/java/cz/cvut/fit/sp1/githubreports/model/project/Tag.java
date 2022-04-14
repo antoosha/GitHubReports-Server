@@ -1,14 +1,13 @@
 package cz.cvut.fit.sp1.githubreports.model.project;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.List;
 
 @Entity
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class Tag {
@@ -17,6 +16,7 @@ public class Tag {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long tagId;
 
+    @Column(nullable = false)
     private String tagName;
 
     @ManyToOne

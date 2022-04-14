@@ -2,15 +2,14 @@ package cz.cvut.fit.sp1.githubreports.model.statistic;
 
 import cz.cvut.fit.sp1.githubreports.model.project.Project;
 import cz.cvut.fit.sp1.githubreports.model.user.User;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class Statistic {
@@ -19,6 +18,7 @@ public class Statistic {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long statisticId;
 
+    @Column(nullable = false)
     private LocalDateTime createdDate;
 
     @ManyToOne
@@ -30,8 +30,9 @@ public class Statistic {
     private User author;
 
     @ManyToOne
-    @JoinColumn(name = "projectId")
+    @JoinColumn(name = "projectId", nullable = false)
     private Project project;
 
+    @Column(nullable = false)
     private String generatedData;
 }

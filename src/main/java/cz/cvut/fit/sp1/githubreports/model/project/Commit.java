@@ -1,15 +1,14 @@
 package cz.cvut.fit.sp1.githubreports.model.project;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Data
 @Entity
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class Commit {
@@ -18,12 +17,16 @@ public class Commit {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long commitId;
 
+    @Column(nullable = false)
     private LocalDateTime createdDate;
 
+    @Column(nullable = false)
     private String hashHubId;
 
+    @Column(nullable = false)
     private String loginAuthor;
 
+    @Column(nullable = false)
     private String description;
 
     @ManyToOne

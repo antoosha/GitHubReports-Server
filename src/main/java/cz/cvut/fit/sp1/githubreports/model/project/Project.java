@@ -2,16 +2,15 @@ package cz.cvut.fit.sp1.githubreports.model.project;
 
 import cz.cvut.fit.sp1.githubreports.model.statistic.Statistic;
 import cz.cvut.fit.sp1.githubreports.model.user.User;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class Project {
@@ -20,8 +19,10 @@ public class Project {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long projectId;
 
+    @Column(nullable = false)
     private LocalDateTime createdDate;
 
+    @Column(nullable = false)
     private String projectName;
 
     private String description;

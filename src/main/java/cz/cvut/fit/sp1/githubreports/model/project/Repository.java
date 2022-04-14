@@ -1,15 +1,14 @@
 package cz.cvut.fit.sp1.githubreports.model.project;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.lang.Nullable;
 
 import javax.persistence.*;
 import java.util.List;
 
 @Entity
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class Repository {
@@ -18,6 +17,7 @@ public class Repository {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long repositoryId;
 
+    @Column(nullable = false)
     private String repositoryName;
 
     @OneToMany(mappedBy = "commitId")
