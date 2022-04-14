@@ -28,14 +28,14 @@ public class Project {
     private String description;
 
     @ManyToOne
-    @JoinColumn(name = "userId", nullable = false)
+    @JoinColumn(name = "user_id", nullable = false)
     private User author;
 
     @ManyToMany
     @JoinTable(
             name = "project_repository",
-            joinColumns = {@JoinColumn(name = "projectId")},
-            inverseJoinColumns = {@JoinColumn(name = "repositoryId")}
+            joinColumns = {@JoinColumn(name = "project_id")},
+            inverseJoinColumns = {@JoinColumn(name = "repository_id")}
     )
     private List<Repository> repositories;
 
@@ -45,8 +45,8 @@ public class Project {
     @ManyToMany
     @JoinTable(
             name = "project_user",
-            joinColumns = {@JoinColumn(name = "projectId")},
-            inverseJoinColumns = {@JoinColumn(name = "userId")}
+            joinColumns = {@JoinColumn(name = "project_id")},
+            inverseJoinColumns = {@JoinColumn(name = "user_id")}
     )
     private List<User> users;
 

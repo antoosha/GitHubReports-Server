@@ -1,8 +1,6 @@
 package cz.cvut.fit.sp1.githubreports.model.project;
 
 import lombok.*;
-import org.springframework.lang.Nullable;
-
 import javax.persistence.*;
 import java.util.List;
 

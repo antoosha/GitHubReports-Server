@@ -20,7 +20,7 @@ public class Tag {
     private String tagName;
 
     @ManyToOne
-    @JoinColumn(name = "projectId", nullable = false)
+    @JoinColumn(name = "project_id", nullable = false)
     private Project project;
 
     @ManyToMany(mappedBy = "tags")

@@ -26,11 +26,11 @@ public class Comment {
     private LocalDateTime createdDate;
 
     @ManyToOne
-    @JoinColumn(name = "userId", nullable = false)
+    @JoinColumn(name = "user_id", nullable = false)
     private User author;
 
     @ManyToOne
-    @JoinColumn(name = "commitId", nullable = false)
+    @JoinColumn(name = "commit_id", nullable = false)
     private Commit commit;
 
 }

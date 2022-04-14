@@ -30,14 +30,14 @@ public class Commit {
     private String description;
 
     @ManyToOne
-    @JoinColumn(name = "repositoryId", nullable = false)
+    @JoinColumn(name = "repository_id", nullable = false)
     private Repository repository;
 
     @ManyToMany
     @JoinTable(
             name = "commit_tag",
-            joinColumns = {@JoinColumn(name = "commitId")},
-            inverseJoinColumns = {@JoinColumn(name = "tagId")}
+            joinColumns = {@JoinColumn(name = "commit_id")},
+            inverseJoinColumns = {@JoinColumn(name = "tag_id")}
     )
     private List<Tag> tags;
 

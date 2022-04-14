@@ -22,15 +22,15 @@ public class Statistic {
     private LocalDateTime createdDate;
 
     @ManyToOne
-    @JoinColumn(name = "statisticName", nullable = false)
+    @JoinColumn(name = "statistic_name", nullable = false)
     private StatisticType statisticType;
 
     @ManyToOne
-    @JoinColumn(name = "userId", nullable = false)
+    @JoinColumn(name = "user_id", nullable = false)
     private User author;
 
     @ManyToOne
-    @JoinColumn(name = "projectId", nullable = false)
+    @JoinColumn(name = "project_id", nullable = false)
     private Project project;
 
     @Column(nullable = false)
