@@ -6,6 +6,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 @Entity
 @Getter
@@ -35,4 +36,28 @@ public class Statistic {
 
     @Column(nullable = false)
     private String pathToFileWithGeneratedStat;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Statistic statistic = (Statistic) o;
+        return getStatisticId().equals(statistic.getStatisticId());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getStatisticId());
+    }
+
+    @Override
+    public String toString() {
+        return "Statistic{" +
+                "statisticId=" + statisticId +
+                ", createdDate=" + createdDate +
+                ", statisticType=" + statisticType +
+                ", author=" + author +
+                ", project=" + project +
+                '}';
+    }
 }
