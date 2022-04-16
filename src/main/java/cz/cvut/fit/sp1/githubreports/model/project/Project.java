@@ -7,6 +7,7 @@ import lombok.*;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Getter
@@ -53,4 +54,31 @@ public class Project {
     @OneToMany(mappedBy = "tagId")
     private List<Tag> tags;
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Project project = (Project) o;
+        return projectId.equals(project.projectId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(projectId);
+    }
+
+    @Override
+    public String toString() {
+        return "Project{" +
+                "projectId=" + projectId +
+                ", createdDate=" + createdDate +
+                ", projectName='" + projectName + '\'' +
+                ", description='" + description + '\'' +
+                ", author=" + author +
+                ", repositories=" + repositories +
+                ", statistics=" + statistics +
+                ", users=" + users +
+                ", tags=" + tags +
+                '}';
+    }
 }
