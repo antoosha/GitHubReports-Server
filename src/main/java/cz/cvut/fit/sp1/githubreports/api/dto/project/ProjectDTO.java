@@ -11,14 +11,14 @@ import java.util.List;
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor
 public class ProjectDTO {
 
-    private Long projectId;
+    private Long projectID;
     private LocalDateTime createdDate;
     private String projectName;
     private String description;
     private Long authorID;
-    private List<Long> repositoriesID;
-    private List<Long> statisticsID;
-    private List<Long> usersID;
-    private List<Long> tagsID;
+    private List<Long> repositoriesIDs;
+    private List<Long> statisticsIDs;
+    private List<Long> usersIDs;
+    private List<Long> tagsIDs;
 
 }

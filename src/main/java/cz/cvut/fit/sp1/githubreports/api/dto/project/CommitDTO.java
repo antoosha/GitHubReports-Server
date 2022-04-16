@@ -11,13 +11,13 @@ import java.util.List;
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor
 public class CommitDTO {
 
-    private Long commitId;
+    private Long commitID;
     private LocalDateTime createdDate;
-    private String hashHubId;
+    private String hashHubID;
     private String loginAuthor;
     private String description;
     private Long repositoryID;
-    private List<Long> tagsID;
-    private List<Long> commentsID;
+    private List<Long> tagsIDs;
+    private List<Long> commentsIDs;
 
 }
