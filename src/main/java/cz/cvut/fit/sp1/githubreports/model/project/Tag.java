@@ -4,6 +4,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Getter
@@ -25,5 +26,27 @@ public class Tag {
 
     @ManyToMany(mappedBy = "tags")
     private List<Commit> commits;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Tag tag = (Tag) o;
+        return tagId.equals(tag.tagId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(tagId);
+    }
+
+    @Override
+    public String toString() {
+        return "Tag{" +
+                "tagId=" + tagId +
+                ", tagName='" + tagName + '\'' +
+                ", project=" + project +
+                '}';
+    }
 }
 
