@@ -1,4 +1,4 @@
-package cz.cvut.fit.sp1.githubreports.api.dto.project;
+package cz.cvut.fit.sp1.githubreports.api.dto.user;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -11,11 +11,9 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class TagDTO {
+public class RoleDTO {
 
-    private Long tagID;
-    private String tagName;
-    private Long projectID;
-    private List<Long> commitsIDs;
+    private String roleName;
+    private List<Long> usersIDs;
 
 }

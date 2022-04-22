@@ -1,66 +1,63 @@
-package cz.cvut.fit.sp1.githubreports.model.project;
+package cz.cvut.fit.sp1.githubreports.model.statistic;
 
-
-
-
-import com.sun.istack.NotNull;
+import cz.cvut.fit.sp1.githubreports.model.project.Project;
 import cz.cvut.fit.sp1.githubreports.model.user.User;
 import lombok.*;
-import org.springframework.lang.Nullable;
-import org.springframework.stereotype.Component;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.Objects;
-
 
 @Entity
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Comment {
+public class Statistic {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long commentId;
-
-    @Column(nullable = false)
-    private String text;
+    private Long statisticId;
 
     @Column(nullable = false)
     private LocalDateTime createdDate;
+
+    @ManyToOne
+    @JoinColumn(name = "statistic_name", nullable = false)
+    private StatisticType statisticType;
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User author;
 
     @ManyToOne
-    @JoinColumn(name = "commit_id", nullable = false)
-    private Commit commit;
+    @JoinColumn(name = "project_id", nullable = false)
+    private Project project;
+
+    @Column(nullable = false)
+    private String pathToFileWithGeneratedStat;
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Comment comment = (Comment) o;
-        return commentId.equals(comment.commentId);
+        Statistic statistic = (Statistic) o;
+        return getStatisticId().equals(statistic.getStatisticId());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(commentId);
+        return Objects.hash(getStatisticId());
     }
 
     @Override
     public String toString() {
-        return "Comment{" +
-                "commentId=" + commentId +
-                ", text='" + text + '\'' +
+        return "Statistic{" +
+                "statisticId=" + statisticId +
                 ", createdDate=" + createdDate +
+                ", statisticType=" + statisticType +
                 ", author=" + author +
-                ", commit=" + commit +
+                ", project=" + project +
                 '}';
     }
-
 }
