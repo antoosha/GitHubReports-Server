@@ -1,2 +1,3 @@
-package cz.cvut.fit.sp1.githubreports.model.project;public class Commit {
+package cz.cvut.fit.sp1.githubreports.model.project;
+public class Commit {
 }

@@ -1,2 +1,5 @@
-package cz.cvut.fit.sp1.githubreports.model.project;public class Comment {
+package cz.cvut.fit.sp1.githubreports.model.project;
+public class Comment {
+
+
 }
