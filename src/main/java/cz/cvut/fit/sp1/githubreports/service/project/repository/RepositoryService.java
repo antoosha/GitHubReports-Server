@@ -15,28 +15,28 @@ public class RepositoryService implements RepositorySPI {
     RepositoryJpaRepository jpaRepository;
 
     @Override
-    public Collection<Repository> readRepositories() {
+    public Collection<Repository> readAll() {
         return jpaRepository.findAll();
     }
 
     @Override
-    public Optional<Repository> readRepositoryById(Long id) {
+    public Optional<Repository> readById(Long id) {
         return jpaRepository.findById(id);
     }
 
     @Override
-    public void createRepository(Repository repository) {
+    public void create(Repository repository) {
         jpaRepository.save(repository);
     }
 
     @Override
-    public void updateRepository(Long id, Repository repository) {
+    public void update(Long id, Repository repository) {
         if (jpaRepository.existsById(id))
             jpaRepository.save(repository);
     }
 
     @Override
-    public void deleteRepository(Long id) {
+    public void delete(Long id) {
         if (jpaRepository.existsById(id))
             jpaRepository.deleteById(id);
     }

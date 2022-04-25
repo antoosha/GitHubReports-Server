@@ -8,10 +8,14 @@ import java.util.Optional;
 
 public interface RoleSPI {
 
-    Collection<Role> readRoles();
-    Optional<Role> readRoleById(String id);
-    void createRole(Role role);
-    void updateRole(String id, Role role);
-    void deleteRole(String id);
+    Collection<Role> readAll();
+
+    Optional<Role> readById(String id);
+
+    void create(Role role);
+
+    void update(String id, Role role);
+
+    void delete(String id);
 
 }

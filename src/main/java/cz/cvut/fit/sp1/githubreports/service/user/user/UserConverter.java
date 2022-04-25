@@ -33,16 +33,16 @@ public class UserConverter {
                 userDTO.getPassword(),
                 userDTO.getPathToFileWithPhoto(),
                 userDTO.getCommentsIDs().stream()
-                        .map(commentID -> commentService.readCommentById(commentID).orElseThrow(RuntimeException::new))
+                        .map(commentID -> commentService.readById(commentID).orElseThrow(RuntimeException::new))
                         .collect(Collectors.toList()),
                 userDTO.getProjectsIDs().stream()
-                        .map(projectID -> projectService.readProjectById(projectID).orElseThrow(RuntimeException::new))
+                        .map(projectID -> projectService.readById(projectID).orElseThrow(RuntimeException::new))
                         .collect(Collectors.toList()),
                 userDTO.getStatisticsIDs().stream()
-                        .map(statisticID -> statisticService.readStatisticById(statisticID).orElseThrow(RuntimeException::new))
+                        .map(statisticID -> statisticService.readById(statisticID).orElseThrow(RuntimeException::new))
                         .collect(Collectors.toList()),
                 userDTO.getRolesIDs().stream()
-                        .map(roleID -> roleService.readRoleById(roleID).orElseThrow(RuntimeException::new))
+                        .map(roleID -> roleService.readById(roleID).orElseThrow(RuntimeException::new))
                         .collect(Collectors.toList())
         );
     }

@@ -15,28 +15,28 @@ public class ProjectService implements ProjectSPI {
     private final ProjectJpaRepository repository;
 
     @Override
-    public Collection<Project> readProjects() {
+    public Collection<Project> readAll() {
         return repository.findAll();
     }
 
     @Override
-    public Optional<Project> readProjectById(Long id) {
+    public Optional<Project> readById(Long id) {
         return repository.findById(id);
     }
 
     @Override
-    public void createProject(Project project) {
+    public void create(Project project) {
         repository.save(project);
     }
 
     @Override
-    public void updateProject(Long id, Project project) {
+    public void update(Long id, Project project) {
         if (repository.existsById(id))
             repository.save(project);
     }
 
     @Override
-    public void deleteProject(Long id) {
+    public void delete(Long id) {
         if (repository.existsById(id))
             repository.deleteById(id);
     }

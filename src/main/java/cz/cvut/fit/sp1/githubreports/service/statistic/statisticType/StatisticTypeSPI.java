@@ -6,13 +6,13 @@ import java.util.Collection;
 import java.util.Optional;
 
 public interface StatisticTypeSPI {
-    Collection<StatisticType> readStatisticTypes();
+    Collection<StatisticType> readAll();
 
     Optional<StatisticType> readById(String id);
 
-    void createStatistic(StatisticType statisticType);
+    void create(StatisticType statisticType);
 
-    void updateStatistic(String id, StatisticType statisticType);
+    void update(String id, StatisticType statisticType);
 
-    void deleteStatistic(String id);
+    void delete(String id);
 }

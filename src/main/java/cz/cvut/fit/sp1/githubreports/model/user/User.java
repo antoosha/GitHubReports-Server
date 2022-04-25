@@ -4,7 +4,6 @@ import cz.cvut.fit.sp1.githubreports.model.project.Comment;
 import cz.cvut.fit.sp1.githubreports.model.project.Project;
 import cz.cvut.fit.sp1.githubreports.model.statistic.Statistic;
 import lombok.*;
-import org.springframework.stereotype.Component;
 
 import javax.persistence.*;
 import java.util.List;

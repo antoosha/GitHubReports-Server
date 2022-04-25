@@ -7,14 +7,14 @@ import java.util.Optional;
 
 public interface ProjectSPI {
 
-    Collection<Project> readProjects();
+    Collection<Project> readAll();
 
-    Optional<Project> readProjectById(Long id);
+    Optional<Project> readById(Long id);
 
-    void createProject(Project project);
+    void create(Project project);
 
-    void updateProject(Long id, Project project);
+    void update(Long id, Project project);
 
-    void deleteProject(Long id);
+    void delete(Long id);
 
 }

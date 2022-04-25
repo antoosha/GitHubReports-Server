@@ -1,13 +1,7 @@
 package cz.cvut.fit.sp1.githubreports.model.project;
 
-
-
-
-import com.sun.istack.NotNull;
 import cz.cvut.fit.sp1.githubreports.model.user.User;
 import lombok.*;
-import org.springframework.lang.Nullable;
-import org.springframework.stereotype.Component;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;

@@ -18,33 +18,33 @@ public class UserService implements UserSPI {
     private final UserJpaRepository repository;
 
     @Override
-    public Collection<User> readUsers() {
+    public Collection<User> readAll() {
         return repository.findAll();
     }
 
     @Override
-    public Optional<User> readUserById(Long id) {
+    public Optional<User> readById(Long id) {
         return repository.findById(id);
     }
 
     @Override
-    public Optional<User> readUserByUsername(String username) {
+    public Optional<User> readByUsername(String username) {
         return repository.findUserByUsername(username);
     }
 
     @Override
-    public void createUser(User user) {
+    public void create(User user) {
         repository.save(user);
     }
 
     @Override
-    public void updateUser(Long id, User user) {
+    public void update(Long id, User user) {
         if (repository.existsById(id))
             repository.save(user);
     }
 
     @Override
-    public void deleteUser(Long id) {
+    public void delete(Long id) {
         if (repository.existsById(id))
             repository.deleteById(id);
     }

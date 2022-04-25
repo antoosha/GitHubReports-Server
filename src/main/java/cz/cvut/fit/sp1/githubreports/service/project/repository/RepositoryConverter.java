@@ -7,13 +7,14 @@ import cz.cvut.fit.sp1.githubreports.model.project.Repository;
 import cz.cvut.fit.sp1.githubreports.service.project.commit.CommitService;
 import cz.cvut.fit.sp1.githubreports.service.project.project.ProjectService;
 import lombok.AllArgsConstructor;
+import org.springframework.stereotype.Component;
 
 import javax.persistence.Converter;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @AllArgsConstructor
-@Converter
+@Component
 public class RepositoryConverter {
 
     private CommitService commitService;
@@ -21,8 +22,8 @@ public class RepositoryConverter {
 
     public Repository toModel(RepositoryDTO repositoryDTO) {
         return new Repository(repositoryDTO.getRepositoryID(), repositoryDTO.getRepositoryName(),
-                repositoryDTO.getCommitsIDs().stream().map(commitID -> commitService.readCommitById(commitID).orElseThrow(RuntimeException::new)).collect(Collectors.toList()),
-                repositoryDTO.getProjectsIDs().stream().map(projectID -> projectService.readProjectById(projectID).orElseThrow(RuntimeException::new)).collect(Collectors.toList()));
+                repositoryDTO.getCommitsIDs().stream().map(commitID -> commitService.readById(commitID).orElseThrow(RuntimeException::new)).collect(Collectors.toList()),
+                repositoryDTO.getProjectsIDs().stream().map(projectID -> projectService.readById(projectID).orElseThrow(RuntimeException::new)).collect(Collectors.toList()));
     }
 
     public RepositoryDTO fromModel(Repository repository) {

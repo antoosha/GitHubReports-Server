@@ -1,7 +1,5 @@
 package cz.cvut.fit.sp1.githubreports.model.project;
 
-
-
 import lombok.*;
 
 import javax.persistence.*;

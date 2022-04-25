@@ -16,7 +16,7 @@ public class StatisticTypeService implements StatisticTypeSPI {
 
 
     @Override
-    public Collection<StatisticType> readStatisticTypes() {
+    public Collection<StatisticType> readAll() {
         return repository.findAll();
     }
 
@@ -26,18 +26,18 @@ public class StatisticTypeService implements StatisticTypeSPI {
     }
 
     @Override
-    public void createStatistic(StatisticType statisticType) {
+    public void create(StatisticType statisticType) {
         repository.save(statisticType);
     }
 
     @Override
-    public void updateStatistic(String id, StatisticType statisticType) {
+    public void update(String id, StatisticType statisticType) {
         if (repository.existsById(id))
             repository.save(statisticType);
     }
 
     @Override
-    public void deleteStatistic(String id) {
+    public void delete(String id) {
         if (repository.existsById(id))
             repository.deleteById(id);
     }

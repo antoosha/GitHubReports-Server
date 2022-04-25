@@ -15,29 +15,29 @@ public class RoleService implements RoleSPI{
     private final RoleJpaRepository repository;
 
     @Override
-    public Collection<Role> readRoles() {
+    public Collection<Role> readAll() {
         return repository.findAll();
     }
 
     @Override
-    public Optional<Role> readRoleById(String id) {
+    public Optional<Role> readById(String id) {
         return repository.findById(id);
     }
 
     @Override
-    public void createRole(Role role) {
+    public void create(Role role) {
         repository.save(role);
     }
 
     @Override
-    public void updateRole(String id, Role role) {
-        if(repository.existsById(id))
+    public void update(String id, Role role) {
+        if (repository.existsById(id))
             repository.save(role);
     }
 
     @Override
-    public void deleteRole(String id) {
-        if(repository.existsById(id))
+    public void delete(String id) {
+        if (repository.existsById(id))
             repository.deleteById(id);
     }
 }

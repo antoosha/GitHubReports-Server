@@ -17,7 +17,7 @@ public class StatisticService implements StatisticSPI {
 
 
     @Override
-    public Collection<Statistic> readStatistics() {
+    public Collection<Statistic> readAll() {
         return repository.findAll();
     }
 
@@ -27,18 +27,18 @@ public class StatisticService implements StatisticSPI {
     }
 
     @Override
-    public void createStatistic(Statistic statistic) {
+    public void create(Statistic statistic) {
         repository.save(statistic);
     }
 
     @Override
-    public void updateStatistic(Long id, Statistic statistic) {
+    public void update(Long id, Statistic statistic) {
         if (repository.existsById(id))
             repository.save(statistic);
     }
 
     @Override
-    public void deleteStatistic(Long id) {
+    public void delete(Long id) {
         if (repository.existsById(id))
             repository.deleteById(id);
     }

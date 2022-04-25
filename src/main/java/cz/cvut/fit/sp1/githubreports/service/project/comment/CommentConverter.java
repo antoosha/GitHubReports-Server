@@ -1,53 +1,47 @@
 package cz.cvut.fit.sp1.githubreports.service.project.comment;
 
-
 import cz.cvut.fit.sp1.githubreports.api.dto.project.CommentDTO;
 import cz.cvut.fit.sp1.githubreports.model.project.Comment;
 import cz.cvut.fit.sp1.githubreports.service.project.commit.CommitService;
 import cz.cvut.fit.sp1.githubreports.service.user.user.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+@AllArgsConstructor
 @Component
 public class CommentConverter {
 
-    private final UserService user;
+    private final UserService userService;
     private final CommitService commitService;
 
-    @Autowired
-    public CommentConverter(UserService user, CommitService commitService) {
-        this.user = user;
-        this.commitService = commitService;
-    }
-
-    public Comment toModel(CommentDTO commentDTO){
+    public Comment toModel(CommentDTO commentDTO) {
         return new Comment(
                 commentDTO.getCommentID(),
                 commentDTO.getText(),
                 commentDTO.getCreatedDate(),
-                user.getById(commentDTO.getAuthorID()),
-                commitService.getById(commentDTO.getCommitID())
+                userService.readById(commentDTO.getAuthorID()).orElseThrow(RuntimeException::new),
+                commitService.readById(commentDTO.getCommitID()).orElseThrow(RuntimeException::new)
         );
     }
 
-    public CommentDTO fromModel(Comment comment){
+    public CommentDTO fromModel(Comment comment) {
         return new CommentDTO(
                 comment.getCommentId(),
                 comment.getText(),
                 comment.getCreatedDate(),
-                user.getId(comment.getAuthor()),
-                commitService.getId(comment.getCommit())
+                comment.getAuthor().getUserId(),
+                comment.getCommit().getCommitId()
         );
     }
 
-    public List<Comment> toModelMany(List<CommentDTO> comments){
+    public List<Comment> toModelsMany(List<CommentDTO> comments) {
         return comments.stream().map(this::toModel).collect(Collectors.toList());
     }
 
-    public List<CommentDTO> fromModelMany(List<Comment> comments){
+    public List<CommentDTO> fromModelsMany(List<Comment> comments) {
         return comments.stream().map(this::fromModel).collect(Collectors.toList());
     }
 }

@@ -24,7 +24,7 @@ public class StatisticConverter {
                 statisticDTO.getStatisticId(),
                 statisticDTO.getCreatedDate(),
                 statisticTypeService.readById(statisticDTO.getStatisticTypeName()).orElseThrow(RuntimeException::new),
-                userService.readUserById(statisticDTO.getAuthorID()).orElseThrow(RuntimeException::new),
+                userService.readById(statisticDTO.getAuthorID()).orElseThrow(RuntimeException::new),
                 projectService.readById(statisticDTO.getProjectID()).orElseThrow(RuntimeException::new),
                 statisticDTO.getPathToFileWithGeneratedStat()
         );

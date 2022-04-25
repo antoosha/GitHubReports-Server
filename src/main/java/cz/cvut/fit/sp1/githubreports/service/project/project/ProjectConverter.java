@@ -11,12 +11,13 @@ import cz.cvut.fit.sp1.githubreports.service.project.tag.TagService;
 import cz.cvut.fit.sp1.githubreports.service.statistic.statistic.StatisticService;
 import cz.cvut.fit.sp1.githubreports.service.user.user.UserService;
 import lombok.AllArgsConstructor;
+import org.springframework.stereotype.Component;
 
 import javax.persistence.Converter;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Converter
+@Component
 @AllArgsConstructor
 public class ProjectConverter {
 
@@ -27,11 +28,11 @@ public class ProjectConverter {
 
     public Project toModel(ProjectDTO projectDTO) {
         return new Project(projectDTO.getProjectID(), projectDTO.getCreatedDate(), projectDTO.getProjectName(), projectDTO.getDescription(),
-                userService.readUserById(projectDTO.getAuthorID()).orElseThrow(RuntimeException::new),
-                projectDTO.getRepositoriesIDs().stream().map(repositoryID -> repositoryService.readRepositoryById(repositoryID).orElseThrow(RuntimeException::new)).collect(Collectors.toList()),
-                projectDTO.getStatisticsIDs().stream().map(statisticID -> statisticService.readStatisticById(statisticID).orElseThrow(RuntimeException::new)).collect(Collectors.toList()),
-                projectDTO.getUsersIDs().stream().map(userID -> userService.readUserById(userID).orElseThrow(RuntimeException::new)).collect(Collectors.toList()),
-                projectDTO.getTagsIDs().stream().map(tagID -> tagService.readTagById(tagID).orElseThrow(RuntimeException::new)).collect(Collectors.toList())
+                userService.readById(projectDTO.getAuthorID()).orElseThrow(RuntimeException::new),
+                projectDTO.getRepositoriesIDs().stream().map(repositoryID -> repositoryService.readById(repositoryID).orElseThrow(RuntimeException::new)).collect(Collectors.toList()),
+                projectDTO.getStatisticsIDs().stream().map(statisticID -> statisticService.readById(statisticID).orElseThrow(RuntimeException::new)).collect(Collectors.toList()),
+                projectDTO.getUsersIDs().stream().map(userID -> userService.readById(userID).orElseThrow(RuntimeException::new)).collect(Collectors.toList()),
+                projectDTO.getTagsIDs().stream().map(tagID -> tagService.readById(tagID).orElseThrow(RuntimeException::new)).collect(Collectors.toList())
         );
     }
 
@@ -52,3 +53,4 @@ public class ProjectConverter {
         return projects.stream().map(this::fromModel).toList();
     }
 }
+

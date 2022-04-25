@@ -7,13 +7,13 @@ import java.util.Optional;
 
 public interface RepositorySPI {
 
-    Collection<Repository> readRepositories();
+    Collection<Repository> readAll();
 
-    Optional<Repository> readRepositoryById(Long id);
+    Optional<Repository> readById(Long id);
 
-    void createRepository(Repository repository);
+    void create(Repository repository);
 
-    void updateRepository(Long id, Repository repository);
+    void update(Long id, Repository repository);
 
-    void deleteRepository(Long id);
+    void delete(Long id);
 }
