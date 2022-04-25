@@ -4,10 +4,12 @@ import cz.cvut.fit.sp1.githubreports.model.project.Comment;
 import cz.cvut.fit.sp1.githubreports.model.project.Project;
 import cz.cvut.fit.sp1.githubreports.model.statistic.Statistic;
 import lombok.*;
+import org.springframework.stereotype.Component;
 
 import javax.persistence.*;
 import java.util.List;
 import java.util.Objects;
+
 
 @Entity
 @Table(name = "entity_user")
@@ -16,6 +18,7 @@ import java.util.Objects;
 @AllArgsConstructor
 @NoArgsConstructor
 public class User {
+
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -72,4 +75,5 @@ public class User {
                 ", roles=" + roles +
                 '}';
     }
+
 }
