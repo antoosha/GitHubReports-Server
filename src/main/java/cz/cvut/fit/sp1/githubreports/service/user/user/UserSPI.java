@@ -7,11 +7,16 @@ import java.util.Optional;
 
 public interface UserSPI {
 
-    Collection<User> readUsers();
-    Optional<User> readUserById(Long id);
-    Optional<User> readUserByUsername(String username);
-    void createUser(User user);
-    void updateUser(Long id, User user);
-    void deleteUser(Long id);
+    Collection<User> readAll();
+
+    Optional<User> readById(Long id);
+
+    Optional<User> readByUsername(String username);
+
+    void create(User user);
+
+    void update(Long id, User user);
+
+    void delete(Long id);
 
 }

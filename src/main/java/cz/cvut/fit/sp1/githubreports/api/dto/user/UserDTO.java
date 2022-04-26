@@ -19,9 +19,9 @@ public class UserDTO {
     private String email;
     private String password;
     private String pathToFileWithPhoto;
-    private List<Long> commentsIDs = new ArrayList<>();
-    private List<Long> projectsIDs = new ArrayList<>();
-    private List<Long> statisticsIDs = new ArrayList<>();
+//    private List<Long> commentsIDs = new ArrayList<>();
+//    private List<Long> projectsIDs = new ArrayList<>();
+//    private List<Long> statisticsIDs = new ArrayList<>();
     private List<String> rolesIDs = new ArrayList<>();
     
 }

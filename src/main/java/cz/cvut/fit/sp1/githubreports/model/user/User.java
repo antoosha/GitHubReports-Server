@@ -32,6 +32,7 @@ public class User {
 
     private String pathToFileWithPhoto;
 
+/*
     @OneToMany(mappedBy = "commentId")
     private List<Comment> comments;
 
@@ -40,8 +41,9 @@ public class User {
 
     @OneToMany(mappedBy = "statisticId")
     private List<Statistic> statistics;
+*/
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "user_role",
             joinColumns = {@JoinColumn(name = "user_id")},
@@ -68,7 +70,7 @@ public class User {
                 "userId=" + userId +
                 ", username='" + username + '\'' +
                 ", email='" + email + '\'' +
-                ", projects=" + projects +
+//                        ", projects=" + projects +
                 ", roles=" + roles +
                 '}';
     }

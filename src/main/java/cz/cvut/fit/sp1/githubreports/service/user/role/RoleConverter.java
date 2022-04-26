@@ -20,7 +20,7 @@ public class RoleConverter {
         return new Role(
                 roleDTO.getRoleName(),
                 roleDTO.getUsersIDs().stream().
-                        map(userId -> userService.readUserById(userId).orElseThrow(RuntimeException::new)) //todo: better exception
+                        map(userId -> userService.readById(userId).orElseThrow(RuntimeException::new))
                         .collect(Collectors.toList())
         );
     }
