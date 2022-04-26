@@ -1,7 +1,6 @@
 package cz.cvut.fit.sp1.githubreports.service.user.user;
 
 import cz.cvut.fit.sp1.githubreports.dao.user.UserJpaRepository;
-import cz.cvut.fit.sp1.githubreports.model.user.Role;
 import cz.cvut.fit.sp1.githubreports.model.user.User;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -44,11 +43,6 @@ public class UserService implements UserSPI {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         repository.save(user);
     }
-
-//    @Override
-//    public void addRole(Long id, Role role) {
-//        repository.findById(id).orElseThrow(RuntimeException::new).getRoles().add(role);
-//    }
 
     @Override
     public void update(Long id, User user) {

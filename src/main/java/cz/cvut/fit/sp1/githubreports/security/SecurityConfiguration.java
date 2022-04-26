@@ -23,10 +23,17 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     private final String secret;
+    private final Integer expirationTimeAccessToken;
+    private final Integer expirationTimeRefreshToken;
     private final AppUserDetailsServices userDetailsService;
 
-    public SecurityConfiguration(@Value("${my.secret}") String secret, AppUserDetailsServices userDetailsService) {
+    public SecurityConfiguration(@Value("${my.secret}") String secret,
+                                 @Value("${expiration.time.access}") Integer expirationTimeAccessToken,
+                                 @Value("${expiration.time.refresh}") Integer expirationTimeRefreshToken,
+                                 AppUserDetailsServices userDetailsService) {
         this.secret = secret;
+        this.expirationTimeAccessToken = expirationTimeAccessToken;
+        this.expirationTimeRefreshToken = expirationTimeRefreshToken;
         this.userDetailsService = userDetailsService;
     }
 
@@ -35,9 +42,15 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         auth.userDetailsService(userDetailsService);
     }
 
+    /*
+        URL for authentication - "/login"
+        URL for refresh access token - "/user/token/refresh"
+        Other URLs required access token.
+     */
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        AppAuthenticationFilter appAuthenticationFilter = new AppAuthenticationFilter(secret, authenticationManagerBean());
+        AppAuthenticationFilter appAuthenticationFilter =
+                new AppAuthenticationFilter(secret, expirationTimeAccessToken, expirationTimeRefreshToken, authenticationManagerBean());
         http.csrf().disable();
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.authorizeHttpRequests().antMatchers("/login/**", "/user/token/refresh/**").permitAll();

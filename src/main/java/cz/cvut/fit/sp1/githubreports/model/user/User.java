@@ -9,7 +9,6 @@ import javax.persistence.*;
 import java.util.List;
 import java.util.Objects;
 
-
 @Entity
 @Table(name = "entity_user")
 @Getter
@@ -17,7 +16,6 @@ import java.util.Objects;
 @AllArgsConstructor
 @NoArgsConstructor
 public class User {
-
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,7 +32,6 @@ public class User {
 
     private String pathToFileWithPhoto;
 
-/*
     @OneToMany(mappedBy = "commentId")
     private List<Comment> comments;
 
@@ -43,7 +40,6 @@ public class User {
 
     @OneToMany(mappedBy = "statisticId")
     private List<Statistic> statistics;
-*/
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
@@ -72,7 +68,7 @@ public class User {
                 "userId=" + userId +
                 ", username='" + username + '\'' +
                 ", email='" + email + '\'' +
-//                        ", projects=" + projects +
+                ", projects=" + projects +
                 ", roles=" + roles +
                 '}';
     }

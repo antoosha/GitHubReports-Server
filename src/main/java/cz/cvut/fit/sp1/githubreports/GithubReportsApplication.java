@@ -32,6 +32,9 @@ public class GithubReportsApplication {
 							"mail",
 							"pass",
 							"photo",
+							Collections.emptyList(),
+							Collections.emptyList(),
+							Collections.emptyList(),
 							List.of(roleService.readById("ROLE_ADMIN").get(), roleService.readById("ROLE_DEVELOPER").get())));
 			userService.create(
 					new User(
@@ -40,19 +43,22 @@ public class GithubReportsApplication {
 							"mail",
 							"pass",
 							"photo",
+							Collections.emptyList(),
+							Collections.emptyList(),
+							Collections.emptyList(),
 							List.of(roleService.readById("ROLE_ADMIN").get())));
-			userService.create(new User(
-					null,
-					"dev",
-					"mail",
-					"pass",
-					"photo",
-					List.of(roleService.readById("ROLE_DEVELOPER").get())));
+			userService.create(
+					new User(
+							null,
+							"dev",
+							"mail",
+							"pass",
+							"photo",
+							Collections.emptyList(),
+							Collections.emptyList(),
+							Collections.emptyList(),
+							List.of(roleService.readById("ROLE_DEVELOPER").get())));
 
-//			userService.addRole(1L, roleService.readRoleById("ROLE_ADMIN").orElseThrow());
-//			userService.addRole(1L, roleService.readRoleById("ROLE_DEVELOPER").orElseThrow());
-//			userService.addRole(2L, roleService.readRoleById("ROLE_ADMIN").orElseThrow());
-//			userService.addRole(3L, roleService.readRoleById("ROLE_DEVELOPER").orElseThrow());
 		};
 	}
 

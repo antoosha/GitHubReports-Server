@@ -30,12 +30,17 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @RequestMapping("/user")
 public class UserController {
 
-    @Value("${my.secret}")
-    private String secret;
+    private final String secret;
+    private final Integer expirationTimeAccessToken;
     private final UserSPI userSPI;
     private final UserConverter userConverter;
 
-    public UserController(@Qualifier("UserService") UserSPI userSPI, UserConverter userConverter) {
+    public UserController(@Value("${my.secret}") String secret,
+                          @Value("${expiration.time.access}") Integer expirationTimeAccessToken,
+                          @Qualifier("UserService") UserSPI userSPI,
+                          UserConverter userConverter) {
+        this.secret = secret;
+        this.expirationTimeAccessToken = expirationTimeAccessToken;
         this.userSPI = userSPI;
         this.userConverter = userConverter;
     }
@@ -44,6 +49,24 @@ public class UserController {
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public Collection<UserDTO> getAllUsers() {
         return userConverter.fromModelsMany(userSPI.readAll());
+    }
+
+    @GetMapping("/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN') || @UserService.hasId(#id)")
+    public UserDTO getUserById(@PathVariable("id") Long id) {
+        return userConverter.fromModel(userSPI.readById(id).orElseThrow(RuntimeException::new));
+    }
+
+    @PostMapping()
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public void creatUser(UserDTO userDTO) {
+        userSPI.create(userConverter.toModel(userDTO));
+    }
+
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public void deleteUserById(@PathVariable("id") Long id) {
+        userSPI.readById(id);
     }
 
     @GetMapping("/token/refresh")
@@ -60,7 +83,7 @@ public class UserController {
 
                 String access_token = JWT.create()
                         .withSubject(user.getUsername())
-                        .withExpiresAt(new Date(System.currentTimeMillis() + 20 * 60 * 1000))
+                        .withExpiresAt(new Date(System.currentTimeMillis() + expirationTimeAccessToken))
                         .withIssuer(request.getRequestURI())
                         .withClaim("roles", user.getRoles().stream().map(Role::getRoleName).collect(Collectors.toList()))
                         .sign(algorithm);
@@ -81,24 +104,6 @@ public class UserController {
         else {
             throw new ResponseStatusException(FORBIDDEN, "Refresh token wasn't found");
         }
-    }
-
-    @GetMapping("/{id}")
-    @PreAuthorize("hasRole('ROLE_ADMIN') || @UserService.hasId(#id)")
-    public UserDTO getUserById(@PathVariable("id") Long id) {
-        return userConverter.fromModel(userSPI.readById(id).orElseThrow(RuntimeException::new));
-    }
-
-    @PostMapping()
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public void creatUser(UserDTO userDTO) {
-        userSPI.create(userConverter.toModel(userDTO));
-    }
-
-    @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public void deleteUserById(@PathVariable("id") Long id) {
-        userSPI.readById(id);
     }
 
 }
