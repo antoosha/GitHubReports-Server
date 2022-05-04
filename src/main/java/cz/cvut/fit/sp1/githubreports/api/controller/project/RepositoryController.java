@@ -23,6 +23,7 @@ public class RepositoryController {
     public Collection<RepositoryDTO> getAll() {
         return repositoryConverter.fromModelsMany(repositorySPI.readAll());
     }
+    
     @GetMapping("/{id}")
     public RepositoryDTO getOne(@PathVariable Long id) {
         return repositoryConverter.fromModel(repositorySPI.readById(id).orElseThrow(NoEntityFoundException::new));
