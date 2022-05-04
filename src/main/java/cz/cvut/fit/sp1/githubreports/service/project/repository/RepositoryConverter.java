@@ -9,8 +9,7 @@ import cz.cvut.fit.sp1.githubreports.service.project.project.ProjectService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
-import javax.persistence.Converter;
-import java.util.List;
+import java.util.Collection;
 import java.util.stream.Collectors;
 
 @AllArgsConstructor
@@ -32,11 +31,11 @@ public class RepositoryConverter {
                 repository.getProjects().stream().map(Project::getProjectId).collect(Collectors.toList()));
     }
 
-    public List<Repository> toModelsMany(List<RepositoryDTO> repositoryDTOs) {
+    public Collection<Repository> toModelsMany(Collection<RepositoryDTO> repositoryDTOs) {
         return repositoryDTOs.stream().map(this::toModel).toList();
     }
 
-    public List<RepositoryDTO> fromModelsMany(List<Repository> repositories) {
+    public Collection<RepositoryDTO> fromModelsMany(Collection<Repository> repositories) {
         return repositories.stream().map(this::fromModel).toList();
     }
 }

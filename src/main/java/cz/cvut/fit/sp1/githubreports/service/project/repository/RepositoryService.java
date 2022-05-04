@@ -1,5 +1,6 @@
 package cz.cvut.fit.sp1.githubreports.service.project.repository;
 
+import cz.cvut.fit.sp1.githubreports.api.exceptions.EntityStateException;
 import cz.cvut.fit.sp1.githubreports.dao.project.RepositoryJpaRepository;
 import cz.cvut.fit.sp1.githubreports.model.project.Repository;
 import lombok.AllArgsConstructor;
@@ -25,14 +26,17 @@ public class RepositoryService implements RepositorySPI {
     }
 
     @Override
-    public void create(Repository repository) {
-        jpaRepository.save(repository);
+    public Repository create(Repository repository) throws EntityStateException {
+        if (jpaRepository.existsById(repository.getRepositoryId()))
+            throw new EntityStateException();
+        return jpaRepository.save(repository);
     }
 
     @Override
-    public void update(Long id, Repository repository) {
-        if (jpaRepository.existsById(id))
-            jpaRepository.save(repository);
+    public Repository update(Long id, Repository repository) throws EntityStateException {
+        if (!jpaRepository.existsById(id))
+            throw new EntityStateException();
+        return jpaRepository.save(repository);
     }
 
     @Override

@@ -1,5 +1,6 @@
 package cz.cvut.fit.sp1.githubreports.service.project.project;
 
+import cz.cvut.fit.sp1.githubreports.api.exceptions.EntityStateException;
 import cz.cvut.fit.sp1.githubreports.model.project.Project;
 
 import java.util.Collection;
@@ -11,9 +12,9 @@ public interface ProjectSPI {
 
     Optional<Project> readById(Long id);
 
-    void create(Project project);
+    Project create(Project project) throws EntityStateException;
 
-    void update(Long id, Project project);
+    Project update(Long id, Project project) throws EntityStateException;
 
     void delete(Long id);
 
