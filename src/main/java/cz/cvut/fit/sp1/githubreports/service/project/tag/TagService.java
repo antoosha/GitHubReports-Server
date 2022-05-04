@@ -1,5 +1,6 @@
 package cz.cvut.fit.sp1.githubreports.service.project.tag;
 
+import cz.cvut.fit.sp1.githubreports.api.exceptions.EntityStateException;
 import cz.cvut.fit.sp1.githubreports.dao.project.TagJpaRepository;
 import cz.cvut.fit.sp1.githubreports.model.project.Tag;
 import lombok.AllArgsConstructor;
@@ -26,19 +27,19 @@ public class TagService implements TagSPI {
     }
 
     @Override
-    public void create(Tag tag) {
-        repository.save(tag);
+    public Tag create(Tag tag) throws EntityStateException {
+        if (repository.existsById(tag.getTagId())) throw new EntityStateException();
+        return repository.save(tag);
     }
 
     @Override
-    public void update(Long id, Tag tag) {
-        if (repository.existsById(id))
-            repository.save(tag);
+    public Tag update(Long id, Tag tag) throws EntityStateException {
+        if (!repository.existsById(id)) throw new EntityStateException();
+        return repository.save(tag);
     }
 
     @Override
     public void delete(Long id) {
-        if (repository.existsById(id))
-            repository.deleteById(id);
+        if (repository.existsById(id)) repository.deleteById(id);
     }
 }

@@ -9,6 +9,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.Converter;
+import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -37,11 +38,11 @@ public class TagConverter {
         );
     }
 
-    public List<Tag> toModelsMany(List<TagDTO> tagDTOs) {
+    public Collection<Tag> toModelsMany(Collection<TagDTO> tagDTOs) {
         return tagDTOs.stream().map(this::toModel).collect(Collectors.toList());
     }
 
-    public List<TagDTO> fromModelsMany(List<Tag> tags) {
+    public Collection<TagDTO> fromModelsMany(Collection<Tag> tags) {
         return tags.stream().map(this::fromModel).collect(Collectors.toList());
     }
 }
