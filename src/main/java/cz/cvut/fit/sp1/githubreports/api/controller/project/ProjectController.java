@@ -23,6 +23,7 @@ public class ProjectController {
     public Collection<ProjectDTO> getAll() {
         return projectConverter.fromModelsMany(projectSPI.readAll());
     }
+    
     @GetMapping("/{id}")
     public ProjectDTO getOne(@PathVariable Long id) {
         return projectConverter.fromModel(projectSPI.readById(id).orElseThrow(NoEntityFoundException::new));
