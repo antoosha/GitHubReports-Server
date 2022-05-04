@@ -1,5 +1,6 @@
 package cz.cvut.fit.sp1.githubreports.service.statistic.statistic;
 
+import cz.cvut.fit.sp1.githubreports.api.exceptions.EntityStateException;
 import cz.cvut.fit.sp1.githubreports.dao.statistic.StatisticJpaRepository;
 import cz.cvut.fit.sp1.githubreports.model.statistic.Statistic;
 import lombok.AllArgsConstructor;
@@ -27,14 +28,19 @@ public class StatisticService implements StatisticSPI {
     }
 
     @Override
-    public void create(Statistic statistic) {
-        repository.save(statistic);
+    public Statistic create(Statistic statistic) throws EntityStateException {
+        if (repository.existsById(statistic.getStatisticId())) {
+            throw new EntityStateException();
+        }
+        return repository.save(statistic);
     }
 
     @Override
-    public void update(Long id, Statistic statistic) {
-        if (repository.existsById(id))
-            repository.save(statistic);
+    public Statistic update(Long id, Statistic statistic) throws EntityStateException {
+        if (!repository.existsById(id)) {
+            throw new EntityStateException();
+        }
+        return repository.save(statistic);
     }
 
     @Override

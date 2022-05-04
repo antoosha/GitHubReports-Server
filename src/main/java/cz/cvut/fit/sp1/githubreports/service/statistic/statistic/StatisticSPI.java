@@ -1,5 +1,6 @@
 package cz.cvut.fit.sp1.githubreports.service.statistic.statistic;
 
+import cz.cvut.fit.sp1.githubreports.api.exceptions.EntityStateException;
 import cz.cvut.fit.sp1.githubreports.model.statistic.Statistic;
 
 import java.util.Collection;
@@ -10,9 +11,9 @@ public interface StatisticSPI {
 
     Optional<Statistic> readById(Long id);
 
-    void create(Statistic statistic);
+    Statistic create(Statistic statistic) throws EntityStateException;
 
-    void update(Long id, Statistic statistic);
+    Statistic update(Long id, Statistic statistic) throws EntityStateException;
 
     void delete(Long id);
 }

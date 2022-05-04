@@ -1,5 +1,6 @@
 package cz.cvut.fit.sp1.githubreports.service.statistic.statisticType;
 
+import cz.cvut.fit.sp1.githubreports.api.exceptions.EntityStateException;
 import cz.cvut.fit.sp1.githubreports.dao.statistic.StatisticTypeJpaRepository;
 import cz.cvut.fit.sp1.githubreports.model.statistic.StatisticType;
 import lombok.AllArgsConstructor;
@@ -26,14 +27,19 @@ public class StatisticTypeService implements StatisticTypeSPI {
     }
 
     @Override
-    public void create(StatisticType statisticType) {
-        repository.save(statisticType);
+    public StatisticType create(StatisticType statisticType) throws EntityStateException {
+        if (repository.existsById(statisticType.getStatisticName())) {
+            throw new EntityStateException();
+        }
+        return repository.save(statisticType);
     }
 
     @Override
-    public void update(String id, StatisticType statisticType) {
-        if (repository.existsById(id))
-            repository.save(statisticType);
+    public StatisticType update(String id, StatisticType statisticType) throws EntityStateException {
+        if (!repository.existsById(id)) {
+            throw new EntityStateException();
+        }
+        return repository.save(statisticType);
     }
 
     @Override
