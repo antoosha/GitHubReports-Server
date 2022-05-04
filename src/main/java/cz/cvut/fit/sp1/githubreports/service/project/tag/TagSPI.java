@@ -1,5 +1,6 @@
 package cz.cvut.fit.sp1.githubreports.service.project.tag;
 
+import cz.cvut.fit.sp1.githubreports.api.exceptions.EntityStateException;
 import cz.cvut.fit.sp1.githubreports.model.project.Tag;
 
 import java.util.Collection;
@@ -11,9 +12,9 @@ public interface TagSPI {
 
     Optional<Tag> readById(Long id);
 
-    void create(Tag tag);
+    Tag create(Tag tag) throws EntityStateException;
 
-    void update(Long id, Tag tag);
+    Tag update(Long id, Tag tag) throws EntityStateException;
 
     void delete(Long id);
 }
