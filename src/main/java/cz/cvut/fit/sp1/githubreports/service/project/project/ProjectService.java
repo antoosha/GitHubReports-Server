@@ -1,5 +1,6 @@
 package cz.cvut.fit.sp1.githubreports.service.project.project;
 
+import cz.cvut.fit.sp1.githubreports.api.exceptions.EntityStateException;
 import cz.cvut.fit.sp1.githubreports.dao.project.ProjectJpaRepository;
 import cz.cvut.fit.sp1.githubreports.model.project.Project;
 import lombok.AllArgsConstructor;
@@ -25,14 +26,17 @@ public class ProjectService implements ProjectSPI {
     }
 
     @Override
-    public void create(Project project) {
-        repository.save(project);
+    public Project create(Project project) throws EntityStateException {
+        if (repository.existsById(project.getProjectId()))
+            throw new EntityStateException();
+        return repository.save(project);
     }
 
     @Override
-    public void update(Long id, Project project) {
-        if (repository.existsById(id))
-            repository.save(project);
+    public Project update(Long id, Project project) throws EntityStateException {
+        if (!repository.existsById(id))
+            throw new EntityStateException();
+        return repository.save(project);
     }
 
     @Override

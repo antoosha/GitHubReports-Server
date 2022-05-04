@@ -1,5 +1,6 @@
 package cz.cvut.fit.sp1.githubreports.service.project.repository;
 
+import cz.cvut.fit.sp1.githubreports.api.exceptions.EntityStateException;
 import cz.cvut.fit.sp1.githubreports.model.project.Repository;
 
 import java.util.Collection;
@@ -11,9 +12,9 @@ public interface RepositorySPI {
 
     Optional<Repository> readById(Long id);
 
-    void create(Repository repository);
+    Repository create(Repository repository) throws EntityStateException;
 
-    void update(Long id, Repository repository);
+    Repository update(Long id, Repository repository) throws EntityStateException;
 
     void delete(Long id);
 }
