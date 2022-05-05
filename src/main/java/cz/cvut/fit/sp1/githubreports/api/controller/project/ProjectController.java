@@ -13,7 +13,7 @@ import java.util.Collection;
 
 @AllArgsConstructor
 @RestController
-@RequestMapping("/repositories")
+@RequestMapping("/projects")
 public class ProjectController {
 
     private final ProjectSPI projectSPI;
