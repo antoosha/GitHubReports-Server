@@ -52,7 +52,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     /*
         URL for authentication - "/login"
-        URL for refresh access token - "/user/token/refresh"
+        URL for refresh access token - "/users/token/refresh"
         Other URLs required access token.
      */
     @Override
@@ -61,8 +61,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 new AppAuthenticationFilter(secret, expirationTimeAccessToken, expirationTimeRefreshToken, authenticationManagerBean());
         http.csrf().disable();
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-        http.authorizeHttpRequests().antMatchers("/login/**", "/user/token/refresh/**").permitAll();
-        http.authorizeHttpRequests().anyRequest().authenticated();
+        http.authorizeHttpRequests().antMatchers("/login/**", "/users/token/refresh/**").permitAll();
+        http.authorizeHttpRequests().anyRequest().permitAll();
         http.addFilter(appAuthenticationFilter);
         http.addFilterBefore(new AppAuthorizationFilter(secret), UsernamePasswordAuthenticationFilter.class);
 
@@ -74,7 +74,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000/"));
+        configuration.setAllowedOrigins(Arrays.asList("*"));
         configuration.setAllowedMethods(Arrays.asList("*"));
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);

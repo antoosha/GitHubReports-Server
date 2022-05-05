@@ -1,6 +1,7 @@
 package cz.cvut.fit.sp1.githubreports.service.project.tag;
 
 import cz.cvut.fit.sp1.githubreports.api.exceptions.EntityStateException;
+import cz.cvut.fit.sp1.githubreports.api.exceptions.NoEntityFoundException;
 import cz.cvut.fit.sp1.githubreports.dao.project.TagJpaRepository;
 import cz.cvut.fit.sp1.githubreports.model.project.Tag;
 import lombok.AllArgsConstructor;
@@ -16,6 +17,14 @@ public class TagService implements TagSPI {
 
     TagJpaRepository repository;
 
+    private void checkValidation(Tag tag) {
+        if (tag.getProject() == null)
+            throw new EntityStateException();
+        if (tag.getProject().getTags().stream()
+                .anyMatch(tag1 -> tag1.getTagName().equals(tag.getTagName())))
+            throw new EntityStateException();
+    }
+
     @Override
     public Collection<Tag> readAll() {
         return repository.findAll();
@@ -28,13 +37,19 @@ public class TagService implements TagSPI {
 
     @Override
     public Tag create(Tag tag) throws EntityStateException {
-        if (repository.existsById(tag.getTagId())) throw new EntityStateException();
+        if (tag.getTagId() != null) {
+            if (repository.existsById(tag.getTagId()))
+                throw new EntityStateException();
+        }
+        checkValidation(tag);
         return repository.save(tag);
     }
 
     @Override
     public Tag update(Long id, Tag tag) throws EntityStateException {
-        if (!repository.existsById(id)) throw new EntityStateException();
+        if (id == null || !repository.existsById(id))
+            throw new NoEntityFoundException();
+        checkValidation(tag);
         return repository.save(tag);
     }
 

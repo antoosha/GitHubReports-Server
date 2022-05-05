@@ -6,6 +6,7 @@ import cz.cvut.fit.sp1.githubreports.model.project.Project;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Optional;
 
@@ -14,6 +15,14 @@ import java.util.Optional;
 public class ProjectService implements ProjectSPI {
 
     private final ProjectJpaRepository repository;
+
+    private void checkValidation(Project project) {
+        if (project.getAuthor() == null)
+            throw new EntityStateException();
+        if (project.getAuthor().getProjects()
+                .stream().anyMatch(project1 -> project1.getProjectName().equals(project.getProjectName())))
+            throw new EntityStateException();
+    }
 
     @Override
     public Collection<Project> readAll() {
@@ -27,15 +36,20 @@ public class ProjectService implements ProjectSPI {
 
     @Override
     public Project create(Project project) throws EntityStateException {
-        if (repository.existsById(project.getProjectId()))
-            throw new EntityStateException();
+        if (project.getProjectId() != null) {
+            if (repository.existsById(project.getProjectId()))
+                throw new EntityStateException();
+        }
+        checkValidation(project);
+        project.setCreatedDate(LocalDateTime.now());
         return repository.save(project);
     }
 
     @Override
     public Project update(Long id, Project project) throws EntityStateException {
-        if (!repository.existsById(id))
+        if (id == null || !repository.existsById(id))
             throw new EntityStateException();
+        checkValidation(project);
         return repository.save(project);
     }
 

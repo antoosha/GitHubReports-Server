@@ -31,7 +31,7 @@ public class StatisticController {
     }
 
     @PostMapping()
-    public StatisticDTO create(StatisticDTO statisticDTO) throws EntityStateException {
+    public StatisticDTO create(@RequestBody StatisticDTO statisticDTO) throws EntityStateException {
         return statisticConverter.fromModel(statisticSPI.create(statisticConverter.toModel(statisticDTO)));
     }
 

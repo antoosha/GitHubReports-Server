@@ -1,6 +1,7 @@
 package cz.cvut.fit.sp1.githubreports.service.project.repository;
 
 import cz.cvut.fit.sp1.githubreports.api.exceptions.EntityStateException;
+import cz.cvut.fit.sp1.githubreports.api.exceptions.NoEntityFoundException;
 import cz.cvut.fit.sp1.githubreports.dao.project.RepositoryJpaRepository;
 import cz.cvut.fit.sp1.githubreports.model.project.Repository;
 import lombok.AllArgsConstructor;
@@ -15,6 +16,14 @@ public class RepositoryService implements RepositorySPI {
 
     RepositoryJpaRepository jpaRepository;
 
+    private void checkValidation(Repository repository) {
+        if (repository.getProjects().isEmpty() ||
+                repository.getProjects().stream()
+                .anyMatch(project -> project.getRepositories().stream()
+                        .anyMatch(rep -> rep.getRepositoryName().equals(repository.getRepositoryName()))))
+            throw new EntityStateException();
+    }
+
     @Override
     public Collection<Repository> readAll() {
         return jpaRepository.findAll();
@@ -27,15 +36,19 @@ public class RepositoryService implements RepositorySPI {
 
     @Override
     public Repository create(Repository repository) throws EntityStateException {
-        if (jpaRepository.existsById(repository.getRepositoryId()))
-            throw new EntityStateException();
+        if (repository.getRepositoryId() != null) {
+            if (jpaRepository.existsById(repository.getRepositoryId()))
+                throw new EntityStateException();
+        }
+        checkValidation(repository);
         return jpaRepository.save(repository);
     }
 
     @Override
     public Repository update(Long id, Repository repository) throws EntityStateException {
-        if (!jpaRepository.existsById(id))
-            throw new EntityStateException();
+        if (id == null || !jpaRepository.existsById(id))
+            throw new NoEntityFoundException();
+        checkValidation(repository);
         return jpaRepository.save(repository);
     }
 

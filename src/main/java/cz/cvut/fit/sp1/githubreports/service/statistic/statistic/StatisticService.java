@@ -29,7 +29,7 @@ public class StatisticService implements StatisticSPI {
 
     @Override
     public Statistic create(Statistic statistic) throws EntityStateException {
-        if (repository.existsById(statistic.getStatisticId())) {
+        if (statistic.getStatisticId() != null && repository.existsById(statistic.getStatisticId())) {
             throw new EntityStateException();
         }
         return repository.save(statistic);

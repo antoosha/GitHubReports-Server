@@ -29,7 +29,7 @@ public class GithubReportsApplication {
 					new User(
 							null,
 							"user",
-							"mail",
+							"mail1",
 							"pass",
 							"photo",
 							Collections.emptyList(),
@@ -40,7 +40,7 @@ public class GithubReportsApplication {
 					new User(
 							null,
 							"admin",
-							"mail",
+							"mail2",
 							"pass",
 							"photo",
 							Collections.emptyList(),
@@ -51,7 +51,7 @@ public class GithubReportsApplication {
 					new User(
 							null,
 							"dev",
-							"mail",
+							"mail3",
 							"pass",
 							"photo",
 							Collections.emptyList(),

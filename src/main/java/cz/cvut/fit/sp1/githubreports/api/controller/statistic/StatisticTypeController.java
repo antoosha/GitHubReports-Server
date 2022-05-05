@@ -30,7 +30,7 @@ public class StatisticTypeController {
     }
 
     @PostMapping()
-    public StatisticTypeDTO create(StatisticTypeDTO statisticTypeDTO) throws EntityStateException {
+    public StatisticTypeDTO create(@RequestBody StatisticTypeDTO statisticTypeDTO) throws EntityStateException {
         return statisticTypeConverter.fromModel(statisticTypeSPI.create(statisticTypeConverter.toModel(statisticTypeDTO)));
     }
 
