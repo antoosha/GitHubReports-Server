@@ -1,7 +1,11 @@
 package cz.cvut.fit.sp1.githubreports.service.user.user;
 
+import cz.cvut.fit.sp1.githubreports.api.exceptions.EntityStateException;
 import cz.cvut.fit.sp1.githubreports.model.user.User;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.Collection;
 import java.util.Optional;
 
@@ -13,10 +17,12 @@ public interface UserSPI {
 
     Optional<User> readByUsername(String username);
 
-    void create(User user);
+    User create(User user) throws EntityStateException;
 
-    void update(Long id, User user);
+    User update(Long id, User user) throws EntityStateException;
 
     void delete(Long id);
+
+    void refreshToken(HttpServletRequest request, HttpServletResponse response, String secret, Integer expirationTimeAccessToken) throws IOException;
 
 }
