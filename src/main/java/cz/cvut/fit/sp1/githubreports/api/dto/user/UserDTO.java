@@ -1,5 +1,6 @@
 package cz.cvut.fit.sp1.githubreports.api.dto.user;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,6 +18,7 @@ public class UserDTO {
     private Long userId;
     private String username;
     private String email;
+    //@JsonIgnore
     private String password;
     private String pathToFileWithPhoto;
     private List<Long> commentsIDs = new ArrayList<>();
