@@ -1,6 +1,7 @@
 package cz.cvut.fit.sp1.githubreports.service.statistic.statistic;
 
 import cz.cvut.fit.sp1.githubreports.api.dto.statistic.StatisticDTO;
+import cz.cvut.fit.sp1.githubreports.api.exceptions.IncorrectRequestException;
 import cz.cvut.fit.sp1.githubreports.model.statistic.Statistic;
 import cz.cvut.fit.sp1.githubreports.service.project.project.ProjectService;
 import cz.cvut.fit.sp1.githubreports.service.statistic.statisticType.StatisticTypeService;
@@ -23,9 +24,9 @@ public class StatisticConverter {
         return new Statistic(
                 statisticDTO.getStatisticId(),
                 statisticDTO.getCreatedDate(),
-                statisticTypeService.readById(statisticDTO.getStatisticTypeName()).orElseThrow(RuntimeException::new),
-                userService.readById(statisticDTO.getAuthorID()).orElseThrow(RuntimeException::new),
-                projectService.readById(statisticDTO.getProjectID()).orElseThrow(RuntimeException::new),
+                statisticTypeSPI.readById(statisticDTO.getStatisticTypeName()).orElseThrow(IncorrectRequestException::new),
+                userSPI.readById(statisticDTO.getAuthorID()).orElseThrow(IncorrectRequestException::new),
+                projectSPI.readById(statisticDTO.getProjectID()).orElseThrow(IncorrectRequestException::new),
                 statisticDTO.getPathToFileWithGeneratedStat()
         );
     }

@@ -1,6 +1,7 @@
 package cz.cvut.fit.sp1.githubreports.service.project.tag;
 
 import cz.cvut.fit.sp1.githubreports.api.dto.project.TagDTO;
+import cz.cvut.fit.sp1.githubreports.api.exceptions.IncorrectRequestException;
 import cz.cvut.fit.sp1.githubreports.model.project.Commit;
 import cz.cvut.fit.sp1.githubreports.model.project.Tag;
 import cz.cvut.fit.sp1.githubreports.service.project.commit.CommitService;
@@ -24,8 +25,8 @@ public class TagConverter {
         return new Tag(
                 tagDTO.getTagID(),
                 tagDTO.getTagName(),
-                projectService.readById(tagDTO.getProjectID()).orElseThrow(RuntimeException::new),
-                tagDTO.getCommitsIDs().stream().map(tagID -> commitService.readById(tagID).orElseThrow(RuntimeException::new)).collect(Collectors.toList())
+                projectSPI.readById(tagDTO.getProjectID()).orElseThrow(IncorrectRequestException::new),
+                tagDTO.getCommitsIDs().stream().map(tagID -> commitSPI.readById(tagID).orElseThrow(IncorrectRequestException::new)).collect(Collectors.toList())
         );
     }
 

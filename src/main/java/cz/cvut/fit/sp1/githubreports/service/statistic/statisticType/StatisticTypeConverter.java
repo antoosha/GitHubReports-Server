@@ -2,9 +2,10 @@ package cz.cvut.fit.sp1.githubreports.service.statistic.statisticType;
 
 
 import cz.cvut.fit.sp1.githubreports.api.dto.statistic.StatisticTypeDTO;
+import cz.cvut.fit.sp1.githubreports.api.exceptions.IncorrectRequestException;
 import cz.cvut.fit.sp1.githubreports.model.statistic.Statistic;
 import cz.cvut.fit.sp1.githubreports.model.statistic.StatisticType;
-import cz.cvut.fit.sp1.githubreports.service.statistic.statistic.StatisticService;
+import cz.cvut.fit.sp1.githubreports.service.statistic.statistic.StatisticSPI;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -15,13 +16,13 @@ import java.util.stream.Collectors;
 @Component
 public class StatisticTypeConverter {
 
-    private final StatisticService statisticService;
+    private final StatisticSPI statisticSPI;
 
     public StatisticType toModel(StatisticTypeDTO statisticTypeDTO) {
         return new StatisticType(
                 statisticTypeDTO.getStatisticName(),
                 statisticTypeDTO.getStatisticsIDs().stream().
-                        map(userId -> statisticService.readById(userId).orElseThrow(RuntimeException::new))
+                        map(userId -> statisticSPI.readById(userId).orElseThrow(IncorrectRequestException::new))
                         .collect(Collectors.toList())
         );
     }
