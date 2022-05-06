@@ -1,19 +1,6 @@
 stages:
   - build
 
-#host-auth:
-#  services:
-#    - postgres
-#  variables:
-#    # Configure postgres service (https://hub.docker.com/_/postgres/)
-#    POSTGRES_DB: postgres
-#    POSTGRES_USER: postgres
-#    POSTGRES_PASSWORD: "password"
-#    POSTGRES_HOST_AUTH_METHOD: trust
-#  image: postgres
-#  script:
-#    - psql -h "postgres" -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "SELECT 'OK' AS status;"
-
 build:
   image: amazoncorretto:17-alpine
   stage: build
