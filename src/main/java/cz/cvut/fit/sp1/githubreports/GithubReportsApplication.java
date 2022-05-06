@@ -19,7 +19,7 @@ public class GithubReportsApplication {
 		SpringApplication.run(GithubReportsApplication.class, args);
 	}
 
-	@Bean
+/*	@Bean
 	CommandLineRunner run(UserService userService, RoleService roleService) {
 		return args -> {
 			roleService.create(new Role("ROLE_ADMIN", Collections.emptyList()));
@@ -60,6 +60,6 @@ public class GithubReportsApplication {
 							List.of(roleService.readById("ROLE_DEVELOPER").get())));
 
 		};
-	}
+	}*/
 
 }

@@ -39,4 +39,9 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
     public ResponseEntity<Object> handleAccessDenied(RuntimeException ex, WebRequest request) {
         return handleExceptionInternal(ex, "User has not permissions for access", new HttpHeaders(), HttpStatus.FORBIDDEN, request);
     }
+
+    @ExceptionHandler(value = {HasRelationsException.class})
+    public ResponseEntity<Object> handleHasRelations(RuntimeException ex, WebRequest request) {
+        return handleExceptionInternal(ex, "Has relations", new HttpHeaders(), HttpStatus.CONFLICT, request);
+    }
 }

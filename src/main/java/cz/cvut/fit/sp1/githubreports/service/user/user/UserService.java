@@ -44,36 +44,36 @@ public class UserService implements UserSPI {
 
     @Override
     public Collection<User> readAll() {
-        return repository.findAll();
+        return userJpaRepository.findAll();
     }
 
     @Override
-    public Optional<User> readById(Long id) { return repository.findById(id); }
+    public Optional<User> readById(Long id) { return userJpaRepository.findById(id); }
 
     @Override
     public Optional<User> readByUsername(String username) {
-        return repository.findUserByUsername(username);
+        return userJpaRepository.findUserByUsername(username);
     }
 
     @Override
     public User create(User user) throws EntityStateException {
-        if (repository.findUserByUsername(user.getUsername()).isPresent() ||
-                repository.findUserByEmail(user.getEmail()).isPresent())
+        if (userJpaRepository.findUserByUsername(user.getUsername()).isPresent() ||
+                userJpaRepository.findUserByEmail(user.getEmail()).isPresent())
             throw new EntityStateException();
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        return repository.save(user);
+        return userJpaRepository.save(user);
     }
 
     @Override
     public User update(Long id, User user) throws EntityStateException {
-        if (id == null || !repository.existsById(id))
+        if (id == null || !userJpaRepository.existsById(id))
             throw new NoEntityFoundException();
-        User userOld = repository.getById(id);
+        User userOld = userJpaRepository.getById(id);
         if (!userOld.getEmail().equals(user.getEmail()))
-            if (repository.findUserByEmail(user.getEmail()).isPresent())
+            if (userJpaRepository.findUserByEmail(user.getEmail()).isPresent())
                 throw new EntityStateException();
         if (!userOld.getUsername().equals(user.getUsername()))
-            if (repository.findUserByUsername(user.getUsername()).isPresent())
+            if (userJpaRepository.findUserByUsername(user.getUsername()).isPresent())
                 throw new EntityStateException();
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         return repository.save(user);

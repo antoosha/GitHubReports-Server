@@ -38,7 +38,7 @@ public class UserController {
 
     @GetMapping()
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public Collection<UserDTO> getAllUsers() {
+    public Collection<UserDTO> getAll() {
         return userConverter.fromModelsMany(userSPI.readAll());
     }
 

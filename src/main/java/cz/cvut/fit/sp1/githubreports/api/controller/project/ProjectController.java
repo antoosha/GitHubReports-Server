@@ -7,17 +7,23 @@ import cz.cvut.fit.sp1.githubreports.api.exceptions.NoEntityFoundException;
 import cz.cvut.fit.sp1.githubreports.service.project.project.ProjectConverter;
 import cz.cvut.fit.sp1.githubreports.service.project.project.ProjectSPI;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
 
-@AllArgsConstructor
 @RestController
 @RequestMapping("/projects")
 public class ProjectController {
 
     private final ProjectSPI projectSPI;
     private final ProjectConverter projectConverter;
+
+    public ProjectController(@Qualifier("ProjectService") ProjectSPI projectSPI, ProjectConverter projectConverter) {
+        this.projectSPI = projectSPI;
+        this.projectConverter = projectConverter;
+    }
 
     @GetMapping()
     public Collection<ProjectDTO> getAll() {
