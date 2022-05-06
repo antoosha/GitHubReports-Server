@@ -1,12 +1,14 @@
 package cz.cvut.fit.sp1.githubreports.service.project.comment;
 
 import cz.cvut.fit.sp1.githubreports.api.dto.project.CommentDTO;
+import cz.cvut.fit.sp1.githubreports.api.exceptions.IncorrectRequestException;
 import cz.cvut.fit.sp1.githubreports.model.project.Comment;
-import cz.cvut.fit.sp1.githubreports.service.project.commit.CommitService;
-import cz.cvut.fit.sp1.githubreports.service.user.user.UserService;
+import cz.cvut.fit.sp1.githubreports.service.project.commit.CommitSPI;
+import cz.cvut.fit.sp1.githubreports.service.user.user.UserSPI;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -14,16 +16,16 @@ import java.util.stream.Collectors;
 @Component
 public class CommentConverter {
 
-    private final UserService userService;
-    private final CommitService commitService;
+    private final UserSPI userSPI;
+    private final CommitSPI commitSPI;
 
     public Comment toModel(CommentDTO commentDTO) {
         return new Comment(
                 commentDTO.getCommentID(),
                 commentDTO.getText(),
                 commentDTO.getCreatedDate(),
-                userService.readById(commentDTO.getAuthorID()).orElseThrow(RuntimeException::new),
-                commitService.readById(commentDTO.getCommitID()).orElseThrow(RuntimeException::new)
+                userSPI.readById(commentDTO.getAuthorID()).orElseThrow(IncorrectRequestException::new),
+                commitSPI.readById(commentDTO.getCommitID()).orElseThrow(IncorrectRequestException::new)
         );
     }
 
