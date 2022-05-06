@@ -4,22 +4,20 @@ import cz.cvut.fit.sp1.githubreports.api.dto.project.TagDTO;
 import cz.cvut.fit.sp1.githubreports.api.exceptions.IncorrectRequestException;
 import cz.cvut.fit.sp1.githubreports.model.project.Commit;
 import cz.cvut.fit.sp1.githubreports.model.project.Tag;
-import cz.cvut.fit.sp1.githubreports.service.project.commit.CommitService;
-import cz.cvut.fit.sp1.githubreports.service.project.project.ProjectService;
+import cz.cvut.fit.sp1.githubreports.service.project.commit.CommitSPI;
+import cz.cvut.fit.sp1.githubreports.service.project.project.ProjectSPI;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
-import javax.persistence.Converter;
 import java.util.Collection;
-import java.util.List;
 import java.util.stream.Collectors;
 
 @AllArgsConstructor
 @Component
 public class TagConverter {
 
-    private final CommitService commitService;
-    private final ProjectService projectService;
+    private final CommitSPI commitSPI;
+    private final ProjectSPI projectSPI;
 
     public Tag toModel(TagDTO tagDTO) {
         return new Tag(
