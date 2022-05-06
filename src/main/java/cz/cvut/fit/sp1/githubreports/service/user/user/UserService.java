@@ -7,7 +7,9 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import cz.cvut.fit.sp1.githubreports.api.exceptions.AccessDeniedException;
 import cz.cvut.fit.sp1.githubreports.api.exceptions.EntityStateException;
+import cz.cvut.fit.sp1.githubreports.api.exceptions.HasRelationsException;
 import cz.cvut.fit.sp1.githubreports.api.exceptions.NoEntityFoundException;
+import cz.cvut.fit.sp1.githubreports.dao.project.ProjectJpaRepository;
 import cz.cvut.fit.sp1.githubreports.dao.user.UserJpaRepository;
 import cz.cvut.fit.sp1.githubreports.model.user.Role;
 import cz.cvut.fit.sp1.githubreports.model.user.User;
@@ -35,7 +37,8 @@ public class UserService implements UserSPI {
 
     private final PasswordEncoder passwordEncoder;
 
-    private final UserJpaRepository repository;
+    private final UserJpaRepository userJpaRepository;
+    private final ProjectJpaRepository projectJpaRepository;
 
     public boolean hasId(Long id) {
         var auth = SecurityContextHolder.getContext().getAuthentication();
@@ -76,13 +79,34 @@ public class UserService implements UserSPI {
             if (userJpaRepository.findUserByUsername(user.getUsername()).isPresent())
                 throw new EntityStateException();
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        return repository.save(user);
+
+        /*
+            If we update in User list of projects we should manually add this user to collection of users in project
+            https://stackoverflow.com/questions/52203892/updating-manytomany-relationships-in-jpa-or-hibernate
+        */
+        user.getProjects().forEach(p->
+            {
+                if(p.getUsers().stream().noneMatch(u->u.getUserId().equals(id))) {
+                    List<User> users = p.getUsers();
+                    users.add(user);
+                    p.setUsers(users);
+                    projectJpaRepository.save(p);
+                }
+            }
+        );
+
+
+        return userJpaRepository.save(user);
     }
 
     @Override
     public void delete(Long id) {
-        if (repository.existsById(id))
-            repository.deleteById(id);
+        if (userJpaRepository.existsById(id))
+        {
+            if(!userJpaRepository.getById(id).getProjects().isEmpty())
+                throw new HasRelationsException();
+            userJpaRepository.deleteById(id);
+        }
     }
 
     @Override
