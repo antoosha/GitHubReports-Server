@@ -1,15 +1,16 @@
 package cz.cvut.fit.sp1.githubreports.service.user.user;
 
 import cz.cvut.fit.sp1.githubreports.api.dto.user.UserDTO;
+import cz.cvut.fit.sp1.githubreports.api.exceptions.IncorrectRequestException;
 import cz.cvut.fit.sp1.githubreports.model.project.Comment;
 import cz.cvut.fit.sp1.githubreports.model.project.Project;
 import cz.cvut.fit.sp1.githubreports.model.statistic.Statistic;
 import cz.cvut.fit.sp1.githubreports.model.user.Role;
 import cz.cvut.fit.sp1.githubreports.model.user.User;
-import cz.cvut.fit.sp1.githubreports.service.project.comment.CommentService;
-import cz.cvut.fit.sp1.githubreports.service.project.project.ProjectService;
-import cz.cvut.fit.sp1.githubreports.service.statistic.statistic.StatisticService;
-import cz.cvut.fit.sp1.githubreports.service.user.role.RoleService;
+import cz.cvut.fit.sp1.githubreports.service.project.comment.CommentSPI;
+import cz.cvut.fit.sp1.githubreports.service.project.project.ProjectSPI;
+import cz.cvut.fit.sp1.githubreports.service.statistic.statistic.StatisticSPI;
+import cz.cvut.fit.sp1.githubreports.service.user.role.RoleSPI;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -20,10 +21,10 @@ import java.util.stream.Collectors;
 @Component
 public class UserConverter {
 
-    private final CommentService commentService;
-    private final ProjectService projectService;
-    private final StatisticService statisticService;
-    private final RoleService roleService;
+    private final CommentSPI commentSPI;
+    private final ProjectSPI projectSPI;
+    private final StatisticSPI statisticSPI;
+    private final RoleSPI roleSPI;
 
     public User toModel(UserDTO userDTO) {
         return new User(
@@ -33,16 +34,16 @@ public class UserConverter {
                 userDTO.getPassword(),
                 userDTO.getPathToFileWithPhoto(),
                 userDTO.getCommentsIDs().stream()
-                        .map(commentID -> commentService.readById(commentID).orElseThrow(RuntimeException::new))
+                        .map(commentID -> commentSPI.readById(commentID).orElseThrow(IncorrectRequestException::new))
                         .collect(Collectors.toList()),
                 userDTO.getProjectsIDs().stream()
-                        .map(projectID -> projectService.readById(projectID).orElseThrow(RuntimeException::new))
+                        .map(projectID -> projectSPI.readById(projectID).orElseThrow(IncorrectRequestException::new))
                         .collect(Collectors.toList()),
                 userDTO.getStatisticsIDs().stream()
-                        .map(statisticID -> statisticService.readById(statisticID).orElseThrow(RuntimeException::new))
+                        .map(statisticID -> statisticSPI.readById(statisticID).orElseThrow(IncorrectRequestException::new))
                         .collect(Collectors.toList()),
                 userDTO.getRolesIDs().stream()
-                        .map(roleID -> roleService.readById(roleID).orElseThrow(RuntimeException::new))
+                        .map(roleID -> roleSPI.readById(roleID).orElseThrow(IncorrectRequestException::new))
                         .collect(Collectors.toList())
         );
     }

@@ -11,6 +11,7 @@ import cz.cvut.fit.sp1.githubreports.api.exceptions.HasRelationsException;
 import cz.cvut.fit.sp1.githubreports.api.exceptions.NoEntityFoundException;
 import cz.cvut.fit.sp1.githubreports.dao.project.ProjectJpaRepository;
 import cz.cvut.fit.sp1.githubreports.dao.user.UserJpaRepository;
+import cz.cvut.fit.sp1.githubreports.model.project.Project;
 import cz.cvut.fit.sp1.githubreports.model.user.Role;
 import cz.cvut.fit.sp1.githubreports.model.user.User;
 import lombok.AllArgsConstructor;
@@ -101,12 +102,17 @@ public class UserService implements UserSPI {
 
     @Override
     public void delete(Long id) {
-        if (userJpaRepository.existsById(id))
-        {
-            if(!userJpaRepository.getById(id).getProjects().isEmpty())
+        if (userJpaRepository.existsById(id)) {
+            if (!userJpaRepository.getById(id).getProjects().isEmpty())
                 throw new HasRelationsException();
             userJpaRepository.deleteById(id);
         }
+    }
+
+    @Override
+    public Collection<Project> getAllUserProjects(Long id) {
+        if (!userJpaRepository.existsById(id)) throw new NoEntityFoundException();
+        return userJpaRepository.getById(id).getProjects();
     }
 
     @Override

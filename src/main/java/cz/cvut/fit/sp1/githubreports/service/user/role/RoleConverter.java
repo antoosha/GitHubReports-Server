@@ -1,9 +1,10 @@
 package cz.cvut.fit.sp1.githubreports.service.user.role;
 
 import cz.cvut.fit.sp1.githubreports.api.dto.user.RoleDTO;
+import cz.cvut.fit.sp1.githubreports.api.exceptions.IncorrectRequestException;
 import cz.cvut.fit.sp1.githubreports.model.user.Role;
 import cz.cvut.fit.sp1.githubreports.model.user.User;
-import cz.cvut.fit.sp1.githubreports.service.user.user.UserService;
+import cz.cvut.fit.sp1.githubreports.service.user.user.UserSPI;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -14,13 +15,13 @@ import java.util.stream.Collectors;
 @Component
 public class RoleConverter {
 
-    private final UserService userService;
+    private final UserSPI userSPI;
 
     public Role toModel(RoleDTO roleDTO) {
         return new Role(
                 roleDTO.getRoleName(),
                 roleDTO.getUsersIDs().stream().
-                        map(userId -> userService.readById(userId).orElseThrow(RuntimeException::new))
+                        map(userId -> userSPI.readById(userId).orElseThrow(IncorrectRequestException::new))
                         .collect(Collectors.toList())
         );
     }
