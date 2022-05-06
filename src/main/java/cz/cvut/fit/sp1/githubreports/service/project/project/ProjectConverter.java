@@ -1,6 +1,7 @@
 package cz.cvut.fit.sp1.githubreports.service.project.project;
 
 import cz.cvut.fit.sp1.githubreports.api.dto.project.ProjectDTO;
+import cz.cvut.fit.sp1.githubreports.api.exceptions.IncorrectRequestException;
 import cz.cvut.fit.sp1.githubreports.model.project.Project;
 import cz.cvut.fit.sp1.githubreports.model.project.Repository;
 import cz.cvut.fit.sp1.githubreports.model.project.Tag;
@@ -27,11 +28,11 @@ public class ProjectConverter {
 
     public Project toModel(ProjectDTO projectDTO) {
         return new Project(projectDTO.getProjectID(), projectDTO.getCreatedDate(), projectDTO.getProjectName(), projectDTO.getDescription(),
-                userService.readById(projectDTO.getAuthorID()).orElseThrow(RuntimeException::new),
-                projectDTO.getRepositoriesIDs().stream().map(repositoryID -> repositoryService.readById(repositoryID).orElseThrow(RuntimeException::new)).collect(Collectors.toList()),
-                projectDTO.getStatisticsIDs().stream().map(statisticID -> statisticService.readById(statisticID).orElseThrow(RuntimeException::new)).collect(Collectors.toList()),
-                projectDTO.getUsersIDs().stream().map(userID -> userService.readById(userID).orElseThrow(RuntimeException::new)).collect(Collectors.toList()),
-                projectDTO.getTagsIDs().stream().map(tagID -> tagService.readById(tagID).orElseThrow(RuntimeException::new)).collect(Collectors.toList())
+                userSPI.readById(projectDTO.getAuthorID()).orElseThrow(IncorrectRequestException::new),
+                projectDTO.getRepositoriesIDs().stream().map(repositoryID -> repositorySPI.readById(repositoryID).orElseThrow(IncorrectRequestException::new)).collect(Collectors.toList()),
+                projectDTO.getStatisticsIDs().stream().map(statisticID -> statisticSPI.readById(statisticID).orElseThrow(IncorrectRequestException::new)).collect(Collectors.toList()),
+                projectDTO.getUsersIDs().stream().map(userID -> userSPI.readById(userID).orElseThrow(IncorrectRequestException::new)).collect(Collectors.toList()),
+                projectDTO.getTagsIDs().stream().map(tagID -> tagSPI.readById(tagID).orElseThrow(IncorrectRequestException::new)).collect(Collectors.toList())
         );
     }
 
