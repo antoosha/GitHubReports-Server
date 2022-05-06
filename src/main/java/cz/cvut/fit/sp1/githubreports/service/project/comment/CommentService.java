@@ -1,5 +1,6 @@
 package cz.cvut.fit.sp1.githubreports.service.project.comment;
 
+import cz.cvut.fit.sp1.githubreports.api.exceptions.EntityStateException;
 import cz.cvut.fit.sp1.githubreports.dao.project.CommentJpaRepository;
 import cz.cvut.fit.sp1.githubreports.model.project.Comment;
 import lombok.AllArgsConstructor;
@@ -12,7 +13,7 @@ import java.util.Optional;
 @Service("CommentService")
 public class CommentService implements CommentSPI {
 
-    CommentJpaRepository repository;
+    private final CommentJpaRepository repository;
 
     @Override
     public Collection<Comment> readAll() {
@@ -25,14 +26,15 @@ public class CommentService implements CommentSPI {
     }
 
     @Override
-    public void create(Comment comment) {
-        repository.save(comment);
+    public Comment create(Comment comment) throws EntityStateException {
+        if (repository.existsById(comment.getCommentId())) throw new EntityStateException();
+        return repository.save(comment);
     }
 
     @Override
-    public void update(Long id, Comment comment) {
-        if (repository.existsById(id))
-            repository.save(comment);
+    public Comment update(Long id, Comment comment) throws EntityStateException {
+        if (!repository.existsById(id)) throw new EntityStateException();
+        return repository.save(comment);
     }
 
     @Override

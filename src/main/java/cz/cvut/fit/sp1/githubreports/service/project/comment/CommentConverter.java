@@ -39,11 +39,11 @@ public class CommentConverter {
         );
     }
 
-    public List<Comment> toModelsMany(List<CommentDTO> comments) {
+    public Collection<Comment> toModelsMany(List<CommentDTO> comments) {
         return comments.stream().map(this::toModel).collect(Collectors.toList());
     }
 
-    public List<CommentDTO> fromModelsMany(List<Comment> comments) {
+    public Collection<CommentDTO> fromModelsMany(List<Comment> comments) {
         return comments.stream().map(this::fromModel).collect(Collectors.toList());
     }
 }
