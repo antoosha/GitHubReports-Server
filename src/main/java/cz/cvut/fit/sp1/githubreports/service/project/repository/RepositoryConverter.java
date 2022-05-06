@@ -5,8 +5,8 @@ import cz.cvut.fit.sp1.githubreports.api.exceptions.IncorrectRequestException;
 import cz.cvut.fit.sp1.githubreports.model.project.Commit;
 import cz.cvut.fit.sp1.githubreports.model.project.Project;
 import cz.cvut.fit.sp1.githubreports.model.project.Repository;
-import cz.cvut.fit.sp1.githubreports.service.project.commit.CommitService;
-import cz.cvut.fit.sp1.githubreports.service.project.project.ProjectService;
+import cz.cvut.fit.sp1.githubreports.service.project.commit.CommitSPI;
+import cz.cvut.fit.sp1.githubreports.service.project.project.ProjectSPI;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -17,8 +17,8 @@ import java.util.stream.Collectors;
 @Component
 public class RepositoryConverter {
 
-    private CommitService commitService;
-    private ProjectService projectService;
+    private CommitSPI commitSPI;
+    private ProjectSPI projectSPI;
 
     public Repository toModel(RepositoryDTO repositoryDTO) {
         return new Repository(repositoryDTO.getRepositoryID(), repositoryDTO.getRepositoryName(),

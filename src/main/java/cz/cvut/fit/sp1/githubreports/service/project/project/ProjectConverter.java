@@ -7,10 +7,10 @@ import cz.cvut.fit.sp1.githubreports.model.project.Repository;
 import cz.cvut.fit.sp1.githubreports.model.project.Tag;
 import cz.cvut.fit.sp1.githubreports.model.statistic.Statistic;
 import cz.cvut.fit.sp1.githubreports.model.user.User;
-import cz.cvut.fit.sp1.githubreports.service.project.repository.RepositoryService;
-import cz.cvut.fit.sp1.githubreports.service.project.tag.TagService;
-import cz.cvut.fit.sp1.githubreports.service.statistic.statistic.StatisticService;
-import cz.cvut.fit.sp1.githubreports.service.user.user.UserService;
+import cz.cvut.fit.sp1.githubreports.service.project.repository.RepositorySPI;
+import cz.cvut.fit.sp1.githubreports.service.project.tag.TagSPI;
+import cz.cvut.fit.sp1.githubreports.service.statistic.statistic.StatisticSPI;
+import cz.cvut.fit.sp1.githubreports.service.user.user.UserSPI;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -21,10 +21,10 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class ProjectConverter {
 
-    private final UserService userService;
-    private final RepositoryService repositoryService;
-    private final StatisticService statisticService;
-    private final TagService tagService;
+    private final UserSPI userSPI;
+    private final RepositorySPI repositorySPI;
+    private final StatisticSPI statisticSPI;
+    private final TagSPI tagSPI;
 
     public Project toModel(ProjectDTO projectDTO) {
         return new Project(projectDTO.getProjectID(), projectDTO.getCreatedDate(), projectDTO.getProjectName(), projectDTO.getDescription(),

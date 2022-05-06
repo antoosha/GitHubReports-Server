@@ -5,12 +5,10 @@ import cz.cvut.fit.sp1.githubreports.api.exceptions.NoEntityFoundException;
 import cz.cvut.fit.sp1.githubreports.dao.project.ProjectJpaRepository;
 import cz.cvut.fit.sp1.githubreports.dao.project.RepositoryJpaRepository;
 import cz.cvut.fit.sp1.githubreports.model.project.Repository;
-import cz.cvut.fit.sp1.githubreports.model.user.User;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
-import java.util.List;
 import java.util.Optional;
 
 @AllArgsConstructor

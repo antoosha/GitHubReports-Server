@@ -1,11 +1,9 @@
 package cz.cvut.fit.sp1.githubreports.service.project.project;
 
 import cz.cvut.fit.sp1.githubreports.api.exceptions.EntityStateException;
-import cz.cvut.fit.sp1.githubreports.api.exceptions.NoEntityFoundException;
 import cz.cvut.fit.sp1.githubreports.dao.project.ProjectJpaRepository;
 import cz.cvut.fit.sp1.githubreports.dao.user.UserJpaRepository;
 import cz.cvut.fit.sp1.githubreports.model.project.Project;
-import cz.cvut.fit.sp1.githubreports.model.user.User;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
