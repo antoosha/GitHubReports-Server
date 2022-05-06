@@ -1,11 +1,12 @@
 package cz.cvut.fit.sp1.githubreports.service.project.repository;
 
 import cz.cvut.fit.sp1.githubreports.api.dto.project.RepositoryDTO;
+import cz.cvut.fit.sp1.githubreports.api.exceptions.IncorrectRequestException;
 import cz.cvut.fit.sp1.githubreports.model.project.Commit;
 import cz.cvut.fit.sp1.githubreports.model.project.Project;
 import cz.cvut.fit.sp1.githubreports.model.project.Repository;
-import cz.cvut.fit.sp1.githubreports.service.project.commit.CommitService;
-import cz.cvut.fit.sp1.githubreports.service.project.project.ProjectService;
+import cz.cvut.fit.sp1.githubreports.service.project.commit.CommitSPI;
+import cz.cvut.fit.sp1.githubreports.service.project.project.ProjectSPI;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -16,13 +17,13 @@ import java.util.stream.Collectors;
 @Component
 public class RepositoryConverter {
 
-    private CommitService commitService;
-    private ProjectService projectService;
+    private CommitSPI commitSPI;
+    private ProjectSPI projectSPI;
 
     public Repository toModel(RepositoryDTO repositoryDTO) {
         return new Repository(repositoryDTO.getRepositoryID(), repositoryDTO.getRepositoryName(),
-                repositoryDTO.getCommitsIDs().stream().map(commitID -> commitService.readById(commitID).orElseThrow(RuntimeException::new)).collect(Collectors.toList()),
-                repositoryDTO.getProjectsIDs().stream().map(projectID -> projectService.readById(projectID).orElseThrow(RuntimeException::new)).collect(Collectors.toList()));
+                repositoryDTO.getCommitsIDs().stream().map(commitID -> commitSPI.readById(commitID).orElseThrow(IncorrectRequestException::new)).collect(Collectors.toList()),
+                repositoryDTO.getProjectsIDs().stream().map(projectID -> projectSPI.readById(projectID).orElseThrow(IncorrectRequestException::new)).collect(Collectors.toList()));
     }
 
     public RepositoryDTO fromModel(Repository repository) {

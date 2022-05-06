@@ -1,10 +1,11 @@
 package cz.cvut.fit.sp1.githubreports.service.statistic.statistic;
 
 import cz.cvut.fit.sp1.githubreports.api.dto.statistic.StatisticDTO;
+import cz.cvut.fit.sp1.githubreports.api.exceptions.IncorrectRequestException;
 import cz.cvut.fit.sp1.githubreports.model.statistic.Statistic;
-import cz.cvut.fit.sp1.githubreports.service.project.project.ProjectService;
-import cz.cvut.fit.sp1.githubreports.service.statistic.statisticType.StatisticTypeService;
-import cz.cvut.fit.sp1.githubreports.service.user.user.UserService;
+import cz.cvut.fit.sp1.githubreports.service.project.project.ProjectSPI;
+import cz.cvut.fit.sp1.githubreports.service.statistic.statisticType.StatisticTypeSPI;
+import cz.cvut.fit.sp1.githubreports.service.user.user.UserSPI;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -14,18 +15,18 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 @Component
 public class StatisticConverter {
-    private final ProjectService projectService;
-    private final StatisticTypeService statisticTypeService;
-    private final UserService userService;
+    private final ProjectSPI projectSPI;
+    private final StatisticTypeSPI statisticTypeSPI;
+    private final UserSPI userSPI;
 
 
     public Statistic toModel(StatisticDTO statisticDTO) {
         return new Statistic(
                 statisticDTO.getStatisticId(),
                 statisticDTO.getCreatedDate(),
-                statisticTypeService.readById(statisticDTO.getStatisticTypeName()).orElseThrow(RuntimeException::new),
-                userService.readById(statisticDTO.getAuthorID()).orElseThrow(RuntimeException::new),
-                projectService.readById(statisticDTO.getProjectID()).orElseThrow(RuntimeException::new),
+                statisticTypeSPI.readById(statisticDTO.getStatisticTypeName()).orElseThrow(IncorrectRequestException::new),
+                userSPI.readById(statisticDTO.getAuthorID()).orElseThrow(IncorrectRequestException::new),
+                projectSPI.readById(statisticDTO.getProjectID()).orElseThrow(IncorrectRequestException::new),
                 statisticDTO.getPathToFileWithGeneratedStat()
         );
     }

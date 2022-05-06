@@ -1,10 +1,11 @@
 package cz.cvut.fit.sp1.githubreports.api.controller.user;
 
-import cz.cvut.fit.sp1.githubreports.api.dto.user.RoleDTO;
+import cz.cvut.fit.sp1.githubreports.api.dto.project.ProjectDTO;
 import cz.cvut.fit.sp1.githubreports.api.dto.user.UserDTO;
 import cz.cvut.fit.sp1.githubreports.api.exceptions.EntityStateException;
 import cz.cvut.fit.sp1.githubreports.api.exceptions.IncorrectRequestException;
 import cz.cvut.fit.sp1.githubreports.api.exceptions.NoEntityFoundException;
+import cz.cvut.fit.sp1.githubreports.service.project.project.ProjectConverter;
 import cz.cvut.fit.sp1.githubreports.service.user.user.UserConverter;
 import cz.cvut.fit.sp1.githubreports.service.user.user.UserSPI;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -25,21 +26,35 @@ public class UserController {
     private final Integer expirationTimeAccessToken;
     private final UserSPI userSPI;
     private final UserConverter userConverter;
+    private final ProjectConverter projectConverter;
 
     public UserController(@Value("${my.secret}") String secret,
                           @Value("${expiration.time.access}") Integer expirationTimeAccessToken,
                           @Qualifier("UserService") UserSPI userSPI,
-                          UserConverter userConverter) {
+                          UserConverter userConverter, ProjectConverter projectConverter) {
         this.secret = secret;
         this.expirationTimeAccessToken = expirationTimeAccessToken;
         this.userSPI = userSPI;
         this.userConverter = userConverter;
+        this.projectConverter = projectConverter;
     }
 
     @GetMapping()
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public Collection<UserDTO> getAllUsers() {
+    public Collection<UserDTO> getAll() {
         return userConverter.fromModelsMany(userSPI.readAll());
+    }
+
+    @GetMapping("/{id}/projects")
+    //@PreAuthorize("hasRole('ROLE_ADMIN')") TODO
+    public Collection<ProjectDTO> getAllUserProjects(@PathVariable("id") Long id) {
+        return projectConverter.fromModelsMany(userSPI.getAllUserProjects(id));
+    }
+
+    @GetMapping("/{username}")
+    //@PreAuthorize("hasRole('ROLE_ADMIN')") TODO
+    public UserDTO getOneByUsername(@PathVariable("username") String username) {
+        return userConverter.fromModel(userSPI.readByUsername(username).orElseThrow(NoEntityFoundException::new));
     }
 
     @GetMapping("/{id}")

@@ -20,7 +20,7 @@ public class Tag {
     @Column(nullable = false)
     private String tagName;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "project_id", nullable = false)
     private Project project;
 

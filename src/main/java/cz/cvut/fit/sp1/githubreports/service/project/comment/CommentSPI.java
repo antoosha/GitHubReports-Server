@@ -1,5 +1,6 @@
 package cz.cvut.fit.sp1.githubreports.service.project.comment;
 
+import cz.cvut.fit.sp1.githubreports.api.exceptions.EntityStateException;
 import cz.cvut.fit.sp1.githubreports.model.project.Comment;
 
 import java.util.Collection;
@@ -11,9 +12,9 @@ public interface CommentSPI {
 
     Optional<Comment> readById(Long id);
 
-    void create(Comment comment);
+    Comment create(Comment comment) throws EntityStateException;
 
-    void update(Long id, Comment comment);
+    Comment update(Long id, Comment comment) throws EntityStateException;
 
     void delete(Long id);
 }
