@@ -22,6 +22,10 @@ import java.util.*;
 @RequestMapping("/users")
 public class UserController {
 
+    /**
+     *  "secret" - secrete key for sign the tokens
+     *  "expirationTimeAccessToken" - expiration time of token in milliseconds
+     */
     private final String secret;
     private final Integer expirationTimeAccessToken;
     private final UserSPI userSPI;
@@ -39,36 +43,89 @@ public class UserController {
         this.projectConverter = projectConverter;
     }
 
+    /**
+        GET: "/users"
+        @return collection of all users in our database.
+     */
     @GetMapping()
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public Collection<UserDTO> getAll() {
         return userConverter.fromModelsMany(userSPI.readAll());
     }
 
+    /**
+         GET: "/users/{id}/projects"
+         @return collection of user's projects.
+     */
     @GetMapping("/{id}/projects")
     //@PreAuthorize("hasRole('ROLE_ADMIN')") TODO
     public Collection<ProjectDTO> getAllUserProjects(@PathVariable("id") Long id) {
         return projectConverter.fromModelsMany(userSPI.getAllUserProjects(id));
     }
 
+    /**
+        GET: "/users/{username}"
+        @return user with by username.
+     */
     @GetMapping("/{username}")
     //@PreAuthorize("hasRole('ROLE_ADMIN')") TODO
     public UserDTO getOneByUsername(@PathVariable("username") String username) {
         return userConverter.fromModel(userSPI.readByUsername(username).orElseThrow(NoEntityFoundException::new));
     }
 
+    /**
+         Get one user. Client must have admin role for this method or call this method with his id.
+         GET: "/users/{id}"
+         @return user by id.
+     */
     @GetMapping("/{id}")
     @PreAuthorize("hasRole('ROLE_ADMIN') || @UserService.hasId(#id)")
     public UserDTO getOne(@PathVariable("id") Long id) {
         return userConverter.fromModel(userSPI.readById(id).orElseThrow(NoEntityFoundException::new));
     }
 
+    /**
+        Create new user. Client must have admin role for this method.
+
+        POST: "/users"
+
+        Request body example:
+        {
+            "username": "user",
+            "password": "pass",
+            "pathToFileWithPhoto": "photoPath",
+            "email": "mail",
+            "roles": [
+                "ROLE_ADMIN",
+                "ROLE_DEVELOPER"
+            ]
+        }
+        @return created user.
+     */
     @PostMapping()
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public UserDTO create(@RequestBody UserDTO userDTO) throws EntityStateException {
         return userConverter.fromModel(userSPI.create(userConverter.toModel(userDTO)));
     }
 
+    /**
+         Update user by id. Client must have admin role for this method or call this method with his id.
+         PUT: "/users/{id}"
+
+         Request body example:
+         {
+             "userId": 1
+             "username": "user",
+             "password": "pass",
+             "pathToFileWithPhoto": "photoPath",
+             "email": "mail",
+             "roles": [
+                 "ROLE_ADMIN",
+                 "ROLE_DEVELOPER"
+             ]
+         }
+         @return updated user.
+     */
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ROLE_ADMIN') || @UserService.hasId(#id)")
     public UserDTO update(@PathVariable Long id, @RequestBody UserDTO userDTO) throws IncorrectRequestException, EntityStateException {
@@ -78,6 +135,12 @@ public class UserController {
         return userConverter.fromModel(userSPI.update(userDTO.getUserId(), userConverter.toModel(userDTO)));
     }
 
+    /**
+        Delete user by id. Client must have admin role for this method.
+        DELETE: "/users/{id}"
+
+        @param id
+     */
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public void delete(@PathVariable("id") Long id) {
@@ -86,6 +149,10 @@ public class UserController {
         userSPI.delete(id);
     }
 
+    /**
+         Get new access token.
+         GET: "/users/token/refresh"
+     */
     @GetMapping("/token/refresh")
     public void refreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException {
         userSPI.refreshToken(request, response, secret, expirationTimeAccessToken);
