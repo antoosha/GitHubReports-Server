@@ -15,6 +15,7 @@ public class CommentDTO {
     private String text;
     private LocalDateTime createdDate;
     private Long authorID;
+    private String authorUsername;
     private Long commitID;
 
 }

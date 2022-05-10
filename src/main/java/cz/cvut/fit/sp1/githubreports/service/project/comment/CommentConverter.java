@@ -25,6 +25,7 @@ public class CommentConverter {
                 commentDTO.getText(),
                 commentDTO.getCreatedDate(),
                 userSPI.readById(commentDTO.getAuthorID()).orElseThrow(IncorrectRequestException::new),
+                commentDTO.getAuthorUsername(),
                 commitSPI.readById(commentDTO.getCommitID()).orElseThrow(IncorrectRequestException::new)
         );
     }
@@ -35,6 +36,7 @@ public class CommentConverter {
                 comment.getText(),
                 comment.getCreatedDate(),
                 comment.getAuthor().getUserId(),
+                comment.getAuthorUsername(),
                 comment.getCommit().getCommitId()
         );
     }

@@ -8,6 +8,7 @@ import cz.cvut.fit.sp1.githubreports.model.project.Repository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityNotFoundException;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Optional;
@@ -58,5 +59,6 @@ public class RepositoryService implements RepositorySPI {
     public void delete(Long id) {
         if (jpaRepository.existsById(id))
             jpaRepository.deleteById(id);
+        else throw new EntityNotFoundException();
     }
 }

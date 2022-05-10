@@ -2,6 +2,7 @@ package cz.cvut.fit.sp1.githubreports.model.statistic;
 
 import lombok.*;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
@@ -18,7 +19,7 @@ public class StatisticType {
     @Id
     private String statisticName;
 
-    @OneToMany(mappedBy = "statisticType")
+    @OneToMany(mappedBy = "statisticType", cascade = CascadeType.ALL)
     private List<Statistic> statistics;
 
     @Override

@@ -29,6 +29,9 @@ public class Comment {
     @JoinColumn(name = "user_id", nullable = false)
     private User author;
 
+
+    private String authorUsername;
+
     @ManyToOne
     @JoinColumn(name = "commit_id", nullable = false)
     private Commit commit;

@@ -41,6 +41,19 @@ public class UserService implements UserSPI {
     private final UserJpaRepository userJpaRepository;
     private final ProjectJpaRepository projectJpaRepository;
 
+    private void delegateUserCommentsToDeletedUser(User toDeleteUser, User deletedUser) {
+        toDeleteUser.getComments()
+                .forEach(comment -> comment.setAuthor(deletedUser));
+    }
+
+    private void removeAllRelationProjects(User toDeleteUser) {
+        toDeleteUser.getProjects().forEach(project -> {
+            List<User> users = project.getUsers();
+            users.remove(toDeleteUser);
+            project.setUsers(users);
+        });
+    }
+
     public boolean hasId(Long id) {
         var auth = SecurityContextHolder.getContext().getAuthentication();
         return readByUsername(auth.getName()).orElseThrow(AccessDeniedException::new).getUserId().equals(id);
@@ -80,16 +93,23 @@ public class UserService implements UserSPI {
             if (userJpaRepository.findUserByUsername(user.getUsername()).isPresent())
                 throw new EntityStateException();
         user.setPassword(passwordEncoder.encode(user.getPassword()));
+        if (!user.getUsername().equals(userOld.getUsername())) {
+            user.getComments().forEach(comment -> comment.setAuthorUsername(user.getUsername()));
+        }
         return userJpaRepository.save(user);
     }
 
     @Override
     public void delete(Long id) {
         if (userJpaRepository.existsById(id)) {
-            if (!userJpaRepository.getById(id).getProjects().isEmpty())
+            if (!userJpaRepository.getById(id).getCreatedProjects().isEmpty())
                 throw new HasRelationsException();
+            User deletedUser = userJpaRepository.findUserByUsername("deletedUser").get(); //should exist
+            User toDeleteUser = userJpaRepository.getById(id);
+            delegateUserCommentsToDeletedUser(toDeleteUser, deletedUser);
+            removeAllRelationProjects(toDeleteUser);
             userJpaRepository.deleteById(id);
-        }
+        } else throw new NoEntityFoundException();
     }
 
     @Override

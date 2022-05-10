@@ -6,6 +6,7 @@ import cz.cvut.fit.sp1.githubreports.model.statistic.StatisticType;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.Collection;
 import java.util.Optional;
 
@@ -46,5 +47,6 @@ public class StatisticTypeService implements StatisticTypeSPI {
     public void delete(String id) {
         if (repository.existsById(id))
             repository.deleteById(id);
+        else throw new EntityNotFoundException();
     }
 }

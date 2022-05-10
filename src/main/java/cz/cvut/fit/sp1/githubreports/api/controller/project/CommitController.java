@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Collection;
 
 @AllArgsConstructor
-@Controller
+@RestController
 @RequestMapping("/commits")
 public class CommitController {
     private final CommitSPI commitSPI;
