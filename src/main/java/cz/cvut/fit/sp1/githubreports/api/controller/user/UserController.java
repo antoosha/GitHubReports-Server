@@ -60,7 +60,7 @@ public class UserController {
      * @return collection of user's projects.
      */
     @GetMapping("/{id}/projects")
-    //@PreAuthorize("hasRole('ROLE_ADMIN')") TODO
+    @PreAuthorize("hasRole('ROLE_ADMIN') || @UserService.hasId(#id)")
     public Collection<ProjectDTO> getAllUserProjects(@PathVariable("id") Long id) {
         return projectConverter.fromModelsMany(userSPI.getAllUserProjects(id));
     }
