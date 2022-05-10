@@ -32,11 +32,14 @@ public class User {
 
     private String pathToFileWithPhoto;
 
-    @OneToMany(mappedBy = "commentId")
+    @OneToMany(mappedBy = "author")
     private List<Comment> comments;
 
     @ManyToMany(mappedBy = "users")
     private List<Project> projects;
+
+    @OneToMany(mappedBy = "author")
+    private List<Project> createdProjects;
 
     @OneToMany(mappedBy = "statisticId")
     private List<Statistic> statistics;

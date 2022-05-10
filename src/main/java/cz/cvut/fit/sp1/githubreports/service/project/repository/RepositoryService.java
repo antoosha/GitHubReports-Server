@@ -8,6 +8,8 @@ import cz.cvut.fit.sp1.githubreports.model.project.Repository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityNotFoundException;
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Optional;
 
@@ -19,10 +21,9 @@ public class RepositoryService implements RepositorySPI {
     ProjectJpaRepository projectJpaRepository;
 
     private void checkValidation(Repository repository) {
-        if (repository.getProjects().isEmpty() ||
-                repository.getProjects().stream()
-                .anyMatch(project -> project.getRepositories().stream()
-                        .anyMatch(rep -> rep.getRepositoryName().equals(repository.getRepositoryName()))))
+        if (repository.getProject() == null ||
+                repository.getProject().getRepositories().stream()
+                        .anyMatch(rep -> rep.getRepositoryName().equals(repository.getRepositoryName())))
             throw new EntityStateException();
     }
 
@@ -51,22 +52,6 @@ public class RepositoryService implements RepositorySPI {
         if (id == null || !jpaRepository.existsById(id))
             throw new NoEntityFoundException();
         checkValidation(repository);
-
-//        /*
-//            If we update in Project list of repositories we should manually add this repository to collection of repositories in project
-//            https://stackoverflow.com/questions/52203892/updating-manytomany-relationships-in-jpa-or-hibernate
-//        */
-//        repository.getProjects().forEach(p->
-//                {
-//                    if(p.getRepositories().stream().noneMatch(r->r.getRepositoryId().equals(id))) {
-//                        List<Repository> repositories = p.getRepositories();
-//                        repositories.add(repository);
-//                        p.setRepositories(repositories);
-//                        projectJpaRepository.save(p);
-//                    }
-//                }
-//        );
-
         return jpaRepository.save(repository);
     }
 
@@ -74,5 +59,6 @@ public class RepositoryService implements RepositorySPI {
     public void delete(Long id) {
         if (jpaRepository.existsById(id))
             jpaRepository.deleteById(id);
+        else throw new EntityNotFoundException();
     }
 }

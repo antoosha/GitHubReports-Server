@@ -6,6 +6,8 @@ import cz.cvut.fit.sp1.githubreports.model.project.Comment;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityNotFoundException;
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Optional;
 
@@ -27,7 +29,10 @@ public class CommentService implements CommentSPI {
 
     @Override
     public Comment create(Comment comment) throws EntityStateException {
-        if (repository.existsById(comment.getCommentId())) throw new EntityStateException();
+        if (comment.getCommentId() != null && repository.existsById(comment.getCommentId()))
+            throw new EntityStateException();
+        comment.setCreatedDate(LocalDateTime.now());
+        comment.setAuthorUsername(comment.getAuthor().getUsername());
         return repository.save(comment);
     }
 
@@ -41,5 +46,6 @@ public class CommentService implements CommentSPI {
     public void delete(Long id) {
         if (repository.existsById(id))
             repository.deleteById(id);
+        else throw new EntityNotFoundException();
     }
 }

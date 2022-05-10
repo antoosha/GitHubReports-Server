@@ -21,6 +21,7 @@ public class UserDTO {
     private String pathToFileWithPhoto;
     private List<Long> commentsIDs = new ArrayList<>();
     private List<Long> projectsIDs = new ArrayList<>();
+    private List<Long> createdProjectsIDs = new ArrayList<>();
     private List<Long> statisticsIDs = new ArrayList<>();
     private List<String> rolesIDs = new ArrayList<>();
     

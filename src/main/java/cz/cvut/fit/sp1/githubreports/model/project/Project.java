@@ -32,15 +32,10 @@ public class Project {
     @JoinColumn(name = "user_id", nullable = false)
     private User author;
 
-    @ManyToMany
-    @JoinTable(
-            name = "project_repository",
-            joinColumns = {@JoinColumn(name = "project_id")},
-            inverseJoinColumns = {@JoinColumn(name = "repository_id")}
-    )
+    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
     private List<Repository> repositories;
 
-    @OneToMany(mappedBy = "statisticId")
+    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
     private List<Statistic> statistics;
 
     @ManyToMany
@@ -51,7 +46,7 @@ public class Project {
     )
     private List<User> users;
 
-    @OneToMany(mappedBy = "tagId")
+    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
     private List<Tag> tags;
 
     @Override

@@ -22,14 +22,14 @@ public class RepositoryConverter {
 
     public Repository toModel(RepositoryDTO repositoryDTO) {
         return new Repository(repositoryDTO.getRepositoryID(), repositoryDTO.getRepositoryName(),
-                repositoryDTO.getCommitsIDs().stream().map(commitID -> commitSPI.readById(commitID).orElseThrow(IncorrectRequestException::new)).collect(Collectors.toList()),
-                repositoryDTO.getProjectsIDs().stream().map(projectID -> projectSPI.readById(projectID).orElseThrow(IncorrectRequestException::new)).collect(Collectors.toList()));
+                projectSPI.readById(repositoryDTO.getProjectID()).orElseThrow(IncorrectRequestException::new),
+                repositoryDTO.getCommitsIDs().stream().map(commitID -> commitSPI.readById(commitID).orElseThrow(IncorrectRequestException::new)).collect(Collectors.toList()));
     }
 
     public RepositoryDTO fromModel(Repository repository) {
         return new RepositoryDTO(repository.getRepositoryId(), repository.getRepositoryName(),
-                repository.getCommits().stream().map(Commit::getCommitId).collect(Collectors.toList()),
-                repository.getProjects().stream().map(Project::getProjectId).collect(Collectors.toList()));
+                repository.getProject().getProjectId(),
+                repository.getCommits().stream().map(Commit::getCommitId).collect(Collectors.toList()));
     }
 
     public Collection<Repository> toModelsMany(Collection<RepositoryDTO> repositoryDTOs) {

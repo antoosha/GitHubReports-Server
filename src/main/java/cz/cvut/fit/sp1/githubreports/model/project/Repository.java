@@ -19,11 +19,12 @@ public class Repository {
     @Column(nullable = false)
     private String repositoryName;
 
-    @OneToMany(mappedBy = "commitId")
-    private List<Commit> commits;
+    @ManyToOne
+    @JoinColumn(name = "project_id", nullable = false)
+    private Project project;
 
-    @ManyToMany(mappedBy = "repositories")
-    private List<Project> projects;
+    @OneToMany(mappedBy = "repository", cascade = CascadeType.ALL)
+    private List<Commit> commits;
 
     @Override
     public boolean equals(Object o) {
@@ -43,7 +44,7 @@ public class Repository {
         return "Repository{" +
                 "repositoryId=" + repositoryId +
                 ", repositoryName='" + repositoryName + '\'' +
-                ", projects=" + projects +
+                ", project=" + project +
                 '}';
     }
 }

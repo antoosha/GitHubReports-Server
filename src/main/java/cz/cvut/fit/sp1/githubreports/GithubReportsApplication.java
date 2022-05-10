@@ -19,12 +19,25 @@ public class GithubReportsApplication {
 		SpringApplication.run(GithubReportsApplication.class, args);
 	}
 
-/*	@Bean
+	/*@Bean
 	CommandLineRunner run(UserService userService, RoleService roleService) {
 		return args -> {
 			roleService.create(new Role("ROLE_ADMIN", Collections.emptyList()));
 			roleService.create(new Role("ROLE_DEVELOPER", Collections.emptyList()));
 
+			//DO NOT CHANGE USERNAME of deletedUser! HAS RELATIONS IN UserService by username!
+			userService.create(
+					new User(
+							null,
+							"deletedUser",
+							"mailDeletedUser",
+							"pass",
+							"photoDeletedUser",
+							Collections.emptyList(),
+							Collections.emptyList(),
+							Collections.emptyList(),
+							Collections.emptyList(),
+							Collections.emptyList()));
 			userService.create(
 					new User(
 							null,
@@ -32,6 +45,7 @@ public class GithubReportsApplication {
 							"mail1",
 							"pass",
 							"photo",
+							Collections.emptyList(),
 							Collections.emptyList(),
 							Collections.emptyList(),
 							Collections.emptyList(),
@@ -46,6 +60,7 @@ public class GithubReportsApplication {
 							Collections.emptyList(),
 							Collections.emptyList(),
 							Collections.emptyList(),
+							Collections.emptyList(),
 							List.of(roleService.readById("ROLE_ADMIN").get())));
 			userService.create(
 					new User(
@@ -57,8 +72,8 @@ public class GithubReportsApplication {
 							Collections.emptyList(),
 							Collections.emptyList(),
 							Collections.emptyList(),
+							Collections.emptyList(),
 							List.of(roleService.readById("ROLE_DEVELOPER").get())));
-
 		};
 	}*/
 

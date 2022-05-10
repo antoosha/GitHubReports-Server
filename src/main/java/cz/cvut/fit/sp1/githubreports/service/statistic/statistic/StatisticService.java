@@ -6,6 +6,8 @@ import cz.cvut.fit.sp1.githubreports.model.statistic.Statistic;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityNotFoundException;
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Optional;
 
@@ -32,6 +34,7 @@ public class StatisticService implements StatisticSPI {
         if (statistic.getStatisticId() != null && repository.existsById(statistic.getStatisticId())) {
             throw new EntityStateException();
         }
+        statistic.setCreatedDate(LocalDateTime.now());
         return repository.save(statistic);
     }
 
@@ -47,5 +50,6 @@ public class StatisticService implements StatisticSPI {
     public void delete(Long id) {
         if (repository.existsById(id))
             repository.deleteById(id);
+        else throw new EntityNotFoundException();
     }
 }

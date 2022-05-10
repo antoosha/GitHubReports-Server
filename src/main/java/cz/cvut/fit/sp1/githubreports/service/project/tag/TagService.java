@@ -7,6 +7,7 @@ import cz.cvut.fit.sp1.githubreports.model.project.Tag;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.Collection;
 import java.util.Optional;
 
@@ -41,6 +42,7 @@ public class TagService implements TagSPI {
                 throw new EntityStateException();
         }
         checkValidation(tag);
+        System.out.println(tag.getTagId() + " " + tag.getProject().getProjectId());
         return repository.save(tag);
     }
 
@@ -54,6 +56,8 @@ public class TagService implements TagSPI {
 
     @Override
     public void delete(Long id) {
-        if (repository.existsById(id)) repository.deleteById(id);
+        if (repository.existsById(id))
+            repository.deleteById(id);
+        else throw new EntityNotFoundException();
     }
 }
