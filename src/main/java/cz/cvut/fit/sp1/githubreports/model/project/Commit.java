@@ -42,7 +42,7 @@ public class Commit {
     )
     private List<Tag> tags;
 
-    @OneToMany(mappedBy = "commentId")
+    @OneToMany(mappedBy = "commit")
     private List<Comment> comments;
 
     @Override

@@ -19,7 +19,7 @@ public class Repository {
     @Column(nullable = false)
     private String repositoryName;
 
-    @OneToMany(mappedBy = "commitId")
+    @OneToMany(mappedBy = "repository")
     private List<Commit> commits;
 
     @ManyToMany(mappedBy = "repositories")

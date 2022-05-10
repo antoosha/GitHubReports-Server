@@ -35,6 +35,7 @@ public class GithubReportsApplication {
 							Collections.emptyList(),
 							Collections.emptyList(),
 							Collections.emptyList(),
+							Collections.emptyList(),
 							List.of(roleService.readById("ROLE_ADMIN").get(), roleService.readById("ROLE_DEVELOPER").get())));
 			userService.create(
 					new User(
@@ -46,6 +47,7 @@ public class GithubReportsApplication {
 							Collections.emptyList(),
 							Collections.emptyList(),
 							Collections.emptyList(),
+							Collections.emptyList(),
 							List.of(roleService.readById("ROLE_ADMIN").get())));
 			userService.create(
 					new User(
@@ -54,6 +56,7 @@ public class GithubReportsApplication {
 							"mail3",
 							"pass",
 							"photo",
+							Collections.emptyList(),
 							Collections.emptyList(),
 							Collections.emptyList(),
 							Collections.emptyList(),

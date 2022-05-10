@@ -41,6 +41,7 @@ public class TagService implements TagSPI {
                 throw new EntityStateException();
         }
         checkValidation(tag);
+        System.out.println(tag.getTagId() + " " + tag.getProject().getProjectId());
         return repository.save(tag);
     }
 

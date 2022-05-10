@@ -39,6 +39,9 @@ public class UserConverter {
                 userDTO.getProjectsIDs().stream()
                         .map(projectID -> projectSPI.readById(projectID).orElseThrow(IncorrectRequestException::new))
                         .collect(Collectors.toList()),
+                userDTO.getCreatedProjectsIDs().stream()
+                        .map(createdProjectID -> projectSPI.readById(createdProjectID).orElseThrow(IncorrectRequestException::new))
+                        .collect(Collectors.toList()),
                 userDTO.getStatisticsIDs().stream()
                         .map(statisticID -> statisticSPI.readById(statisticID).orElseThrow(IncorrectRequestException::new))
                         .collect(Collectors.toList()),
@@ -57,6 +60,7 @@ public class UserConverter {
                 user.getPathToFileWithPhoto(),
                 user.getComments().stream().map(Comment::getCommentId).collect(Collectors.toList()),
                 user.getProjects().stream().map(Project::getProjectId).collect(Collectors.toList()),
+                user.getCreatedProjects().stream().map(Project::getProjectId).collect(Collectors.toList()),
                 user.getStatistics().stream().map(Statistic::getStatisticId).collect(Collectors.toList()),
                 user.getRoles().stream().map(Role::getRoleName).collect(Collectors.toList())
         );

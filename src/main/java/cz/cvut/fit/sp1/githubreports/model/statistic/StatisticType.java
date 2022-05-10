@@ -18,7 +18,7 @@ public class StatisticType {
     @Id
     private String statisticName;
 
-    @OneToMany(mappedBy = "statisticId")
+    @OneToMany(mappedBy = "statisticType")
     private List<Statistic> statistics;
 
     @Override

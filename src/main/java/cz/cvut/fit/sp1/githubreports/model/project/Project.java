@@ -40,7 +40,7 @@ public class Project {
     )
     private List<Repository> repositories;
 
-    @OneToMany(mappedBy = "statisticId")
+    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
     private List<Statistic> statistics;
 
     @ManyToMany
@@ -51,7 +51,7 @@ public class Project {
     )
     private List<User> users;
 
-    @OneToMany(mappedBy = "tagId")
+    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
     private List<Tag> tags;
 
     @Override
