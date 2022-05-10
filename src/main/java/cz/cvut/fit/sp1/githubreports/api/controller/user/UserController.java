@@ -54,8 +54,10 @@ public class UserController {
     }
 
     /**
-         GET: "/users/{id}/projects"
-         @return collection of user's projects.
+     * Get all user's projects. Client must have admin role for this method or call this method with his id.
+     * GET: "/users/{id}/projects"
+     *
+     * @return collection of user's projects.
      */
     @GetMapping("/{id}/projects")
     //@PreAuthorize("hasRole('ROLE_ADMIN')") TODO
@@ -64,11 +66,13 @@ public class UserController {
     }
 
     /**
-        GET: "/users/{username}"
-        @return user with by username.
+     * Get one user. Client must have admin role for this method or call this method with his username.
+     * GET: "/username/{username}"
+     *
+     * @return user with by username.
      */
-    @GetMapping("/{username}")
-    //@PreAuthorize("hasRole('ROLE_ADMIN')") TODO
+    @GetMapping("/username/{username}")
+    @PreAuthorize("hasRole('ROLE_ADMIN') || @UserService.hasUsername(#username)")
     public UserDTO getOneByUsername(@PathVariable("username") String username) {
         return userConverter.fromModel(userSPI.readByUsername(username).orElseThrow(NoEntityFoundException::new));
     }
@@ -85,22 +89,24 @@ public class UserController {
     }
 
     /**
-        Create new user. Client must have admin role for this method.
-
-        POST: "/users"
-
-        Request body example:
-        {
-            "username": "user",
-            "password": "pass",
-            "pathToFileWithPhoto": "photoPath",
-            "email": "mail",
-            "roles": [
-                "ROLE_ADMIN",
-                "ROLE_DEVELOPER"
-            ]
-        }
-        @return created user.
+     * POST: "/users"
+     * <p>
+     * Request body example (only required parameters):
+     * {
+     * "username": "username",
+     * "email": "userMail",
+     * "password": "pass",
+     * "pathToFileWithPhoto": "photo",
+     * "commentsIDs": [],
+     * "projectsIDs": [],
+     * "createdProjectsIDs": [],
+     * "statisticsIDs": [],
+     * "rolesIDs": [
+     * "ROLE_DEVELOPER"
+     * ]
+     * }
+     *
+     * @return created user.
      */
     @PostMapping()
     @PreAuthorize("hasRole('ROLE_ADMIN')")
@@ -109,22 +115,25 @@ public class UserController {
     }
 
     /**
-         Update user by id. Client must have admin role for this method or call this method with his id.
-         PUT: "/users/{id}"
+     Update user by id. Client must have admin role for this method or call this method with his id.
+     PUT: "/users/{id}"
 
-         Request body example:
-         {
-             "userId": 1
-             "username": "user",
-             "password": "pass",
-             "pathToFileWithPhoto": "photoPath",
-             "email": "mail",
-             "roles": [
-                 "ROLE_ADMIN",
-                 "ROLE_DEVELOPER"
-             ]
-         }
-         @return updated user.
+     Request body example (only required parameters):
+     {
+     "userId": 1,
+     "username": "username",
+     "email": "userMail",
+     "password": "pass",
+     "pathToFileWithPhoto": "photo",
+     "commentsIDs": [],
+     "projectsIDs": [],
+     "createdProjectsIDs": [],
+     "statisticsIDs": [],
+     "rolesIDs": [
+     "ROLE_DEVELOPER"
+     ]
+     }
+     @return updated user.
      */
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ROLE_ADMIN') || @UserService.hasId(#id)")
@@ -138,7 +147,6 @@ public class UserController {
     /**
         Delete user by id. Client must have admin role for this method.
         DELETE: "/users/{id}"
-
         @param id
      */
     @DeleteMapping("/{id}")

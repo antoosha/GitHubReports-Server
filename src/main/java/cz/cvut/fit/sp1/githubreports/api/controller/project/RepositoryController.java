@@ -38,20 +38,21 @@ public class RepositoryController {
     }
 
     /**
-     Create new repository.
-
-     POST: "/repositories"
-
-     Request body example:
-     {
-         "repositoryName": "repositoryName",
-         "commitsIDs": [],
-         "projectsIDs": [
-            1
-         ]
-     }
-     projectsIDs - cannot be empty.
-     @return created repository.
+     * Create new repository.
+     * <p>
+     * POST: "/repositories"
+     * <p>
+     * Request body example:
+     * {
+     * "repositoryName": "repositoryName",
+     * "projectID": [
+     * 1
+     * ],
+     * "commitsIDs": []
+     * }
+     * projectID - cannot be empty.
+     *
+     * @return created repository.
      */
     @PostMapping()
     public RepositoryDTO create(@RequestBody RepositoryDTO repositoryDTO) throws EntityStateException {
@@ -59,19 +60,21 @@ public class RepositoryController {
     }
 
     /**
-     Update repository by id.
-     PUT: "/repositories/{id}"
-
-     Request body example:
-     {
-         "repositoryID": 1,
-         "repositoryName": "repository",
-         "commitsIDs": [],
-         "projectsIDs": [
-            1
-         ]
-     }
-     @return updated repository.
+     * Update repository by id.
+     * <p>
+     * PUT: "/repositories/{id}"
+     * <p>
+     * Request body example:
+     * {
+     * "repositoryID": 1,
+     * "repositoryName": "repository",
+     * "commitsIDs": [],
+     * "projectsIDs": [
+     * 1
+     * ]
+     * }
+     *
+     * @return updated repository.
      */
     @PutMapping("/{id}")
     public RepositoryDTO update(@PathVariable Long id, @RequestBody RepositoryDTO repositoryDTO) throws IncorrectRequestException, EntityStateException {

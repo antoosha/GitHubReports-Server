@@ -42,21 +42,22 @@ public class ProjectController {
     }
 
     /**
-         Create new project.
-
-         POST: "/projects"
-
-         Request body example:
-         {
-             "projectName": "project name",
-             "description": "desc",
-             "authorID": 2,
-             "repositoriesIDs": [],
-             "statisticsIDs": [],
-             "usersIDs": [2],
-             "tagsIDs": []
-         }
-         @return created project.
+     * Create new project.
+     * <p>
+     * POST: "/projects"
+     * <p>
+     * Request body example:
+     * {
+     * "projectName": "projectName",
+     * "description": "desc",
+     * "authorID": 2,
+     * "repositoriesIDs": [],
+     * "statisticsIDs": [],
+     * "usersIDs": [2],
+     * "tagsIDs": []
+     * }
+     *
+     * @return created project.
      */
     @PostMapping()
     public ProjectDTO create(@RequestBody ProjectDTO projectDTO) throws EntityStateException {
@@ -64,22 +65,24 @@ public class ProjectController {
     }
 
     /**
-         Update project by id.
-         PUT: "/projects/{id}"
-
-         Request body example:
-         {
-             "projectID": 1,
-             "createdDate": "2022-05-05T22:16:42.304572",
-             "projectName": "project3",
-             "description": "desc",
-             "authorID": 2,
-             "repositoriesIDs": [],
-             "statisticsIDs": [],
-             "usersIDs": [2],
-             "tagsIDs": []
-         }
-         @return updated project.
+     * Update project by id.
+     * <p>
+     * PUT: "/projects/{id}"
+     * <p>
+     * Request body example:
+     * {
+     * "projectID": 1,
+     * "createdDate": "2022-05-05T22:16:42.304572",
+     * "projectName": "project3",
+     * "description": "desc",
+     * "authorID": 2,
+     * "repositoriesIDs": [],
+     * "statisticsIDs": [],
+     * "usersIDs": [2],
+     * "tagsIDs": []
+     * }
+     *
+     * @return updated project.
      */
     @PutMapping("/{id}")
     public ProjectDTO update(@PathVariable Long id, @RequestBody ProjectDTO projectDTO) throws IncorrectRequestException, EntityStateException {
