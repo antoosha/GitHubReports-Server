@@ -59,6 +59,11 @@ public class UserService implements UserSPI {
         return readByUsername(auth.getName()).orElseThrow(AccessDeniedException::new).getUserId().equals(id);
     }
 
+    public boolean hasUsername(String username) {
+        var auth = SecurityContextHolder.getContext().getAuthentication();
+        return readByUsername(auth.getName()).orElseThrow(AccessDeniedException::new).getUsername().equals(username);
+    }
+
     @Override
     public Collection<User> readAll() {
         return userJpaRepository.findAll();
