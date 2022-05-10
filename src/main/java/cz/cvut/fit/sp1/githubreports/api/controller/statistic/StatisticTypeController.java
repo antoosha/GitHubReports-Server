@@ -36,9 +36,6 @@ public class StatisticTypeController {
 
     @PutMapping("/{id}")
     public StatisticTypeDTO update(@PathVariable String id, @RequestBody StatisticTypeDTO statisticTypeDTO) throws IncorrectRequestException, EntityStateException {
-        if (!statisticTypeDTO.getStatisticName().equals(id)) {
-            throw new IncorrectRequestException();
-        }
         return statisticTypeConverter.fromModel(statisticTypeSPI.update(statisticTypeDTO.getStatisticName(), statisticTypeConverter.toModel(statisticTypeDTO)));
     }
 
