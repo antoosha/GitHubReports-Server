@@ -42,7 +42,7 @@ public class Commit {
     )
     private List<Tag> tags;
 
-    @OneToMany(mappedBy = "commit")
+    @OneToMany(mappedBy = "commit", cascade = CascadeType.ALL)
     private List<Comment> comments;
 
     @Override

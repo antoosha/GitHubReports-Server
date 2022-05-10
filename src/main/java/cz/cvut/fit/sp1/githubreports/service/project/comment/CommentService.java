@@ -6,6 +6,7 @@ import cz.cvut.fit.sp1.githubreports.model.project.Comment;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Optional;
 
@@ -28,6 +29,7 @@ public class CommentService implements CommentSPI {
     @Override
     public Comment create(Comment comment) throws EntityStateException {
         if (repository.existsById(comment.getCommentId())) throw new EntityStateException();
+        comment.setCreatedDate(LocalDateTime.now());
         return repository.save(comment);
     }
 

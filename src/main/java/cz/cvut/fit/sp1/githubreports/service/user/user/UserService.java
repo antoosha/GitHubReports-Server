@@ -80,23 +80,6 @@ public class UserService implements UserSPI {
             if (userJpaRepository.findUserByUsername(user.getUsername()).isPresent())
                 throw new EntityStateException();
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-
-        /*
-            If we update in User list of projects we should manually add this user to collection of users in project
-            https://stackoverflow.com/questions/52203892/updating-manytomany-relationships-in-jpa-or-hibernate
-        */
-        user.getProjects().forEach(p->
-            {
-                if(p.getUsers().stream().noneMatch(u->u.getUserId().equals(id))) {
-                    List<User> users = p.getUsers();
-                    users.add(user);
-                    p.setUsers(users);
-                    projectJpaRepository.save(p);
-                }
-            }
-        );
-
-
         return userJpaRepository.save(user);
     }
 
