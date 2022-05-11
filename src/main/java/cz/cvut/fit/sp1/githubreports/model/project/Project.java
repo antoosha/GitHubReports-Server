@@ -3,6 +3,7 @@ package cz.cvut.fit.sp1.githubreports.model.project;
 import cz.cvut.fit.sp1.githubreports.model.statistic.Statistic;
 import cz.cvut.fit.sp1.githubreports.model.user.User;
 import lombok.*;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -26,6 +27,7 @@ public class Project {
     @Column(nullable = false)
     private String projectName;
 
+    @Type(type = "text")
     private String description;
 
     @ManyToOne
