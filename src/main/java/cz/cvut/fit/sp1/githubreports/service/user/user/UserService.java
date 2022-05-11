@@ -5,25 +5,30 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import cz.cvut.fit.sp1.githubreports.api.exceptions.AccessDeniedException;
-import cz.cvut.fit.sp1.githubreports.api.exceptions.EntityStateException;
-import cz.cvut.fit.sp1.githubreports.api.exceptions.HasRelationsException;
-import cz.cvut.fit.sp1.githubreports.api.exceptions.NoEntityFoundException;
+import cz.cvut.fit.sp1.githubreports.api.exceptions.*;
 import cz.cvut.fit.sp1.githubreports.dao.project.ProjectJpaRepository;
 import cz.cvut.fit.sp1.githubreports.dao.user.UserJpaRepository;
 import cz.cvut.fit.sp1.githubreports.model.project.Project;
 import cz.cvut.fit.sp1.githubreports.model.user.Role;
 import cz.cvut.fit.sp1.githubreports.model.user.User;
 import lombok.AllArgsConstructor;
+import org.springframework.lang.NonNull;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -70,7 +75,9 @@ public class UserService implements UserSPI {
     }
 
     @Override
-    public Optional<User> readById(Long id) { return userJpaRepository.findById(id); }
+    public Optional<User> readById(Long id) {
+        return userJpaRepository.findById(id);
+    }
 
     @Override
     public Optional<User> readByUsername(String username) {
@@ -154,10 +161,39 @@ public class UserService implements UserSPI {
                 response.setContentType(APPLICATION_JSON_VALUE);
                 new ObjectMapper().writeValue(response.getOutputStream(), error);
             }
-        }
-        else {
+        } else {
             throw new ResponseStatusException(FORBIDDEN, "Refresh token wasn't found");
         }
     }
 
+
+    @Override
+    public void savePhoto(String username, MultipartFile multipartFile) throws NoEntityFoundException {
+        if (multipartFile == null || username == null || username.isEmpty())
+            throw new IncorrectRequestException();
+        String fileName = StringUtils.cleanPath(Objects.requireNonNull(multipartFile.getOriginalFilename()));
+        User user = userJpaRepository.findUserByUsername(username).orElseThrow(NoEntityFoundException::new);
+        String uploadDir = "src/main/resources/serverData/images/userPhotos/" + user.getUserId();
+        user.setPathToFileWithPhoto(uploadDir);
+        saveFile(uploadDir, "photo." + fileName.split("\\.")[1], multipartFile);
+        userJpaRepository.save(user);
+    }
+
+
+    private void saveFile(String uploadDir, String fileName, MultipartFile multipartFile) throws EntityStateException {
+        Path uploadPath = Paths.get(uploadDir);
+        try {
+            if (!Files.exists(uploadPath)) {
+                Files.createDirectories(uploadPath);
+            }
+        } catch (IOException ioe) {
+            throw new EntityStateException("Could not create directory image file");
+        }
+        try (InputStream inputStream = multipartFile.getInputStream()) {
+            Path filePath = uploadPath.resolve(fileName);
+            Files.copy(inputStream, filePath, StandardCopyOption.REPLACE_EXISTING);
+        } catch (IOException ioe) {
+            throw new EntityStateException("Could not save image file: " + fileName);
+        }
+    }
 }
