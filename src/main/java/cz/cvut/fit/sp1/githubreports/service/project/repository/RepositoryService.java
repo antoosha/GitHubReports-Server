@@ -9,19 +9,16 @@ import cz.cvut.fit.sp1.githubreports.model.project.Commit;
 import cz.cvut.fit.sp1.githubreports.model.project.Repository;
 import cz.cvut.fit.sp1.githubreports.service.project.commit.CommitSPI;
 import lombok.AllArgsConstructor;
+import org.kohsuke.github.GHCommit;
 import org.kohsuke.github.GHRepository;
 import org.kohsuke.github.GitHub;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.Optional;
+import java.util.*;
 
 @AllArgsConstructor
 @Service("RepositoryService")
@@ -45,22 +42,26 @@ public class RepositoryService implements RepositorySPI {
         }
     }
 
-    private void pullUpRepositoryFromGitHub(Repository repository, String tokenAuth) throws IncorrectRequestException, EntityStateException {
-        String[] tokens = repository.getRepositoryURL().split("/");
+    private String getFormattedURL(String repositoryURL) {
+        String[] tokens = repositoryURL.split("/");
         if (tokens.length != 5) {
             throw new IncorrectRequestException("Repository name must be in format owner/repo");
         }
-        String formattedURL = tokens[3] + "/" + tokens[4]; //get owner + / + repo
+        return tokens[3] + "/" + tokens[4]; //get owner + / + repo
+    }
+
+    private void checkName(Repository repository, String newName) {
         //check user's own name
         if (repository.getRepositoryName().isEmpty()) {
-            repository.setRepositoryName(tokens[4]);
+            repository.setRepositoryName(newName);
         }
-        checkSameRepositoryNames(repository);
+    }
 
+    private void pullUpRepositoryFromGitHub(String formattedURL, Repository repository, String tokenAuth) throws IncorrectRequestException, EntityStateException {
         try {
             GitHub gitHub = GitHub.connectUsingOAuth(tokenAuth);
             GHRepository ghRepository = gitHub.getRepository(formattedURL);
-            repository = jpaRepository.save(repository); // saving without any commits in it
+            repository = jpaRepository.save(repository); // for create no commits, for update existed commits
             pullUpCommitsFromGHRepository(repository, ghRepository);// pulling up commits and adding them to this repo
         } catch (IOException e) {
             throw new IncorrectRequestException(e.getMessage());
@@ -75,22 +76,36 @@ public class RepositoryService implements RepositorySPI {
 
     private void pullUpCommitsFromGHRepository(Repository repository, GHRepository ghRepository) {
         try {
-            ghRepository.listCommits().withPageSize(1).toList().forEach(
-                    ghCommit -> {
-                        try {
-                            Commit commit = commitSPI.create(new Commit(null,
-                                    convertToLocalDate(ghCommit.getCommitDate()),
-                                    ghCommit.getSHA1(),
-                                    ghCommit.getCommitShortInfo().getAuthor().getName(),
-                                    ghCommit.getCommitShortInfo().getMessage(),
-                                    jpaRepository.findRepositoryByRepositoryName(repository.getRepositoryName()),
-                                    new ArrayList<>(),
-                                    new ArrayList<>()));
-                        } catch (IOException e) {
-                            throw new EntityStateException(e.getMessage());
-                        }
+            List<Commit> oldCommits = repository.getCommits();
+            List<GHCommit> ghCommits = ghRepository.listCommits().withPageSize(1).toList();
+
+            // 1) коммит существует и там и там -> оставить, не трогать, сохранить, пропустить
+            // 2) добавился новый коммит в гитхаб -> нужно добавить их нам
+            // 3) из гитхаба удалились коммиты, а у нас такие ещё существуют -> удалить у нас
+            for (Commit oldCommit : oldCommits) {
+                if (ghCommits.stream().noneMatch(commit -> commit.getSHA1().equals(oldCommit.getHashHubId()))) {
+                    commitSPI.delete(oldCommit.getCommitId());
+                }
+            }
+
+            for (GHCommit ghCommit : ghCommits) {
+                try {
+                    //1 2
+                    if (oldCommits.stream().noneMatch(commit -> commit.getHashHubId().equals(ghCommit.getSHA1()))) {
+                        Commit commit = commitSPI.create(new Commit(null,
+                                convertToLocalDate(ghCommit.getCommitDate()),
+                                ghCommit.getSHA1(),
+                                ghCommit.getCommitShortInfo().getAuthor().getName(),
+                                ghCommit.getCommitShortInfo().getMessage(),
+                                jpaRepository.findRepositoryByRepositoryName(repository.getRepositoryName())
+                                        .orElseThrow(EntityStateException::new),
+                                new ArrayList<>(),
+                                new ArrayList<>()));
                     }
-            );
+                } catch (IOException e) {
+                    throw new EntityStateException(e.getMessage());
+                }
+            }
         } catch (IOException e) {
             throw new EntityStateException(e.getMessage());
         }
@@ -113,17 +128,25 @@ public class RepositoryService implements RepositorySPI {
                 throw new EntityStateException();
         }
         checkValidation(repository);
-        pullUpRepositoryFromGitHub(repository, tokenAuth);
-        return jpaRepository.findRepositoryByRepositoryName(repository.getRepositoryName());
+        String formattedURL = getFormattedURL(repository.getRepositoryURL());
+        checkName(repository, formattedURL.split("/")[1]);
+        checkSameRepositoryNames(repository);
+        pullUpRepositoryFromGitHub(formattedURL, repository, tokenAuth);
+        return jpaRepository.findRepositoryByRepositoryName(repository.getRepositoryName()).orElseThrow(EntityStateException::new);
     }
 
     @Override
-    public Repository update(Long id, Repository repository) throws EntityStateException {
+    public Repository update(Long id, Repository repository, String tokenAuth) throws EntityStateException {
         if (id == null || !jpaRepository.existsById(id))
             throw new NoEntityFoundException();
         checkValidation(repository);
-        checkSameRepositoryNames(repository);
-        return jpaRepository.save(repository);
+        String formattedURL = getFormattedURL(repository.getRepositoryURL());
+        checkName(repository, formattedURL.split("/")[1]);
+        if (!repository.getRepositoryName().equals(jpaRepository.getById(id).getRepositoryName()))
+            checkSameRepositoryNames(repository);
+        if (!repository.getRepositoryURL().equals(jpaRepository.getById(id).getRepositoryURL()))
+            pullUpRepositoryFromGitHub(formattedURL, repository, tokenAuth);
+        return jpaRepository.getById(id);
     }
 
     @Override
@@ -131,5 +154,16 @@ public class RepositoryService implements RepositorySPI {
         if (jpaRepository.existsById(id))
             jpaRepository.deleteById(id);
         else throw new EntityNotFoundException();
+    }
+
+    @Override
+    public Repository synchronize(Long id, String tokenAuth) throws NoEntityFoundException {
+        if (!jpaRepository.existsById(id)) {
+            throw new NoEntityFoundException();
+        }
+        Repository repository = jpaRepository.getById(id);
+        String formattedURL = getFormattedURL(repository.getRepositoryURL());
+        pullUpRepositoryFromGitHub(formattedURL, repository, tokenAuth);
+        return jpaRepository.getById(id);
     }
 }

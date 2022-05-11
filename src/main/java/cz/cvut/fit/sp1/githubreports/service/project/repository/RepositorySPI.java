@@ -14,7 +14,9 @@ public interface RepositorySPI {
 
     Repository create(Repository repository, String tokenAuth) throws EntityStateException;
 
-    Repository update(Long id, Repository repository) throws EntityStateException;
+    Repository update(Long id, Repository repository, String tokenAuth) throws EntityStateException;
 
     void delete(Long id);
+
+    Repository synchronize(Long id, String tokenAuth);
 }

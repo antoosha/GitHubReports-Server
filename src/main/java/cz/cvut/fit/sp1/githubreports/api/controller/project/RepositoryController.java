@@ -42,7 +42,7 @@ public class RepositoryController {
     /**
      * Create new repository.
      * <p>
-     * POST: "/repositories"
+     * POST: "/repositories/{tokenAuth}" where tokenAuth is oauth token from github
      * <p>
      * Request body example:
      * {
@@ -65,14 +65,14 @@ public class RepositoryController {
     /**
      * Update repository by id.
      * <p>
-     * PUT: "/repositories/{id}"
+     * PUT: "/repositories/{id}/{tokenAuth}" where tokenAuth is oauth token from github
      * <p>
      * Request body example:
      * {
      * "repositoryID": 1,
      * "repositoryName": "repository",
      * "repositoryURL": "https://github.com/user/repositoryName",
-     * "commitsIDs": [],
+     * "commitsIDs": [], or not empty if any exists
      * "projectsIDs": [
      * 1
      * ]
@@ -80,11 +80,11 @@ public class RepositoryController {
      *
      * @return updated repository.
      */
-    @PutMapping("/{id}")
-    public RepositoryDTO update(@PathVariable Long id, @RequestBody RepositoryDTO repositoryDTO) throws IncorrectRequestException, EntityStateException {
+    @PutMapping("/{id}/{tokenAuth}")
+    public RepositoryDTO update(@PathVariable Long id, @RequestBody RepositoryDTO repositoryDTO, @PathVariable("tokenAuth") String tokenAuth) throws IncorrectRequestException, EntityStateException {
         if (!repositoryDTO.getRepositoryID().equals(id))
             throw new IncorrectRequestException();
-        return repositoryConverter.fromModel(repositorySPI.update(repositoryDTO.getRepositoryID(), repositoryConverter.toModel(repositoryDTO)));
+        return repositoryConverter.fromModel(repositorySPI.update(repositoryDTO.getRepositoryID(), repositoryConverter.toModel(repositoryDTO), tokenAuth));
     }
 
     /**
@@ -96,5 +96,10 @@ public class RepositoryController {
         if (repositorySPI.readById(id).isEmpty())
             throw new NoEntityFoundException();
         repositorySPI.delete(id);
+    }
+
+    @PutMapping("/synchronize/{id}/{tokenAuth}")
+    public RepositoryDTO synchronize(@PathVariable("id") Long id, @PathVariable("tokenAuth") String tokenAuth) {
+        return repositoryConverter.fromModel(repositorySPI.synchronize(id, tokenAuth));
     }
 }
