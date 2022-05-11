@@ -2,15 +2,13 @@ stages:
   - build
   - test
 
-services:
-  - postgres:14
-
 variables:
+  GRADLE_OPTS: "-Dorg.gradle.daemon=false"
   POSTGRES_DB: "postgres"
   POSTGRES_USER: "postgres"
   POSTGRES_PASSWORD: "password"
 
-build:
+Build Gradle:
   image: amazoncorretto:17-alpine
   stage: build
   before_script:
@@ -18,8 +16,18 @@ build:
   script:
     - ./gradlew assemble
 
-test:
+Build Docker:
+  image: docker:stable
+  stage: build
+  services:
+    - docker:dind
+  script:
+    - docker build . -t githubreports-server:ci
+
+Test:
   image: amazoncorretto:17-alpine
+  services:
+    - postgres:14
   stage: test
   before_script:
     - chmod +x gradlew
