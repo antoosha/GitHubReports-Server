@@ -41,7 +41,6 @@ public class CommitService implements CommitSPI {
                 throw new EntityStateException();
         }
         checkValidation(commit);
-        commit.setCreatedDate(LocalDateTime.now());
         return repository.save(commit);
     }
 
@@ -58,5 +57,11 @@ public class CommitService implements CommitSPI {
         if (repository.existsById(id))
             repository.deleteById(id);
         else throw new EntityNotFoundException();
+    }
+
+    @Override
+    public void changeIsDeleted(Commit commit, boolean isDeleted) {
+        commit.setDeleted(isDeleted);
+        repository.save(commit);
     }
 }

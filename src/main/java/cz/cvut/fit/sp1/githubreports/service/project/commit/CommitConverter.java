@@ -30,6 +30,7 @@ public class CommitConverter {
                 commitDTO.getHashHubID(),
                 commitDTO.getLoginAuthor(),
                 commitDTO.getDescription(),
+                commitDTO.isDeleted(),
                 repositorySPI.readById(commitDTO.getRepositoryID()).orElseThrow(IncorrectRequestException::new),
                 commitDTO.getTagsIDs().stream().map(tagID -> tagSPI.readById(tagID).orElseThrow(IncorrectRequestException::new)).collect(Collectors.toList()),
                 commitDTO.getCommentsIDs().stream().map(commentID -> commentSPI.readById(commentID).orElseThrow(IncorrectRequestException::new)).collect(Collectors.toList())
@@ -43,6 +44,7 @@ public class CommitConverter {
                 commit.getHashHubId(),
                 commit.getLoginAuthor(),
                 commit.getDescription(),
+                commit.isDeleted(),
                 commit.getRepository().getRepositoryId(),
                 commit.getTags().stream().map(Tag::getTagId).collect(Collectors.toList()),
                 commit.getComments().stream().map(Comment::getCommentId).collect(Collectors.toList())

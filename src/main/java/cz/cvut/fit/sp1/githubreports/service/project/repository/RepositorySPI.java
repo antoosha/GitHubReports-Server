@@ -12,9 +12,11 @@ public interface RepositorySPI {
 
     Optional<Repository> readById(Long id);
 
-    Repository create(Repository repository) throws EntityStateException;
+    Repository create(Repository repository, String tokenAuth) throws EntityStateException;
 
-    Repository update(Long id, Repository repository) throws EntityStateException;
+    Repository update(Long id, Repository repository, String tokenAuth) throws EntityStateException;
 
     void delete(Long id);
+
+    Repository synchronize(Long id, String tokenAuth);
 }

@@ -16,4 +16,6 @@ public interface CommitSPI {
     Commit update(Long id, Commit commit) throws EntityStateException;
 
     void delete(Long id);
+
+    void changeIsDeleted(Commit commit, boolean isDeleted);
 }

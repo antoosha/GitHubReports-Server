@@ -1,6 +1,7 @@
 package cz.cvut.fit.sp1.githubreports.model.project;
 
 import lombok.*;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -28,7 +29,11 @@ public class Commit {
     private String loginAuthor;
 
     @Column(nullable = false)
+    @Type(type = "text")
     private String description;
+
+    @Column(nullable = false)
+    private boolean isDeleted;
 
     @ManyToOne
     @JoinColumn(name = "repository_id", nullable = false)
