@@ -2,6 +2,7 @@ package cz.cvut.fit.sp1.githubreports.model.project;
 
 import cz.cvut.fit.sp1.githubreports.model.user.User;
 import lombok.*;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -20,6 +21,7 @@ public class Comment {
     private Long commentId;
 
     @Column(nullable = false)
+    @Type(type = "text")
     private String text;
 
     @Column(nullable = false)
