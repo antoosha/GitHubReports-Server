@@ -47,7 +47,9 @@ public class Repository {
         return "Repository{" +
                 "repositoryId=" + repositoryId +
                 ", repositoryName='" + repositoryName + '\'' +
-                ", project=" + project +
+                ", repositoryURL='" + repositoryURL + '\'' +
+                ", projectID=" + project.getProjectId() +
+                ", commitsIDs=" + commits.stream().map(Commit::getCommitId) +
                 '}';
     }
 }

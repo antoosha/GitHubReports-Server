@@ -71,9 +71,13 @@ public class User {
                 "userId=" + userId +
                 ", username='" + username + '\'' +
                 ", email='" + email + '\'' +
-                ", projects=" + projects +
-                ", roles=" + roles +
+                ", password='" + password + '\'' +
+                ", pathToFileWithPhoto='" + pathToFileWithPhoto + '\'' +
+                ", commentsIDs=" + comments.stream().map(Comment::getCommentId) +
+                ", projectsIDs=" + projects.stream().map(Project::getProjectId) +
+                ", createdProjectsIDs=" + createdProjects.stream().map(Project::getProjectId) +
+                ", statisticsIDs=" + statistics.stream().map(Statistic::getStatisticId) +
+                ", roles=" + roles.stream().map(Role::getRoleName) +
                 '}';
     }
-
 }

@@ -71,11 +71,11 @@ public class Project {
                 ", createdDate=" + createdDate +
                 ", projectName='" + projectName + '\'' +
                 ", description='" + description + '\'' +
-                ", author=" + author +
-                ", repositories=" + repositories +
-                ", statistics=" + statistics +
-                ", users=" + users +
-                ", tags=" + tags +
+                ", authorUsername=" + author.getUsername() +
+                ", repositoriesIDs=" + repositories.stream().map(Repository::getRepositoryId) +
+                ", statisticsIDs=" + statistics.stream().map(Statistic::getStatisticId) +
+                ", usersIDs=" + users.stream().map(User::getUserId) +
+                ", tagsIDs=" + tags.stream().map(Tag::getTagId) +
                 '}';
     }
 }

@@ -45,7 +45,8 @@ public class Tag {
         return "Tag{" +
                 "tagId=" + tagId +
                 ", tagName='" + tagName + '\'' +
-                ", project=" + project +
+                ", projectID=" + project.getProjectId() +
+                ", commitsIDs=" + commits.stream().map(Commit::getCommitId) +
                 '}';
     }
 }

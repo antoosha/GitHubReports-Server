@@ -39,6 +39,7 @@ public class StatisticType {
     public String toString() {
         return "StatisticType{" +
                 "statisticName='" + statisticName + '\'' +
+                ", statisticsIDs=" + statistics.stream().map(Statistic::getStatisticId) +
                 '}';
     }
 }
