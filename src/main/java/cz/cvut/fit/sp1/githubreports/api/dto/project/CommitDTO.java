@@ -16,6 +16,7 @@ public class CommitDTO {
     private String hashHubID;
     private String loginAuthor;
     private String description;
+    private boolean isDeleted;
     private Long repositoryID;
     private List<Long> tagsIDs;
     private List<Long> commentsIDs;

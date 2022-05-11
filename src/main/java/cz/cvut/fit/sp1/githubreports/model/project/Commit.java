@@ -32,6 +32,9 @@ public class Commit {
     @Type(type = "text")
     private String description;
 
+    @Column(nullable = false)
+    private boolean isDeleted;
+
     @ManyToOne
     @JoinColumn(name = "repository_id", nullable = false)
     private Repository repository;

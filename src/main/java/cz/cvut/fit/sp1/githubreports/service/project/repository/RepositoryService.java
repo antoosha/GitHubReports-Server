@@ -13,8 +13,11 @@ import org.kohsuke.github.GHCommit;
 import org.kohsuke.github.GHRepository;
 import org.kohsuke.github.GitHub;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
 import javax.persistence.EntityNotFoundException;
+import javax.persistence.PersistenceContext;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -27,6 +30,9 @@ public class RepositoryService implements RepositorySPI {
     RepositoryJpaRepository jpaRepository;
     ProjectJpaRepository projectJpaRepository;
     CommitSPI commitSPI;
+
+    @PersistenceContext
+    private final EntityManager entityManager;
 
     private void checkValidation(Repository repository) {
         if (repository.getProject() == null)
@@ -57,15 +63,17 @@ public class RepositoryService implements RepositorySPI {
         }
     }
 
-    private void pullUpRepositoryFromGitHub(String formattedURL, Repository repository, String tokenAuth) throws IncorrectRequestException, EntityStateException {
+
+    private Repository pullUpRepositoryFromGitHub(String formattedURL, Repository repository, String tokenAuth) throws IncorrectRequestException, EntityStateException {
         try {
             GitHub gitHub = GitHub.connectUsingOAuth(tokenAuth);
             GHRepository ghRepository = gitHub.getRepository(formattedURL);
             repository = jpaRepository.save(repository); // for create no commits, for update existed commits
-            pullUpCommitsFromGHRepository(repository, ghRepository);// pulling up commits and adding them to this repo
+            pullUpCommitsFromGHRepository(repository, ghRepository);// pulling up commits and adding them to this
         } catch (IOException e) {
             throw new IncorrectRequestException(e.getMessage());
         }
+        return repository;
     }
 
     private LocalDateTime convertToLocalDate(Date dateToConvert) {
@@ -84,7 +92,9 @@ public class RepositoryService implements RepositorySPI {
             // 3) из гитхаба удалились коммиты, а у нас такие ещё существуют -> удалить у нас
             for (Commit oldCommit : oldCommits) {
                 if (ghCommits.stream().noneMatch(commit -> commit.getSHA1().equals(oldCommit.getHashHubId()))) {
-                    commitSPI.delete(oldCommit.getCommitId());
+                    commitSPI.changeIsDeleted(oldCommit, true);
+                } else {
+                    commitSPI.changeIsDeleted(oldCommit, false);
                 }
             }
 
@@ -97,11 +107,13 @@ public class RepositoryService implements RepositorySPI {
                                 ghCommit.getSHA1(),
                                 ghCommit.getCommitShortInfo().getAuthor().getName(),
                                 ghCommit.getCommitShortInfo().getMessage(),
+                                false,
                                 jpaRepository.findRepositoryByRepositoryName(repository.getRepositoryName())
                                         .orElseThrow(EntityStateException::new),
                                 new ArrayList<>(),
                                 new ArrayList<>()));
                     }
+
                 } catch (IOException e) {
                     throw new EntityStateException(e.getMessage());
                 }
@@ -122,6 +134,7 @@ public class RepositoryService implements RepositorySPI {
     }
 
     @Override
+    @Transactional
     public Repository create(Repository repository, String tokenAuth) throws EntityStateException {
         if (repository.getRepositoryId() != null) {
             if (jpaRepository.existsById(repository.getRepositoryId()))
@@ -131,22 +144,29 @@ public class RepositoryService implements RepositorySPI {
         String formattedURL = getFormattedURL(repository.getRepositoryURL());
         checkName(repository, formattedURL.split("/")[1]);
         checkSameRepositoryNames(repository);
-        pullUpRepositoryFromGitHub(formattedURL, repository, tokenAuth);
-        return jpaRepository.findRepositoryByRepositoryName(repository.getRepositoryName()).orElseThrow(EntityStateException::new);
+        repository = pullUpRepositoryFromGitHub(formattedURL, repository, tokenAuth);
+        entityManager.refresh(repository);
+        return repository;
     }
 
     @Override
+    @Transactional
     public Repository update(Long id, Repository repository, String tokenAuth) throws EntityStateException {
         if (id == null || !jpaRepository.existsById(id))
             throw new NoEntityFoundException();
         checkValidation(repository);
         String formattedURL = getFormattedURL(repository.getRepositoryURL());
+        System.out.println(repository.getRepositoryURL());
         checkName(repository, formattedURL.split("/")[1]);
         if (!repository.getRepositoryName().equals(jpaRepository.getById(id).getRepositoryName()))
             checkSameRepositoryNames(repository);
-        if (!repository.getRepositoryURL().equals(jpaRepository.getById(id).getRepositoryURL()))
-            pullUpRepositoryFromGitHub(formattedURL, repository, tokenAuth);
-        return jpaRepository.getById(id);
+        if (!repository.getRepositoryURL().equals(jpaRepository.getById(id).getRepositoryURL())){
+            repository = pullUpRepositoryFromGitHub(formattedURL, repository, tokenAuth);
+        }
+        System.out.println(repository.getRepositoryURL());
+        entityManager.getEntityManagerFactory().getCache().evictAll();
+        System.out.println(repository.getRepositoryURL());
+        return repository;
     }
 
     @Override
@@ -157,13 +177,15 @@ public class RepositoryService implements RepositorySPI {
     }
 
     @Override
+    @Transactional
     public Repository synchronize(Long id, String tokenAuth) throws NoEntityFoundException {
         if (!jpaRepository.existsById(id)) {
             throw new NoEntityFoundException();
         }
         Repository repository = jpaRepository.getById(id);
         String formattedURL = getFormattedURL(repository.getRepositoryURL());
-        pullUpRepositoryFromGitHub(formattedURL, repository, tokenAuth);
-        return jpaRepository.getById(id);
+        repository = pullUpRepositoryFromGitHub(formattedURL, repository, tokenAuth);
+        entityManager.refresh(repository);
+        return repository;
     }
 }
