@@ -28,6 +28,7 @@ public class RepositoryConverter {
 
     public RepositoryDTO fromModel(Repository repository) {
         return new RepositoryDTO(repository.getRepositoryId(), repository.getRepositoryName(),
+                repository.getRepositoryURL(),
                 repository.getProject().getProjectId(),
                 repository.getCommits().stream().map(Commit::getCommitId).collect(Collectors.toList()));
     }
