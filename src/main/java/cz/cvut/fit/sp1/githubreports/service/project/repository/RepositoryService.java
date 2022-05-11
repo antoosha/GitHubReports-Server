@@ -63,13 +63,14 @@ public class RepositoryService implements RepositorySPI {
         }
     }
 
-
-    private Repository pullUpRepositoryFromGitHub(String formattedURL, Repository repository, String tokenAuth) throws IncorrectRequestException, EntityStateException {
+    @Transactional
+    public Repository pullUpRepositoryFromGitHub(String formattedURL, Repository repository, String tokenAuth) throws IncorrectRequestException, EntityStateException {
         try {
             GitHub gitHub = GitHub.connectUsingOAuth(tokenAuth);
             GHRepository ghRepository = gitHub.getRepository(formattedURL);
             repository = jpaRepository.save(repository); // for create no commits, for update existed commits
             pullUpCommitsFromGHRepository(repository, ghRepository);// pulling up commits and adding them to this
+            entityManager.flush();
         } catch (IOException e) {
             throw new IncorrectRequestException(e.getMessage());
         }
@@ -87,9 +88,11 @@ public class RepositoryService implements RepositorySPI {
             List<Commit> oldCommits = repository.getCommits();
             List<GHCommit> ghCommits = ghRepository.listCommits().withPageSize(1).toList();
 
-            // 1) коммит существует и там и там -> оставить, не трогать, сохранить, пропустить
-            // 2) добавился новый коммит в гитхаб -> нужно добавить их нам
-            // 3) из гитхаба удалились коммиты, а у нас такие ещё существуют -> удалить у нас
+            /**1) If commit exists in our app and in GitHub then set deleted flag to false.
+             * 2) If commit doesn't exist in our app and exists in GitHub then pull commits from GitHub.
+             * 3) If commit exists in our app and doesn't exist in GitHub then change deleted flag to true.
+             */
+            //  3) case
             for (Commit oldCommit : oldCommits) {
                 if (ghCommits.stream().noneMatch(commit -> commit.getSHA1().equals(oldCommit.getHashHubId()))) {
                     commitSPI.changeIsDeleted(oldCommit, true);
@@ -100,7 +103,7 @@ public class RepositoryService implements RepositorySPI {
 
             for (GHCommit ghCommit : ghCommits) {
                 try {
-                    //1 2
+                    // 1) 2) cases
                     if (oldCommits.stream().noneMatch(commit -> commit.getHashHubId().equals(ghCommit.getSHA1()))) {
                         Commit commit = commitSPI.create(new Commit(null,
                                 convertToLocalDate(ghCommit.getCommitDate()),
@@ -156,16 +159,14 @@ public class RepositoryService implements RepositorySPI {
             throw new NoEntityFoundException();
         checkValidation(repository);
         String formattedURL = getFormattedURL(repository.getRepositoryURL());
-        System.out.println(repository.getRepositoryURL());
         checkName(repository, formattedURL.split("/")[1]);
         if (!repository.getRepositoryName().equals(jpaRepository.getById(id).getRepositoryName()))
             checkSameRepositoryNames(repository);
-        if (!repository.getRepositoryURL().equals(jpaRepository.getById(id).getRepositoryURL())){
+        repository.setCommits(jpaRepository.getById(repository.getRepositoryId()).getCommits());
+        if (!repository.getRepositoryURL().equals(jpaRepository.getById(id).getRepositoryURL())) {
             repository = pullUpRepositoryFromGitHub(formattedURL, repository, tokenAuth);
+            entityManager.refresh(repository);
         }
-        System.out.println(repository.getRepositoryURL());
-        entityManager.getEntityManagerFactory().getCache().evictAll();
-        System.out.println(repository.getRepositoryURL());
         return repository;
     }
 

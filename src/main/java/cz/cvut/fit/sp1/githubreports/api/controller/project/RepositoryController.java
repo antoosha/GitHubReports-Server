@@ -1,11 +1,13 @@
 package cz.cvut.fit.sp1.githubreports.api.controller.project;
 
 import cz.cvut.fit.sp1.githubreports.api.dto.project.RepositoryDTO;
+import cz.cvut.fit.sp1.githubreports.api.dto.project.RepositoryUpdateDTO;
 import cz.cvut.fit.sp1.githubreports.api.exceptions.EntityStateException;
 import cz.cvut.fit.sp1.githubreports.api.exceptions.IncorrectRequestException;
 import cz.cvut.fit.sp1.githubreports.api.exceptions.NoEntityFoundException;
 import cz.cvut.fit.sp1.githubreports.service.project.repository.RepositoryConverter;
 import cz.cvut.fit.sp1.githubreports.service.project.repository.RepositorySPI;
+import cz.cvut.fit.sp1.githubreports.service.project.repository.RepositoryUpdateConverter;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,6 +20,7 @@ public class RepositoryController {
 
     private final RepositorySPI repositorySPI;
     private final RepositoryConverter repositoryConverter;
+    private final RepositoryUpdateConverter repositoryUpdateConverter;
 
     /**
      * GET: "/repositories"
@@ -55,6 +58,7 @@ public class RepositoryController {
      * }
      * projectID - cannot be empty.
      *
+     * @param tokenAuth
      * @return created repository.
      */
     @PostMapping("/{tokenAuth}")
@@ -72,24 +76,26 @@ public class RepositoryController {
      * "repositoryID": 1,
      * "repositoryName": "repository",
      * "repositoryURL": "https://github.com/user/repositoryName",
-     * "commitsIDs": [], or not empty if any exists
      * "projectsIDs": [
      * 1
      * ]
      * }
      *
+     * @param id
+     * @param tokenAuth
      * @return updated repository.
      */
     @PutMapping("/{id}/{tokenAuth}")
-    public RepositoryDTO update(@PathVariable Long id, @RequestBody RepositoryDTO repositoryDTO, @PathVariable("tokenAuth") String tokenAuth) throws IncorrectRequestException, EntityStateException {
-        if (!repositoryDTO.getRepositoryID().equals(id))
+    public RepositoryDTO update(@PathVariable Long id, @RequestBody RepositoryUpdateDTO repositoryUpdateDTO, @PathVariable("tokenAuth") String tokenAuth) throws IncorrectRequestException, EntityStateException {
+        if (!repositoryUpdateDTO.getRepositoryID().equals(id))
             throw new IncorrectRequestException();
-        return repositoryConverter.fromModel(repositorySPI.update(repositoryDTO.getRepositoryID(), repositoryConverter.toModel(repositoryDTO), tokenAuth));
+        return repositoryConverter.fromModel(repositorySPI.update(repositoryUpdateDTO.getRepositoryID(), repositoryUpdateConverter.toModel(repositoryUpdateDTO), tokenAuth));
     }
 
     /**
      * Delete repository by id.
      * DELETE: "/repositories/{id}"
+     * @param id
      */
     @DeleteMapping("/{id}")
     public void delete(@PathVariable Long id) {
@@ -98,6 +104,11 @@ public class RepositoryController {
         repositorySPI.delete(id);
     }
 
+    /**
+     * Synchronize existing repository by id.
+     * @param id
+     * @param tokenAuth
+     */
     @PutMapping("/synchronize/{id}/{tokenAuth}")
     public RepositoryDTO synchronize(@PathVariable("id") Long id, @PathVariable("tokenAuth") String tokenAuth) {
         return repositoryConverter.fromModel(repositorySPI.synchronize(id, tokenAuth));
