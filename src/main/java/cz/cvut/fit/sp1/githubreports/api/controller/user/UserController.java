@@ -13,14 +13,12 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.util.*;
 
 @RestController
@@ -176,6 +174,7 @@ public class UserController {
     }
 
     /**
+     * Save user's photo
      * ONLY .jpg
      *
      * @param username
@@ -187,16 +186,26 @@ public class UserController {
         userSPI.savePhoto(username, multipartFile);
     }
 
+    /**
+     * Get user's photo
+     * @param id
+     * @return photo in jpg format
+     * @throws EntityStateException
+     */
     @GetMapping(
             value = "/{id}/photo",
             produces = MediaType.IMAGE_JPEG_VALUE
     )
-    public @ResponseBody
-    byte[] getImageWithMediaType(@PathVariable("id") Long id) throws EntityStateException {
-        InputStream in = getClass().getResourceAsStream("src/main/resources/serverData/images/userPhotos/" + id + "/photo.jpg");
+    public @ResponseBody byte[] getImageWithMediaType(@PathVariable("id") Long id) throws EntityStateException {
+        InputStream is = null;
         byte[] bytes = null;
         try {
-            bytes = IOUtils.toByteArray(in);
+            is = new FileInputStream("src/main/resources/serverData/images/userPhotos/" + id + "/photo.jpg");
+        } catch (FileNotFoundException e) {
+            throw new NoEntityFoundException();
+        }
+        try {
+            bytes = IOUtils.toByteArray(is);
         } catch (IOException ioe) {
             throw new EntityStateException("Problem with sending response bytes");
         }
