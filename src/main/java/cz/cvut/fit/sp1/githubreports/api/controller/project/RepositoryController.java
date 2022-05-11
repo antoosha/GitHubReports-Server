@@ -20,8 +20,9 @@ public class RepositoryController {
     private final RepositoryConverter repositoryConverter;
 
     /**
-         GET: "/repositories"
-         @return collection of all repositories in our database.
+     * GET: "/repositories"
+     *
+     * @return collection of all repositories in our database.
      */
     @GetMapping()
     public Collection<RepositoryDTO> getAll() {
@@ -29,8 +30,9 @@ public class RepositoryController {
     }
 
     /**
-         GET: "/repositories/{id}"
-         @return repository by id.
+     * GET: "/repositories/{id}"
+     *
+     * @return repository by id.
      */
     @GetMapping("/{id}")
     public RepositoryDTO getOne(@PathVariable Long id) {
@@ -45,6 +47,7 @@ public class RepositoryController {
      * Request body example:
      * {
      * "repositoryName": "repositoryName",
+     * "repositoryURL": "https://github.com/user/repositoryName",
      * "projectID": [
      * 1
      * ],
@@ -54,9 +57,9 @@ public class RepositoryController {
      *
      * @return created repository.
      */
-    @PostMapping()
-    public RepositoryDTO create(@RequestBody RepositoryDTO repositoryDTO) throws EntityStateException {
-        return repositoryConverter.fromModel(repositorySPI.create(repositoryConverter.toModel(repositoryDTO)));
+    @PostMapping("/{tokenAuth}")
+    public RepositoryDTO create(@RequestBody RepositoryDTO repositoryDTO, @PathVariable("tokenAuth") String tokenAuth) throws EntityStateException {
+        return repositoryConverter.fromModel(repositorySPI.create(repositoryConverter.toModel(repositoryDTO), tokenAuth));
     }
 
     /**
@@ -68,6 +71,7 @@ public class RepositoryController {
      * {
      * "repositoryID": 1,
      * "repositoryName": "repository",
+     * "repositoryURL": "https://github.com/user/repositoryName",
      * "commitsIDs": [],
      * "projectsIDs": [
      * 1
@@ -84,8 +88,8 @@ public class RepositoryController {
     }
 
     /**
-     Delete repository by id.
-     DELETE: "/repositories/{id}"
+     * Delete repository by id.
+     * DELETE: "/repositories/{id}"
      */
     @DeleteMapping("/{id}")
     public void delete(@PathVariable Long id) {

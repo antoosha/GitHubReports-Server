@@ -17,6 +17,7 @@ public class RepositoryDTO {
 
     private Long repositoryID;
     private String repositoryName;
+    private String repositoryURL;
     private Long projectID;
     private List<Long> commitsIDs;
 

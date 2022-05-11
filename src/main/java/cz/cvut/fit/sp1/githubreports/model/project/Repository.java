@@ -19,6 +19,9 @@ public class Repository {
     @Column(nullable = false)
     private String repositoryName;
 
+    @Column(nullable = false)
+    private String repositoryURL;
+
     @ManyToOne
     @JoinColumn(name = "project_id", nullable = false)
     private Project project;

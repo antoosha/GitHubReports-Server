@@ -41,7 +41,6 @@ public class CommitService implements CommitSPI {
                 throw new EntityStateException();
         }
         checkValidation(commit);
-        commit.setCreatedDate(LocalDateTime.now());
         return repository.save(commit);
     }
 

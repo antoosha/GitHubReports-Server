@@ -3,7 +3,6 @@ package cz.cvut.fit.sp1.githubreports.service.project.repository;
 import cz.cvut.fit.sp1.githubreports.api.dto.project.RepositoryDTO;
 import cz.cvut.fit.sp1.githubreports.api.exceptions.IncorrectRequestException;
 import cz.cvut.fit.sp1.githubreports.model.project.Commit;
-import cz.cvut.fit.sp1.githubreports.model.project.Project;
 import cz.cvut.fit.sp1.githubreports.model.project.Repository;
 import cz.cvut.fit.sp1.githubreports.service.project.commit.CommitSPI;
 import cz.cvut.fit.sp1.githubreports.service.project.project.ProjectSPI;
@@ -22,6 +21,7 @@ public class RepositoryConverter {
 
     public Repository toModel(RepositoryDTO repositoryDTO) {
         return new Repository(repositoryDTO.getRepositoryID(), repositoryDTO.getRepositoryName(),
+                repositoryDTO.getRepositoryURL(),
                 projectSPI.readById(repositoryDTO.getProjectID()).orElseThrow(IncorrectRequestException::new),
                 repositoryDTO.getCommitsIDs().stream().map(commitID -> commitSPI.readById(commitID).orElseThrow(IncorrectRequestException::new)).collect(Collectors.toList()));
     }
