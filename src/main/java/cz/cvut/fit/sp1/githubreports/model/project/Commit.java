@@ -66,14 +66,16 @@ public class Commit {
     @Override
     public String toString() {
         return "Commit{" +
-                "commitId=" + commitId +
+                "deleted=" + isDeleted() +
+                ", commitId=" + commitId +
                 ", createdDate=" + createdDate +
                 ", hashHubId='" + hashHubId + '\'' +
                 ", loginAuthor='" + loginAuthor + '\'' +
                 ", description='" + description + '\'' +
-                ", repository=" + repository +
-                ", tags=" + tags +
-                ", comments=" + comments +
+                ", isDeleted=" + isDeleted +
+                ", repositoryID=" + repository.getRepositoryId() +
+                ", tagsIDs=" + tags.stream().map(Tag::getTagId) +
+                ", commentsIDs=" + comments.stream().map(Comment::getCommentId) +
                 '}';
     }
 }

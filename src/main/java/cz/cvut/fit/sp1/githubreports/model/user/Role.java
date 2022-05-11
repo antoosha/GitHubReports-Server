@@ -38,7 +38,7 @@ public class Role {
     public String toString() {
         return "Role{" +
                 "roleName='" + roleName + '\'' +
-                ", users=" + users +
+                ", usersIDs=" + users.stream().map(User::getUserId) +
                 '}';
     }
 }

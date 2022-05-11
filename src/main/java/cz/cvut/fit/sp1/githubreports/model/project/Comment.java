@@ -55,9 +55,8 @@ public class Comment {
                 "commentId=" + commentId +
                 ", text='" + text + '\'' +
                 ", createdDate=" + createdDate +
-                ", author=" + author +
-                ", commit=" + commit +
+                ", authorUsername='" + authorUsername + '\'' +
+                ", commitID=" + commit.getCommitId() +
                 '}';
     }
-
 }

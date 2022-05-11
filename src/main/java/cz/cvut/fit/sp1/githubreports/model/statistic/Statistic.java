@@ -55,9 +55,9 @@ public class Statistic {
         return "Statistic{" +
                 "statisticId=" + statisticId +
                 ", createdDate=" + createdDate +
-                ", statisticType=" + statisticType +
-                ", author=" + author +
-                ", project=" + project +
+                ", statisticType=" + statisticType.getStatisticName() +
+                ", authorUsername=" + author.getUsername() +
+                ", projectID=" + project.getProjectId() +
                 '}';
     }
 }
