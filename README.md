@@ -17,6 +17,7 @@
 **Other**
 *   Flyway(database-migration tool)
 *   Lombok
+*   Kohsuke library to work with GitHub API https://github-api.kohsuke.org/
 
 # Coding standards
 ## Naming conventions
