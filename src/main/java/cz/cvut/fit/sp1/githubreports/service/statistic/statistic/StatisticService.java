@@ -1,12 +1,12 @@
 package cz.cvut.fit.sp1.githubreports.service.statistic.statistic;
 
 import cz.cvut.fit.sp1.githubreports.api.exceptions.EntityStateException;
+import cz.cvut.fit.sp1.githubreports.api.exceptions.NoEntityFoundException;
 import cz.cvut.fit.sp1.githubreports.dao.statistic.StatisticJpaRepository;
 import cz.cvut.fit.sp1.githubreports.model.statistic.Statistic;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.EntityNotFoundException;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Optional;
@@ -50,6 +50,6 @@ public class StatisticService implements StatisticSPI {
     public void delete(Long id) {
         if (repository.existsById(id))
             repository.deleteById(id);
-        else throw new EntityNotFoundException();
+        else throw new NoEntityFoundException();
     }
 }

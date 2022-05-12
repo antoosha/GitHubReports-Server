@@ -7,8 +7,6 @@ import cz.cvut.fit.sp1.githubreports.model.project.Commit;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.EntityNotFoundException;
-import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Optional;
 
@@ -56,7 +54,7 @@ public class CommitService implements CommitSPI {
     public void delete(Long id) {
         if (repository.existsById(id))
             repository.deleteById(id);
-        else throw new EntityNotFoundException();
+        else throw new NoEntityFoundException();
     }
 
     @Override

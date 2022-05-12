@@ -7,7 +7,6 @@ import cz.cvut.fit.sp1.githubreports.model.project.Tag;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.EntityNotFoundException;
 import java.util.Collection;
 import java.util.Optional;
 
@@ -58,6 +57,6 @@ public class TagService implements TagSPI {
     public void delete(Long id) {
         if (repository.existsById(id))
             repository.deleteById(id);
-        else throw new EntityNotFoundException();
+        else throw new NoEntityFoundException();
     }
 }

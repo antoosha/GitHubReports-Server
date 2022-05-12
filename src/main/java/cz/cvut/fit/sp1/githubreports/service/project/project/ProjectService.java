@@ -1,16 +1,15 @@
 package cz.cvut.fit.sp1.githubreports.service.project.project;
 
 import cz.cvut.fit.sp1.githubreports.api.exceptions.EntityStateException;
+import cz.cvut.fit.sp1.githubreports.api.exceptions.NoEntityFoundException;
 import cz.cvut.fit.sp1.githubreports.dao.project.ProjectJpaRepository;
 import cz.cvut.fit.sp1.githubreports.dao.user.UserJpaRepository;
 import cz.cvut.fit.sp1.githubreports.model.project.Project;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.EntityNotFoundException;
 import java.time.LocalDateTime;
 import java.util.Collection;
-import java.util.List;
 import java.util.Optional;
 
 @AllArgsConstructor
@@ -71,6 +70,6 @@ public class ProjectService implements ProjectSPI {
     public void delete(Long id) {
         if (projectJpaRepository.existsById(id))
             projectJpaRepository.deleteById(id);
-        else throw new EntityNotFoundException();
+        else throw new NoEntityFoundException();
     }
 }
