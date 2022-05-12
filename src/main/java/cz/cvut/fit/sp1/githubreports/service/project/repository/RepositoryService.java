@@ -16,7 +16,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
-import javax.persistence.EntityNotFoundException;
 import javax.persistence.PersistenceContext;
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -88,7 +87,8 @@ public class RepositoryService implements RepositorySPI {
             List<Commit> oldCommits = repository.getCommits();
             List<GHCommit> ghCommits = ghRepository.listCommits().withPageSize(1).toList();
 
-            /**1) If commit exists in our app and in GitHub then set deleted flag to false.
+            /**
+             * 1) If commit exists in our app and in GitHub then set deleted flag to false.
              * 2) If commit doesn't exist in our app and exists in GitHub then pull commits from GitHub.
              * 3) If commit exists in our app and doesn't exist in GitHub then change deleted flag to true.
              */
@@ -174,7 +174,7 @@ public class RepositoryService implements RepositorySPI {
     public void delete(Long id) {
         if (jpaRepository.existsById(id))
             jpaRepository.deleteById(id);
-        else throw new EntityNotFoundException();
+        else throw new NoEntityFoundException();
     }
 
     @Override

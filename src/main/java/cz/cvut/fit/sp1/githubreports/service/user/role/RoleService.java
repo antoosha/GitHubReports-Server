@@ -1,12 +1,12 @@
 package cz.cvut.fit.sp1.githubreports.service.user.role;
 
 import cz.cvut.fit.sp1.githubreports.api.exceptions.EntityStateException;
+import cz.cvut.fit.sp1.githubreports.api.exceptions.NoEntityFoundException;
 import cz.cvut.fit.sp1.githubreports.dao.user.RoleJpaRepository;
 import cz.cvut.fit.sp1.githubreports.model.user.Role;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.EntityNotFoundException;
 import java.util.Collection;
 import java.util.Optional;
 
@@ -42,6 +42,6 @@ public class RoleService implements RoleSPI {
     public void delete(String id) {
         if (repository.existsById(id))
             repository.deleteById(id);
-        else throw new EntityNotFoundException();
+        else throw new NoEntityFoundException();
     }
 }
