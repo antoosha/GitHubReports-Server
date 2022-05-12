@@ -8,14 +8,17 @@ import cz.cvut.fit.sp1.githubreports.api.exceptions.NoEntityFoundException;
 import cz.cvut.fit.sp1.githubreports.service.project.project.ProjectConverter;
 import cz.cvut.fit.sp1.githubreports.service.user.user.UserConverter;
 import cz.cvut.fit.sp1.githubreports.service.user.user.UserSPI;
+import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
+import java.io.*;
 import java.util.*;
 
 @RestController
@@ -158,12 +161,55 @@ public class UserController {
     }
 
     /**
-         Get new access token.
-         GET: "/users/token/refresh"
+     * Get new access token.
+     * GET: "/users/token/refresh"
      */
     @GetMapping("/token/refresh")
-    public void refreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        userSPI.refreshToken(request, response, secret, expirationTimeAccessToken);
+    public void refreshToken(HttpServletRequest request, HttpServletResponse response) {
+        try {
+            userSPI.refreshToken(request, response, secret, expirationTimeAccessToken);
+        } catch (IOException e) {
+            throw new EntityStateException(e.getMessage());
+        }
+    }
+
+    /**
+     * Save user's photo
+     * ONLY .jpg
+     *
+     * @param username
+     * @param multipartFile
+     * @throws EntityStateException
+     */
+    @PostMapping("/{username}/save/photo")
+    public void saveUserPhoto(@PathVariable("username") String username, @RequestParam("photo") MultipartFile multipartFile) throws EntityStateException {
+        userSPI.savePhoto(username, multipartFile);
+    }
+
+    /**
+     * Get user's photo
+     * @param id
+     * @return photo in jpg format
+     * @throws EntityStateException
+     */
+    @GetMapping(
+            value = "/{id}/photo",
+            produces = MediaType.IMAGE_JPEG_VALUE
+    )
+    public @ResponseBody byte[] getImageWithMediaType(@PathVariable("id") Long id) throws EntityStateException {
+        InputStream is = null;
+        byte[] bytes = null;
+        try {
+            is = new FileInputStream("src/main/resources/serverData/images/userPhotos/" + id + "/photo.jpg");
+        } catch (FileNotFoundException e) {
+            throw new NoEntityFoundException();
+        }
+        try {
+            bytes = IOUtils.toByteArray(is);
+        } catch (IOException ioe) {
+            throw new EntityStateException("Problem with sending response bytes");
+        }
+        return bytes;
     }
 
 }
