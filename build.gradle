@@ -32,6 +32,18 @@ dependencies {
 	testImplementation 'org.springframework.security:spring-security-test'
 }
 
+springBoot {
+	mainClass = 'cz.cvut.fit.sp1.githubreports.GithubReportsApplication'
+}
+
+bootJar {
+	archiveFileName = 'githubreports.jar'
+}
+
+jar {
+	enabled = false
+}
+
 tasks.named('test') {
 	useJUnitPlatform()
 }
