@@ -19,9 +19,16 @@ public class TagService implements TagSPI {
     private void checkValidation(Tag tag) {
         if (tag.getProject() == null)
             throw new EntityStateException();
-        if (tag.getProject().getTags().stream()
-                .anyMatch(tag1 -> tag1.getTagName().equals(tag.getTagName())))
-            throw new EntityStateException();
+        if (tag.getTagId() != null) {
+            if (!tag.getTagName().equals(repository.findById(tag.getTagId()).get().getTagName()))
+                if (tag.getProject().getTags().stream()
+                        .anyMatch(tag1 -> tag1.getTagName().equals(tag.getTagName())))
+                    throw new EntityStateException();
+        } else {
+            if (tag.getProject().getTags().stream()
+                    .anyMatch(tag1 -> tag1.getTagName().equals(tag.getTagName())))
+                throw new EntityStateException();
+        }
     }
 
     @Override
@@ -41,7 +48,6 @@ public class TagService implements TagSPI {
                 throw new EntityStateException();
         }
         checkValidation(tag);
-        System.out.println(tag.getTagId() + " " + tag.getProject().getProjectId());
         return repository.save(tag);
     }
 
