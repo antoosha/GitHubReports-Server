@@ -2,12 +2,15 @@ package cz.cvut.fit.sp1.githubreports.api.controller.user;
 
 import cz.cvut.fit.sp1.githubreports.api.dto.project.ProjectDTO;
 import cz.cvut.fit.sp1.githubreports.api.dto.user.UserDTO;
+import cz.cvut.fit.sp1.githubreports.api.dto.user.UserUpdateDTO;
 import cz.cvut.fit.sp1.githubreports.api.exceptions.EntityStateException;
 import cz.cvut.fit.sp1.githubreports.api.exceptions.IncorrectRequestException;
 import cz.cvut.fit.sp1.githubreports.api.exceptions.NoEntityFoundException;
+import cz.cvut.fit.sp1.githubreports.model.user.User;
 import cz.cvut.fit.sp1.githubreports.service.project.project.ProjectConverter;
 import cz.cvut.fit.sp1.githubreports.service.user.user.UserConverter;
 import cz.cvut.fit.sp1.githubreports.service.user.user.UserSPI;
+import cz.cvut.fit.sp1.githubreports.service.user.user.UserUpdateConverter;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -33,16 +36,20 @@ public class UserController {
     private final Integer expirationTimeAccessToken;
     private final UserSPI userSPI;
     private final UserConverter userConverter;
+    private final UserUpdateConverter userUpdateConverter;
     private final ProjectConverter projectConverter;
 
     public UserController(@Value("${my.secret}") String secret,
                           @Value("${expiration.time.access}") Integer expirationTimeAccessToken,
                           @Qualifier("UserService") UserSPI userSPI,
-                          UserConverter userConverter, ProjectConverter projectConverter) {
+                          UserConverter userConverter,
+                          UserUpdateConverter userUpdateConverter,
+                          ProjectConverter projectConverter) {
         this.secret = secret;
         this.expirationTimeAccessToken = expirationTimeAccessToken;
         this.userSPI = userSPI;
         this.userConverter = userConverter;
+        this.userUpdateConverter = userUpdateConverter;
         this.projectConverter = projectConverter;
     }
 
@@ -141,10 +148,37 @@ public class UserController {
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ROLE_ADMIN') || @UserService.hasId(#id)")
     public UserDTO update(@PathVariable Long id, @RequestBody UserDTO userDTO) throws IncorrectRequestException, EntityStateException {
-        //System.out.println(userDTO.getUserId() + " " +  userDTO.getUsername());
         if (!userDTO.getUserId().equals(id))
             throw new IncorrectRequestException();
         return userConverter.fromModel(userSPI.update(userDTO.getUserId(), userConverter.toModel(userDTO)));
+    }
+
+    /**
+     Update user by id without changing the password . Client must have admin role for this method or call this method with his id.
+     PUT: "/users/{id}"
+
+     Request body example (only required parameters):
+     {
+     "userId": 1,
+     "username": "username",
+     "email": "userMail",
+     "pathToFileWithPhoto": "photo",
+     "commentsIDs": [],
+     "projectsIDs": [],
+     "createdProjectsIDs": [],
+     "statisticsIDs": [],
+     "rolesIDs": [
+     "ROLE_DEVELOPER"
+     ]
+     }
+     @return updated user.
+     */
+    @PatchMapping("/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN') || @UserService.hasId(#id)")
+    public UserUpdateDTO update(@PathVariable Long id, @RequestBody UserUpdateDTO userUpdateDTO) throws IncorrectRequestException, EntityStateException {
+        if (!userUpdateDTO.getUserId().equals(id))
+            throw new IncorrectRequestException();
+        return userUpdateConverter.fromModel(userSPI.updateWithoutPassword(userUpdateDTO.getUserId(), userUpdateConverter.toModel(userUpdateDTO)));
     }
 
     /**

@@ -112,6 +112,15 @@ public class UserService implements UserSPI {
     }
 
     @Override
+    public User updateWithoutPassword(Long id, User user) throws EntityStateException {
+        if (id == null || !userJpaRepository.existsById(id))
+            throw new NoEntityFoundException();
+        User userOld = userJpaRepository.getById(id);
+        user.setPassword(userOld.getPassword());
+        return update(id, user);
+    }
+
+    @Override
     public void delete(Long id) {
         if (userJpaRepository.existsById(id)) {
             if (!userJpaRepository.getById(id).getCreatedProjects().isEmpty())

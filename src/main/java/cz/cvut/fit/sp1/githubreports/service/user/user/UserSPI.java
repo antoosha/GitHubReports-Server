@@ -23,6 +23,8 @@ public interface UserSPI {
 
     User update(Long id, User user) throws EntityStateException;
 
+    User updateWithoutPassword(Long id, User user) throws EntityStateException;
+
     void delete(Long id);
 
     Collection<Project> getAllUserProjects(Long id);
