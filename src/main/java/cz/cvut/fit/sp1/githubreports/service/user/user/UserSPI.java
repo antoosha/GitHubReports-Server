@@ -21,7 +21,7 @@ public interface UserSPI {
 
     User create(User user) throws EntityStateException;
 
-    User update(Long id, User user) throws EntityStateException;
+    User WithPassword(Long id, User user) throws EntityStateException;
 
     User updateWithoutPassword(Long id, User user) throws EntityStateException;
 

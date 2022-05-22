@@ -6,7 +6,6 @@ import cz.cvut.fit.sp1.githubreports.api.dto.user.UserUpdateDTO;
 import cz.cvut.fit.sp1.githubreports.api.exceptions.EntityStateException;
 import cz.cvut.fit.sp1.githubreports.api.exceptions.IncorrectRequestException;
 import cz.cvut.fit.sp1.githubreports.api.exceptions.NoEntityFoundException;
-import cz.cvut.fit.sp1.githubreports.model.user.User;
 import cz.cvut.fit.sp1.githubreports.service.project.project.ProjectConverter;
 import cz.cvut.fit.sp1.githubreports.service.user.user.UserConverter;
 import cz.cvut.fit.sp1.githubreports.service.user.user.UserSPI;
@@ -150,7 +149,7 @@ public class UserController {
     public UserDTO update(@PathVariable Long id, @RequestBody UserDTO userDTO) throws IncorrectRequestException, EntityStateException {
         if (!userDTO.getUserId().equals(id))
             throw new IncorrectRequestException();
-        return userConverter.fromModel(userSPI.update(userDTO.getUserId(), userConverter.toModel(userDTO)));
+        return userConverter.fromModel(userSPI.WithPassword(userDTO.getUserId(), userConverter.toModel(userDTO)));
     }
 
     /**

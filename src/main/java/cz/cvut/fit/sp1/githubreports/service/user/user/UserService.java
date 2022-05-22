@@ -93,8 +93,7 @@ public class UserService implements UserSPI {
         return userJpaRepository.save(user);
     }
 
-    @Override
-    public User update(Long id, User user) throws EntityStateException {
+    private void update(Long id, User user) {
         if (id == null || !userJpaRepository.existsById(id))
             throw new NoEntityFoundException();
         User userOld = userJpaRepository.getById(id);
@@ -104,20 +103,24 @@ public class UserService implements UserSPI {
         if (!userOld.getUsername().equals(user.getUsername()))
             if (userJpaRepository.findUserByUsername(user.getUsername()).isPresent())
                 throw new EntityStateException();
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
         if (!user.getUsername().equals(userOld.getUsername())) {
             user.getComments().forEach(comment -> comment.setAuthorUsername(user.getUsername()));
         }
+    }
+
+    @Override
+    public User WithPassword(Long id, User user) throws EntityStateException {
+        update(id, user);
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+
         return userJpaRepository.save(user);
     }
 
     @Override
     public User updateWithoutPassword(Long id, User user) throws EntityStateException {
-        if (id == null || !userJpaRepository.existsById(id))
-            throw new NoEntityFoundException();
-        User userOld = userJpaRepository.getById(id);
-        user.setPassword(userOld.getPassword());
-        return update(id, user);
+        update(id, user);
+        user.setPassword(userJpaRepository.getById(id).getPassword());
+        return userJpaRepository.save(user);
     }
 
     @Override
