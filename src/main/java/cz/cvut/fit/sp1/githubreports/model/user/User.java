@@ -32,11 +32,14 @@ public class User {
 
     private String pathToFileWithPhoto;
 
-    @OneToMany(mappedBy = "commentId")
+    @OneToMany(mappedBy = "author")
     private List<Comment> comments;
 
     @ManyToMany(mappedBy = "users")
     private List<Project> projects;
+
+    @OneToMany(mappedBy = "author")
+    private List<Project> createdProjects;
 
     @OneToMany(mappedBy = "statisticId")
     private List<Statistic> statistics;
@@ -68,9 +71,13 @@ public class User {
                 "userId=" + userId +
                 ", username='" + username + '\'' +
                 ", email='" + email + '\'' +
-                ", projects=" + projects +
-                ", roles=" + roles +
+                ", password='" + password + '\'' +
+                ", pathToFileWithPhoto='" + pathToFileWithPhoto + '\'' +
+                ", commentsIDs=" + comments.stream().map(Comment::getCommentId) +
+                ", projectsIDs=" + projects.stream().map(Project::getProjectId) +
+                ", createdProjectsIDs=" + createdProjects.stream().map(Project::getProjectId) +
+                ", statisticsIDs=" + statistics.stream().map(Statistic::getStatisticId) +
+                ", roles=" + roles.stream().map(Role::getRoleName) +
                 '}';
     }
-
 }

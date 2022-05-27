@@ -1,38 +1,38 @@
 package cz.cvut.fit.sp1.githubreports.service.project.project;
 
 import cz.cvut.fit.sp1.githubreports.api.dto.project.ProjectDTO;
+import cz.cvut.fit.sp1.githubreports.api.exceptions.IncorrectRequestException;
 import cz.cvut.fit.sp1.githubreports.model.project.Project;
 import cz.cvut.fit.sp1.githubreports.model.project.Repository;
 import cz.cvut.fit.sp1.githubreports.model.project.Tag;
 import cz.cvut.fit.sp1.githubreports.model.statistic.Statistic;
 import cz.cvut.fit.sp1.githubreports.model.user.User;
-import cz.cvut.fit.sp1.githubreports.service.project.repository.RepositoryService;
-import cz.cvut.fit.sp1.githubreports.service.project.tag.TagService;
-import cz.cvut.fit.sp1.githubreports.service.statistic.statistic.StatisticService;
-import cz.cvut.fit.sp1.githubreports.service.user.user.UserService;
+import cz.cvut.fit.sp1.githubreports.service.project.repository.RepositorySPI;
+import cz.cvut.fit.sp1.githubreports.service.project.tag.TagSPI;
+import cz.cvut.fit.sp1.githubreports.service.statistic.statistic.StatisticSPI;
+import cz.cvut.fit.sp1.githubreports.service.user.user.UserSPI;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
-import javax.persistence.Converter;
-import java.util.List;
+import java.util.Collection;
 import java.util.stream.Collectors;
 
 @Component
 @AllArgsConstructor
 public class ProjectConverter {
 
-    private final UserService userService;
-    private final RepositoryService repositoryService;
-    private final StatisticService statisticService;
-    private final TagService tagService;
+    private final UserSPI userSPI;
+    private final RepositorySPI repositorySPI;
+    private final StatisticSPI statisticSPI;
+    private final TagSPI tagSPI;
 
     public Project toModel(ProjectDTO projectDTO) {
         return new Project(projectDTO.getProjectID(), projectDTO.getCreatedDate(), projectDTO.getProjectName(), projectDTO.getDescription(),
-                userService.readById(projectDTO.getAuthorID()).orElseThrow(RuntimeException::new),
-                projectDTO.getRepositoriesIDs().stream().map(repositoryID -> repositoryService.readById(repositoryID).orElseThrow(RuntimeException::new)).collect(Collectors.toList()),
-                projectDTO.getStatisticsIDs().stream().map(statisticID -> statisticService.readById(statisticID).orElseThrow(RuntimeException::new)).collect(Collectors.toList()),
-                projectDTO.getUsersIDs().stream().map(userID -> userService.readById(userID).orElseThrow(RuntimeException::new)).collect(Collectors.toList()),
-                projectDTO.getTagsIDs().stream().map(tagID -> tagService.readById(tagID).orElseThrow(RuntimeException::new)).collect(Collectors.toList())
+                userSPI.readById(projectDTO.getAuthorID()).orElseThrow(IncorrectRequestException::new),
+                projectDTO.getRepositoriesIDs().stream().map(repositoryID -> repositorySPI.readById(repositoryID).orElseThrow(IncorrectRequestException::new)).collect(Collectors.toList()),
+                projectDTO.getStatisticsIDs().stream().map(statisticID -> statisticSPI.readById(statisticID).orElseThrow(IncorrectRequestException::new)).collect(Collectors.toList()),
+                projectDTO.getUsersIDs().stream().map(userID -> userSPI.readById(userID).orElseThrow(IncorrectRequestException::new)).collect(Collectors.toList()),
+                projectDTO.getTagsIDs().stream().map(tagID -> tagSPI.readById(tagID).orElseThrow(IncorrectRequestException::new)).collect(Collectors.toList())
         );
     }
 
@@ -45,11 +45,11 @@ public class ProjectConverter {
         );
     }
 
-    public List<Project> toModelsMany(List<ProjectDTO> projectDTOs) {
+    public Collection<Project> toModelsMany(Collection<ProjectDTO> projectDTOs) {
         return projectDTOs.stream().map(this::toModel).toList();
     }
 
-    public List<ProjectDTO> fromModelsMany(List<Project> projects) {
+    public Collection<ProjectDTO> fromModelsMany(Collection<Project> projects) {
         return projects.stream().map(this::fromModel).toList();
     }
 }

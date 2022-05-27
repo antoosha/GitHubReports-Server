@@ -1,6 +1,7 @@
 package cz.cvut.fit.sp1.githubreports.service.user.role;
 
 
+import cz.cvut.fit.sp1.githubreports.api.exceptions.EntityStateException;
 import cz.cvut.fit.sp1.githubreports.model.user.Role;
 
 import java.util.Collection;
@@ -12,9 +13,9 @@ public interface RoleSPI {
 
     Optional<Role> readById(String id);
 
-    void create(Role role);
+    Role create(Role role) throws EntityStateException;
 
-    void update(String id, Role role);
+    Role update(String id, Role role) throws EntityStateException;
 
     void delete(String id);
 

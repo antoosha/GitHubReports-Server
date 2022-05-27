@@ -3,6 +3,7 @@ package cz.cvut.fit.sp1.githubreports.model.project;
 import cz.cvut.fit.sp1.githubreports.model.statistic.Statistic;
 import cz.cvut.fit.sp1.githubreports.model.user.User;
 import lombok.*;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -26,21 +27,17 @@ public class Project {
     @Column(nullable = false)
     private String projectName;
 
+    @Type(type = "text")
     private String description;
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User author;
 
-    @ManyToMany
-    @JoinTable(
-            name = "project_repository",
-            joinColumns = {@JoinColumn(name = "project_id")},
-            inverseJoinColumns = {@JoinColumn(name = "repository_id")}
-    )
+    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
     private List<Repository> repositories;
 
-    @OneToMany(mappedBy = "statisticId")
+    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
     private List<Statistic> statistics;
 
     @ManyToMany
@@ -51,7 +48,7 @@ public class Project {
     )
     private List<User> users;
 
-    @OneToMany(mappedBy = "tagId")
+    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
     private List<Tag> tags;
 
     @Override
@@ -74,11 +71,11 @@ public class Project {
                 ", createdDate=" + createdDate +
                 ", projectName='" + projectName + '\'' +
                 ", description='" + description + '\'' +
-                ", author=" + author +
-                ", repositories=" + repositories +
-                ", statistics=" + statistics +
-                ", users=" + users +
-                ", tags=" + tags +
+                ", authorUsername=" + author.getUsername() +
+                ", repositoriesIDs=" + repositories.stream().map(Repository::getRepositoryId) +
+                ", statisticsIDs=" + statistics.stream().map(Statistic::getStatisticId) +
+                ", usersIDs=" + users.stream().map(User::getUserId) +
+                ", tagsIDs=" + tags.stream().map(Tag::getTagId) +
                 '}';
     }
 }

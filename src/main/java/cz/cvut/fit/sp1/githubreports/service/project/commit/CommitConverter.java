@@ -1,16 +1,16 @@
 package cz.cvut.fit.sp1.githubreports.service.project.commit;
 
 import cz.cvut.fit.sp1.githubreports.api.dto.project.CommitDTO;
+import cz.cvut.fit.sp1.githubreports.api.exceptions.IncorrectRequestException;
 import cz.cvut.fit.sp1.githubreports.model.project.Comment;
 import cz.cvut.fit.sp1.githubreports.model.project.Commit;
 import cz.cvut.fit.sp1.githubreports.model.project.Tag;
-import cz.cvut.fit.sp1.githubreports.service.project.comment.CommentService;
-import cz.cvut.fit.sp1.githubreports.service.project.repository.RepositoryService;
-import cz.cvut.fit.sp1.githubreports.service.project.tag.TagService;
+import cz.cvut.fit.sp1.githubreports.service.project.comment.CommentSPI;
+import cz.cvut.fit.sp1.githubreports.service.project.repository.RepositorySPI;
+import cz.cvut.fit.sp1.githubreports.service.project.tag.TagSPI;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
-import javax.persistence.Converter;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
@@ -18,9 +18,9 @@ import java.util.stream.Collectors;
 @Component
 public class CommitConverter {
 
-    private final TagService tagService;
-    private final CommentService commentService;
-    private final RepositoryService repositoryService;
+    private final TagSPI tagSPI;
+    private final CommentSPI commentSPI;
+    private final RepositorySPI repositorySPI;
 
 
     public Commit toModel(CommitDTO commitDTO) {
@@ -30,9 +30,10 @@ public class CommitConverter {
                 commitDTO.getHashHubID(),
                 commitDTO.getLoginAuthor(),
                 commitDTO.getDescription(),
-                repositoryService.readById(commitDTO.getRepositoryID()).orElseThrow(RuntimeException::new),
-                commitDTO.getTagsIDs().stream().map(tagID -> tagService.readById(tagID).orElseThrow(RuntimeException::new)).collect(Collectors.toList()),
-                commitDTO.getCommentsIDs().stream().map(commentID -> commentService.readById(commentID).orElseThrow(RuntimeException::new)).collect(Collectors.toList())
+                commitDTO.isDeleted(),
+                repositorySPI.readById(commitDTO.getRepositoryID()).orElseThrow(IncorrectRequestException::new),
+                commitDTO.getTagsIDs().stream().map(tagID -> tagSPI.readById(tagID).orElseThrow(IncorrectRequestException::new)).collect(Collectors.toList()),
+                commitDTO.getCommentsIDs().stream().map(commentID -> commentSPI.readById(commentID).orElseThrow(IncorrectRequestException::new)).collect(Collectors.toList())
         );
     }
 
@@ -43,6 +44,7 @@ public class CommitConverter {
                 commit.getHashHubId(),
                 commit.getLoginAuthor(),
                 commit.getDescription(),
+                commit.isDeleted(),
                 commit.getRepository().getRepositoryId(),
                 commit.getTags().stream().map(Tag::getTagId).collect(Collectors.toList()),
                 commit.getComments().stream().map(Comment::getCommentId).collect(Collectors.toList())

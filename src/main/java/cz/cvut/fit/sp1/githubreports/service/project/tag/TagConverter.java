@@ -1,30 +1,30 @@
 package cz.cvut.fit.sp1.githubreports.service.project.tag;
 
 import cz.cvut.fit.sp1.githubreports.api.dto.project.TagDTO;
+import cz.cvut.fit.sp1.githubreports.api.exceptions.IncorrectRequestException;
 import cz.cvut.fit.sp1.githubreports.model.project.Commit;
 import cz.cvut.fit.sp1.githubreports.model.project.Tag;
-import cz.cvut.fit.sp1.githubreports.service.project.commit.CommitService;
-import cz.cvut.fit.sp1.githubreports.service.project.project.ProjectService;
+import cz.cvut.fit.sp1.githubreports.service.project.commit.CommitSPI;
+import cz.cvut.fit.sp1.githubreports.service.project.project.ProjectSPI;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
-import javax.persistence.Converter;
-import java.util.List;
+import java.util.Collection;
 import java.util.stream.Collectors;
 
 @AllArgsConstructor
 @Component
 public class TagConverter {
 
-    private final CommitService commitService;
-    private final ProjectService projectService;
+    private final CommitSPI commitSPI;
+    private final ProjectSPI projectSPI;
 
     public Tag toModel(TagDTO tagDTO) {
         return new Tag(
                 tagDTO.getTagID(),
                 tagDTO.getTagName(),
-                projectService.readById(tagDTO.getProjectID()).orElseThrow(RuntimeException::new),
-                tagDTO.getCommitsIDs().stream().map(tagID -> commitService.readById(tagID).orElseThrow(RuntimeException::new)).collect(Collectors.toList())
+                projectSPI.readById(tagDTO.getProjectID()).orElseThrow(IncorrectRequestException::new),
+                tagDTO.getCommitsIDs().stream().map(tagID -> commitSPI.readById(tagID).orElseThrow(IncorrectRequestException::new)).collect(Collectors.toList())
         );
     }
 
@@ -37,11 +37,11 @@ public class TagConverter {
         );
     }
 
-    public List<Tag> toModelsMany(List<TagDTO> tagDTOs) {
+    public Collection<Tag> toModelsMany(Collection<TagDTO> tagDTOs) {
         return tagDTOs.stream().map(this::toModel).collect(Collectors.toList());
     }
 
-    public List<TagDTO> fromModelsMany(List<Tag> tags) {
+    public Collection<TagDTO> fromModelsMany(Collection<Tag> tags) {
         return tags.stream().map(this::fromModel).collect(Collectors.toList());
     }
 }

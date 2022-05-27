@@ -1,5 +1,7 @@
 package cz.cvut.fit.sp1.githubreports.service.user.role;
 
+import cz.cvut.fit.sp1.githubreports.api.exceptions.EntityStateException;
+import cz.cvut.fit.sp1.githubreports.api.exceptions.NoEntityFoundException;
 import cz.cvut.fit.sp1.githubreports.dao.user.RoleJpaRepository;
 import cz.cvut.fit.sp1.githubreports.model.user.Role;
 import lombok.AllArgsConstructor;
@@ -10,7 +12,7 @@ import java.util.Optional;
 
 @AllArgsConstructor
 @Service
-public class RoleService implements RoleSPI{
+public class RoleService implements RoleSPI {
 
     private final RoleJpaRepository repository;
 
@@ -25,19 +27,21 @@ public class RoleService implements RoleSPI{
     }
 
     @Override
-    public void create(Role role) {
-        repository.save(role);
+    public Role create(Role role) throws EntityStateException {
+        if (repository.existsById(role.getRoleName())) throw new EntityStateException();
+        return repository.save(role);
     }
 
     @Override
-    public void update(String id, Role role) {
-        if (repository.existsById(id))
-            repository.save(role);
+    public Role update(String id, Role role) throws EntityStateException {
+        if (!repository.existsById(id)) throw new EntityStateException();
+        return repository.save(role);
     }
 
     @Override
     public void delete(String id) {
         if (repository.existsById(id))
             repository.deleteById(id);
+        else throw new NoEntityFoundException();
     }
 }

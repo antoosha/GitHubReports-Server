@@ -1,5 +1,7 @@
 package cz.cvut.fit.sp1.githubreports.service.project.commit;
 
+import cz.cvut.fit.sp1.githubreports.api.exceptions.EntityStateException;
+import cz.cvut.fit.sp1.githubreports.api.exceptions.NoEntityFoundException;
 import cz.cvut.fit.sp1.githubreports.dao.project.CommitJpaRepository;
 import cz.cvut.fit.sp1.githubreports.model.project.Commit;
 import lombok.AllArgsConstructor;
@@ -14,6 +16,12 @@ public class CommitService implements CommitSPI {
 
     CommitJpaRepository repository;
 
+    private void checkValidation(Commit commit) {
+        if (commit.getRepository() == null)
+            throw new EntityStateException();
+        if (commit.getLoginAuthor().isEmpty()) throw new EntityStateException();
+    }
+
     @Override
     public Collection<Commit> readAll() {
         return repository.findAll();
@@ -25,19 +33,33 @@ public class CommitService implements CommitSPI {
     }
 
     @Override
-    public void create(Commit commit) {
-        repository.save(commit);
+    public Commit create(Commit commit) throws EntityStateException {
+        if (commit.getCommitId() != null) {
+            if (repository.existsById(commit.getCommitId()))
+                throw new EntityStateException();
+        }
+        checkValidation(commit);
+        return repository.save(commit);
     }
 
     @Override
-    public void update(Long id, Commit commit) {
-        if (repository.existsById(id))
-            repository.save(commit);
+    public Commit update(Long id, Commit commit) throws EntityStateException {
+        if (id == null || !repository.existsById(id))
+            throw new NoEntityFoundException();
+        checkValidation(commit);
+        return repository.save(commit);
     }
 
     @Override
     public void delete(Long id) {
         if (repository.existsById(id))
             repository.deleteById(id);
+        else throw new NoEntityFoundException();
+    }
+
+    @Override
+    public void changeIsDeleted(Commit commit, boolean isDeleted) {
+        commit.setDeleted(isDeleted);
+        repository.save(commit);
     }
 }

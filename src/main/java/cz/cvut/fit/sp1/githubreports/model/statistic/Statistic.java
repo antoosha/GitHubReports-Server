@@ -3,6 +3,7 @@ package cz.cvut.fit.sp1.githubreports.model.statistic;
 import cz.cvut.fit.sp1.githubreports.model.project.Project;
 import cz.cvut.fit.sp1.githubreports.model.user.User;
 import lombok.*;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -35,6 +36,7 @@ public class Statistic {
     private Project project;
 
     @Column(nullable = false)
+    @Type(type = "text")
     private String pathToFileWithGeneratedStat;
 
     @Override
@@ -55,9 +57,9 @@ public class Statistic {
         return "Statistic{" +
                 "statisticId=" + statisticId +
                 ", createdDate=" + createdDate +
-                ", statisticType=" + statisticType +
-                ", author=" + author +
-                ", project=" + project +
+                ", statisticType=" + statisticType.getStatisticName() +
+                ", authorUsername=" + author.getUsername() +
+                ", projectID=" + project.getProjectId() +
                 '}';
     }
 }

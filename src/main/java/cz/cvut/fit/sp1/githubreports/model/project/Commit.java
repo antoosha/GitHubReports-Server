@@ -1,6 +1,7 @@
 package cz.cvut.fit.sp1.githubreports.model.project;
 
 import lombok.*;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -28,7 +29,11 @@ public class Commit {
     private String loginAuthor;
 
     @Column(nullable = false)
+    @Type(type = "text")
     private String description;
+
+    @Column(nullable = false)
+    private boolean isDeleted;
 
     @ManyToOne
     @JoinColumn(name = "repository_id", nullable = false)
@@ -42,7 +47,7 @@ public class Commit {
     )
     private List<Tag> tags;
 
-    @OneToMany(mappedBy = "commentId")
+    @OneToMany(mappedBy = "commit", cascade = CascadeType.ALL)
     private List<Comment> comments;
 
     @Override
@@ -61,14 +66,16 @@ public class Commit {
     @Override
     public String toString() {
         return "Commit{" +
-                "commitId=" + commitId +
+                "deleted=" + isDeleted() +
+                ", commitId=" + commitId +
                 ", createdDate=" + createdDate +
                 ", hashHubId='" + hashHubId + '\'' +
                 ", loginAuthor='" + loginAuthor + '\'' +
                 ", description='" + description + '\'' +
-                ", repository=" + repository +
-                ", tags=" + tags +
-                ", comments=" + comments +
+                ", isDeleted=" + isDeleted +
+                ", repositoryID=" + repository.getRepositoryId() +
+                ", tagsIDs=" + tags.stream().map(Tag::getTagId) +
+                ", commentsIDs=" + comments.stream().map(Comment::getCommentId) +
                 '}';
     }
 }

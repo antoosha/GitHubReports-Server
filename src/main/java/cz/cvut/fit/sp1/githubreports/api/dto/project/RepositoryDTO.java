@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.lang.NonNull;
+import org.springframework.lang.Nullable;
 
 import java.util.List;
 
@@ -15,7 +17,8 @@ public class RepositoryDTO {
 
     private Long repositoryID;
     private String repositoryName;
+    private String repositoryURL;
+    private Long projectID;
     private List<Long> commitsIDs;
-    private List<Long> projectsIDs;
 
 }

@@ -19,11 +19,15 @@ public class Repository {
     @Column(nullable = false)
     private String repositoryName;
 
-    @OneToMany(mappedBy = "commitId")
-    private List<Commit> commits;
+    @Column(nullable = false)
+    private String repositoryURL;
 
-    @ManyToMany(mappedBy = "repositories")
-    private List<Project> projects;
+    @ManyToOne
+    @JoinColumn(name = "project_id", nullable = false)
+    private Project project;
+
+    @OneToMany(mappedBy = "repository", cascade = CascadeType.ALL)
+    private List<Commit> commits;
 
     @Override
     public boolean equals(Object o) {
@@ -43,7 +47,9 @@ public class Repository {
         return "Repository{" +
                 "repositoryId=" + repositoryId +
                 ", repositoryName='" + repositoryName + '\'' +
-                ", projects=" + projects +
+                ", repositoryURL='" + repositoryURL + '\'' +
+                ", projectID=" + project.getProjectId() +
+                ", commitsIDs=" + commits.stream().map(Commit::getCommitId) +
                 '}';
     }
 }
