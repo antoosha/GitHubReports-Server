@@ -41,7 +41,7 @@ springBoot {
 openApiGenerate {
 	generatorName = "spring"
 	inputSpec = "$rootDir/src/main/resources/specification.yaml".toString()
-	outputDir = "$buildDir/generated".toString()
+	outputDir = "$rootDir/src/main/java/cz/cvut/fit/sp1/githubreports/api/generated".toString()
 	apiPackage = "org.openapi.api"
 	modelPackage = "org.openapi.model"
 	configOptions = [

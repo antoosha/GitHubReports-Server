@@ -10,7 +10,7 @@ paths:
     get:
       tags:
         - user-controller
-      operationId: getOne
+      operationId: getUser
       parameters:
         - name: id
           in: path
@@ -28,7 +28,7 @@ paths:
     put:
       tags:
         - user-controller
-      operationId: update
+      operationId: updateUser
       parameters:
         - name: id
           in: path
@@ -52,7 +52,7 @@ paths:
     delete:
       tags:
         - user-controller
-      operationId: delete
+      operationId: deleteUser
       parameters:
         - name: id
           in: path
