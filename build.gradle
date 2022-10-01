@@ -1,7 +1,7 @@
 plugins {
 	id 'org.springframework.boot' version '2.6.6'
 	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
-	id "org.openapi.generator" version "6.2.0"
+	id "org.openapi.generator" version "6.0.1"
 	id 'java'
 }
 
@@ -25,11 +25,6 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'com.auth0:java-jwt:3.19.1'
 	implementation 'org.kohsuke:github-api:1.306'
-	implementation 'org.openapitools:openapi-generator-maven-plugin:6.0.1'
-	implementation 'org.openapitools:jackson-databind-nullable:0.2.3'
-	implementation 'io.springfox:springfox-swagger2:3.0.0'
-	implementation 'org.slf4j:slf4j-api:2.0.1'
-
 //	implementation 'org.flywaydb:flyway-core'
 	compileOnly 'org.projectlombok:lombok'
 	runtimeOnly 'org.postgresql:postgresql'
@@ -37,6 +32,7 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'
 }
+
 
 springBoot {
 	mainClass = 'cz.cvut.fit.sp1.githubreports.GithubReportsApplication'
