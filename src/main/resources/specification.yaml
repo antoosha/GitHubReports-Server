@@ -1,0 +1,1197 @@
+openapi: 3.0.1
+info:
+  title: OpenAPI definition
+  version: v0
+servers:
+  - url: http://localhost:8080
+    description: Generated server url
+paths:
+  /users/{id}:
+    get:
+      tags:
+        - user-controller
+      operationId: getOne
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/UserDTO'
+    put:
+      tags:
+        - user-controller
+      operationId: update
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserDTO'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/UserDTO'
+    delete:
+      tags:
+        - user-controller
+      operationId: delete
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: OK
+    patch:
+      tags:
+        - user-controller
+      operationId: update_9
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserUpdateDTO'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/UserUpdateDTO'
+  /tags/{id}:
+    get:
+      tags:
+        - tag-controller
+      operationId: getOne_1
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/TagDTO'
+    put:
+      tags:
+        - tag-controller
+      operationId: update_1
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TagDTO'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/TagDTO'
+    delete:
+      tags:
+        - tag-controller
+      operationId: delete_1
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: OK
+  /statistics/{id}:
+    get:
+      tags:
+        - statistic-controller
+      operationId: getOne_2
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/StatisticDTO'
+    put:
+      tags:
+        - statistic-controller
+      operationId: update_2
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StatisticDTO'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/StatisticDTO'
+    delete:
+      tags:
+        - statistic-controller
+      operationId: delete_2
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: OK
+  /statisticTypes/{id}:
+    get:
+      tags:
+        - statistic-type-controller
+      operationId: getOne_3
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/StatisticTypeDTO'
+    put:
+      tags:
+        - statistic-type-controller
+      operationId: update_3
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StatisticTypeDTO'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/StatisticTypeDTO'
+    delete:
+      tags:
+        - statistic-type-controller
+      operationId: delete_3
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+  /roles/{roleName}:
+    put:
+      tags:
+        - role-controller
+      operationId: update_4
+      parameters:
+        - name: roleName
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RoleDTO'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/RoleDTO'
+  /repositories/{id}/{tokenAuth}:
+    put:
+      tags:
+        - repository-controller
+      operationId: update_5
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: tokenAuth
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RepositoryUpdateDTO'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/RepositoryDTO'
+  /repositories/synchronize/{id}/{tokenAuth}:
+    put:
+      tags:
+        - repository-controller
+      operationId: synchronize
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: tokenAuth
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/RepositoryDTO'
+  /projects/{id}:
+    get:
+      tags:
+        - project-controller
+      operationId: getOne_6
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ProjectDTO'
+    put:
+      tags:
+        - project-controller
+      operationId: update_6
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProjectDTO'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ProjectDTO'
+    delete:
+      tags:
+        - project-controller
+      operationId: delete_6
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: OK
+  /commits/{id}:
+    get:
+      tags:
+        - commit-controller
+      operationId: getOne_7
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/CommitDTO'
+    put:
+      tags:
+        - commit-controller
+      operationId: update_7
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CommitDTO'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/CommitDTO'
+    delete:
+      tags:
+        - commit-controller
+      operationId: delete_7
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: OK
+  /comments/{id}:
+    get:
+      tags:
+        - comment-controller
+      operationId: getOne_8
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/CommentDTO'
+    put:
+      tags:
+        - comment-controller
+      operationId: update_8
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CommentDTO'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/CommentDTO'
+    delete:
+      tags:
+        - comment-controller
+      operationId: delete_8
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: OK
+  /users:
+    get:
+      tags:
+        - user-controller
+      operationId: getAll
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UserDTO'
+    post:
+      tags:
+        - user-controller
+      operationId: create
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserDTO'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/UserDTO'
+  /users/{username}/save/photo:
+    post:
+      tags:
+        - user-controller
+      operationId: saveUserPhoto
+      parameters:
+        - name: username
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              required:
+                - photo
+              type: object
+              properties:
+                photo:
+                  type: string
+                  format: binary
+      responses:
+        '200':
+          description: OK
+  /tags:
+    get:
+      tags:
+        - tag-controller
+      operationId: getAll_1
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TagDTO'
+    post:
+      tags:
+        - tag-controller
+      operationId: create_1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TagDTO'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/TagDTO'
+  /statistics:
+    get:
+      tags:
+        - statistic-controller
+      operationId: getAll_2
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/StatisticDTO'
+    post:
+      tags:
+        - statistic-controller
+      operationId: create_2
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StatisticDTO'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/StatisticDTO'
+  /statisticTypes:
+    get:
+      tags:
+        - statistic-type-controller
+      operationId: getAll_3
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/StatisticTypeDTO'
+    post:
+      tags:
+        - statistic-type-controller
+      operationId: create_3
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StatisticTypeDTO'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/StatisticTypeDTO'
+  /roles:
+    get:
+      tags:
+        - role-controller
+      operationId: getAll_4
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/RoleDTO'
+    post:
+      tags:
+        - role-controller
+      operationId: create_4
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RoleDTO'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/RoleDTO'
+  /repositories/{tokenAuth}:
+    post:
+      tags:
+        - repository-controller
+      operationId: create_5
+      parameters:
+        - name: tokenAuth
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RepositoryDTO'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/RepositoryDTO'
+  /projects:
+    get:
+      tags:
+        - project-controller
+      operationId: getAll_6
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ProjectDTO'
+    post:
+      tags:
+        - project-controller
+      operationId: create_6
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProjectDTO'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ProjectDTO'
+  /commits:
+    get:
+      tags:
+        - commit-controller
+      operationId: getAll_7
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CommitDTO'
+    post:
+      tags:
+        - commit-controller
+      operationId: create_7
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CommitDTO'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/CommitDTO'
+  /comments:
+    get:
+      tags:
+        - comment-controller
+      operationId: getAll_8
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CommentDTO'
+    post:
+      tags:
+        - comment-controller
+      operationId: create_8
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CommentDTO'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/CommentDTO'
+  /users/{id}/projects:
+    get:
+      tags:
+        - user-controller
+      operationId: getAllUserProjects
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ProjectDTO'
+  /users/{id}/photo:
+    get:
+      tags:
+        - user-controller
+      operationId: getImageWithMediaType
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: OK
+          content:
+            image/jpeg:
+              schema:
+                type: array
+                items:
+                  type: string
+                  format: byte
+  /users/username/{username}:
+    get:
+      tags:
+        - user-controller
+      operationId: getOneByUsername
+      parameters:
+        - name: username
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/UserDTO'
+  /users/token/refresh:
+    get:
+      tags:
+        - user-controller
+      operationId: refreshToken
+      responses:
+        '200':
+          description: OK
+  /roles/{id}:
+    get:
+      tags:
+        - role-controller
+      operationId: getOne_4
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/RoleDTO'
+    delete:
+      tags:
+        - role-controller
+      operationId: delete_4
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+  /repositories:
+    get:
+      tags:
+        - repository-controller
+      operationId: getAll_5
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/RepositoryDTO'
+  /repositories/{id}:
+    get:
+      tags:
+        - repository-controller
+      operationId: getOne_5
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/RepositoryDTO'
+    delete:
+      tags:
+        - repository-controller
+      operationId: delete_5
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: OK
+components:
+  schemas:
+    UserDTO:
+      type: object
+      properties:
+        userId:
+          type: integer
+          format: int64
+        username:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+        pathToFileWithPhoto:
+          type: string
+        commentsIDs:
+          type: array
+          items:
+            type: integer
+            format: int64
+        projectsIDs:
+          type: array
+          items:
+            type: integer
+            format: int64
+        createdProjectsIDs:
+          type: array
+          items:
+            type: integer
+            format: int64
+        statisticsIDs:
+          type: array
+          items:
+            type: integer
+            format: int64
+        rolesIDs:
+          type: array
+          items:
+            type: string
+    TagDTO:
+      type: object
+      properties:
+        tagID:
+          type: integer
+          format: int64
+        tagName:
+          type: string
+        projectID:
+          type: integer
+          format: int64
+        commitsIDs:
+          type: array
+          items:
+            type: integer
+            format: int64
+    StatisticDTO:
+      type: object
+      properties:
+        statisticId:
+          type: integer
+          format: int64
+        createdDate:
+          type: string
+          format: date-time
+        statisticTypeName:
+          type: string
+        authorID:
+          type: integer
+          format: int64
+        projectID:
+          type: integer
+          format: int64
+        pathToFileWithGeneratedStat:
+          type: string
+    StatisticTypeDTO:
+      type: object
+      properties:
+        statisticName:
+          type: string
+        statisticsIDs:
+          type: array
+          items:
+            type: integer
+            format: int64
+    RoleDTO:
+      type: object
+      properties:
+        roleName:
+          type: string
+        usersIDs:
+          type: array
+          items:
+            type: integer
+            format: int64
+    RepositoryUpdateDTO:
+      type: object
+      properties:
+        repositoryID:
+          type: integer
+          format: int64
+        repositoryName:
+          type: string
+        repositoryURL:
+          type: string
+        projectID:
+          type: integer
+          format: int64
+    RepositoryDTO:
+      type: object
+      properties:
+        repositoryID:
+          type: integer
+          format: int64
+        repositoryName:
+          type: string
+        repositoryURL:
+          type: string
+        projectID:
+          type: integer
+          format: int64
+        commitsIDs:
+          type: array
+          items:
+            type: integer
+            format: int64
+    ProjectDTO:
+      type: object
+      properties:
+        projectID:
+          type: integer
+          format: int64
+        createdDate:
+          type: string
+          format: date-time
+        projectName:
+          type: string
+        description:
+          type: string
+        authorID:
+          type: integer
+          format: int64
+        repositoriesIDs:
+          type: array
+          items:
+            type: integer
+            format: int64
+        statisticsIDs:
+          type: array
+          items:
+            type: integer
+            format: int64
+        usersIDs:
+          type: array
+          items:
+            type: integer
+            format: int64
+        tagsIDs:
+          type: array
+          items:
+            type: integer
+            format: int64
+    CommitDTO:
+      type: object
+      properties:
+        commitID:
+          type: integer
+          format: int64
+        createdDate:
+          type: string
+          format: date-time
+        hashHubID:
+          type: string
+        loginAuthor:
+          type: string
+        description:
+          type: string
+        repositoryID:
+          type: integer
+          format: int64
+        tagsIDs:
+          type: array
+          items:
+            type: integer
+            format: int64
+        commentsIDs:
+          type: array
+          items:
+            type: integer
+            format: int64
+        deleted:
+          type: boolean
+    CommentDTO:
+      type: object
+      properties:
+        commentID:
+          type: integer
+          format: int64
+        text:
+          type: string
+        createdDate:
+          type: string
+          format: date-time
+        authorID:
+          type: integer
+          format: int64
+        authorUsername:
+          type: string
+        commitID:
+          type: integer
+          format: int64
+    UserUpdateDTO:
+      type: object
+      properties:
+        userId:
+          type: integer
+          format: int64
+        username:
+          type: string
+        email:
+          type: string
+        pathToFileWithPhoto:
+          type: string
+        commentsIDs:
+          type: array
+          items:
+            type: integer
+            format: int64
+        projectsIDs:
+          type: array
+          items:
+            type: integer
+            format: int64
+        createdProjectsIDs:
+          type: array
+          items:
+            type: integer
+            format: int64
+        statisticsIDs:
+          type: array
+          items:
+            type: integer
+            format: int64
+        rolesIDs:
+          type: array
+          items:
+            type: string
