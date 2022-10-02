@@ -6,7 +6,7 @@ variables:
   GRADLE_OPTS: "-Dorg.gradle.daemon=false"
   POSTGRES_DB: "postgres"
   POSTGRES_USER: "postgres"
-  POSTGRES_PASSWORD: "password"
+  POSTGRES_PASSWORD: "postgres"
 
 Build Gradle:
   image: amazoncorretto:17-alpine
