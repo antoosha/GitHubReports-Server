@@ -393,14 +393,17 @@ paths:
             '*/*':
               schema:
                 $ref: '#/components/schemas/RepositoryDTO'
-  /projects/{id}:
+  /projects/{projectID}:
     get:
       tags:
         - project-controller
       operationId: getProject
+      summary: Find project by ID
+      description: Return a single project by ID
       parameters:
-        - name: id
+        - name: projectID
           in: path
+          description: ID of project
           required: true
           schema:
             type: integer
@@ -409,16 +412,21 @@ paths:
         '200':
           description: OK
           content:
-            '*/*':
+            'application/json':
               schema:
                 $ref: '#/components/schemas/ProjectDTO'
+        '404':
+          description: Project not found
     put:
       tags:
         - project-controller
       operationId: updateProject
+      summary: Update project by ID
+      description: Update an existing project by ID
       parameters:
-        - name: id
+        - name: projectID
           in: path
+          description: ID of project
           required: true
           schema:
             type: integer
@@ -433,16 +441,21 @@ paths:
         '200':
           description: OK
           content:
-            '*/*':
+            'application/json':
               schema:
                 $ref: '#/components/schemas/ProjectDTO'
+        '404':
+          description: Project not found
     delete:
       tags:
         - project-controller
       operationId: deleteProject
+      summary: Delete project by ID
+      description: Delete an existing project by ID
       parameters:
-        - name: id
+        - name: projectID
           in: path
+          description: ID of project
           required: true
           schema:
             type: integer
@@ -450,14 +463,19 @@ paths:
       responses:
         '200':
           description: OK
-  /commits/{id}:
+        '404':
+          description: Project not found
+  /commits/{commitsID}:
     get:
       tags:
         - commit-controller
       operationId: getCommit
+      summary: Find commit by ID
+      description: Return a single commit by ID
       parameters:
-        - name: id
+        - name: commitsID
           in: path
+          description: ID of commit
           required: true
           schema:
             type: integer
@@ -466,16 +484,21 @@ paths:
         '200':
           description: OK
           content:
-            '*/*':
+            'application/json':
               schema:
                 $ref: '#/components/schemas/CommitDTO'
+        '404':
+          description: Commit not found
     put:
       tags:
         - commit-controller
       operationId: updateCommit
+      summary: Update commit by ID
+      description: Update an existing commit by ID
       parameters:
-        - name: id
+        - name: commitsID
           in: path
+          description: ID of commit
           required: true
           schema:
             type: integer
@@ -490,16 +513,21 @@ paths:
         '200':
           description: OK
           content:
-            '*/*':
+            'application/json':
               schema:
                 $ref: '#/components/schemas/CommitDTO'
+        '404':
+          description: Commit not found
     delete:
       tags:
         - commit-controller
       operationId: deleteCommit
+      summary: Delete commit by ID
+      description: Delete an existing commit by ID
       parameters:
-        - name: id
+        - name: commitsID
           in: path
+          description: ID of commit
           required: true
           schema:
             type: integer
@@ -507,14 +535,19 @@ paths:
       responses:
         '200':
           description: OK
-  /comments/{id}:
+        '404':
+          description: Commit not found
+  /comments/{commentID}:
     get:
       tags:
         - comment-controller
       operationId: getComment
+      summary: Find comment by ID
+      description: Return a single comment by ID
       parameters:
-        - name: id
+        - name: commentID
           in: path
+          description: ID of comment
           required: true
           schema:
             type: integer
@@ -523,16 +556,21 @@ paths:
         '200':
           description: OK
           content:
-            '*/*':
+            'application/json':
               schema:
                 $ref: '#/components/schemas/CommentDTO'
+        '404':
+          description: Comment not found
     put:
       tags:
         - comment-controller
       operationId: updateComment
+      summary: Update comment by ID
+      description: Update an existing comment by ID
       parameters:
-        - name: id
+        - name: commentID
           in: path
+          description: ID of comment
           required: true
           schema:
             type: integer
@@ -547,16 +585,21 @@ paths:
         '200':
           description: OK
           content:
-            '*/*':
+            'application/json':
               schema:
                 $ref: '#/components/schemas/CommentDTO'
+        '404':
+          description: Comment not found
     delete:
       tags:
         - comment-controller
       operationId: deleteComment
+      summary: Delete comment by ID
+      description: Delete an existing comment by ID
       parameters:
-        - name: id
+        - name: commentID
           in: path
+          description: ID of comment
           required: true
           schema:
             type: integer
@@ -564,6 +607,8 @@ paths:
       responses:
         '200':
           description: OK
+        '404':
+          description: Comment not found
   /users:
     get:
       tags:
@@ -760,6 +805,7 @@ paths:
       operationId: createRepository
       parameters:
         - name: tokenAuth
+          description: Authorization token from an github account
           in: path
           required: true
           schema:
@@ -954,14 +1000,17 @@ paths:
       responses:
         '200':
           description: OK
-  /roles/{id}:
+  /roles/{roleID}:
     get:
       tags:
         - role-controller
       operationId: getRole
+      summary: Find role by ID
+      description: Return a single role by ID
       parameters:
-        - name: id
+        - name: roleID
           in: path
+          description: ID of role
           required: true
           schema:
             type: string
@@ -969,44 +1018,56 @@ paths:
         '200':
           description: OK
           content:
-            '*/*':
+            'application/json':
               schema:
                 $ref: '#/components/schemas/RoleDTO'
+        '404':
+          description: Role not found
     delete:
       tags:
         - role-controller
       operationId: deleteRole
+      summary: Delete role by ID
+      description: Delete an existing role by ID
       parameters:
-        - name: id
+        - name: roleID
           in: path
+          description: ID of role
           required: true
           schema:
             type: string
       responses:
         '200':
           description: OK
+        '404':
+          description: Role not found
   /repositories:
     get:
       tags:
         - repository-controller
       operationId: getRepositories
+      summary: Get all repositories
+      description: Get all repositories
       responses:
         '200':
           description: OK
           content:
-            '*/*':
+            'application/json':
               schema:
                 type: array
                 items:
                   $ref: '#/components/schemas/RepositoryDTO'
-  /repositories/{id}:
+  /repositories/{repositoryID}:
     get:
       tags:
         - repository-controller
       operationId: getRepository
+      summary: Find repository by ID
+      description: Return a single repository by ID
       parameters:
-        - name: id
+        - name: repositoryID
           in: path
+          description: ID of repository
           required: true
           schema:
             type: integer
@@ -1015,16 +1076,21 @@ paths:
         '200':
           description: OK
           content:
-            '*/*':
+            'application/json':
               schema:
                 $ref: '#/components/schemas/RepositoryDTO'
+        '404':
+          description: Repository not found
     delete:
       tags:
         - repository-controller
       operationId: deleteRepository
+      summary: Delete repository by ID
+      description: Delete an existing repository by ID
       parameters:
-        - name: id
+        - name: repositoryID
           in: path
+          description: ID of repository
           required: true
           schema:
             type: integer
@@ -1032,6 +1098,8 @@ paths:
       responses:
         '200':
           description: OK
+        '404':
+          description: Repository not found
 components:
   schemas:
     UserDTO:
