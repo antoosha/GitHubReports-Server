@@ -6,14 +6,17 @@ servers:
   - url: http://localhost:8080
     description: Generated server url
 paths:
-  /users/{id}:
+  /users/{userID}:
     get:
       tags:
         - user-controller
+      summary: Find user by ID
+      description: Return a single user.
       operationId: getUser
       parameters:
-        - name: id
+        - name: userID
           in: path
+          description: ID of user to return
           required: true
           schema:
             type: integer
@@ -22,16 +25,23 @@ paths:
         '200':
           description: OK
           content:
-            '*/*':
+            'application/json':
               schema:
                 $ref: '#/components/schemas/UserDTO'
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: User not found
     put:
       tags:
         - user-controller
       operationId: updateUser
+      summary: Update user by ID
+      description: Update an existing user by ID
       parameters:
-        - name: id
+        - name: userID
           in: path
+          description: ID of user to update
           required: true
           schema:
             type: integer
@@ -46,16 +56,20 @@ paths:
         '200':
           description: OK
           content:
-            '*/*':
+            'application/json':
               schema:
                 $ref: '#/components/schemas/UserDTO'
+        '404':
+          description: User not found
     delete:
       tags:
         - user-controller
       operationId: deleteUser
+      summary: Delete user by ID
       parameters:
-        - name: id
+        - name: userID
           in: path
+          description: ID of user to delete
           required: true
           schema:
             type: integer
@@ -66,9 +80,10 @@ paths:
     patch:
       tags:
         - user-controller
-      operationId: update_9
+      operationId: updateUser1
+      summary: Delete user by ID
       parameters:
-        - name: id
+        - name: userID
           in: path
           required: true
           schema:
@@ -84,17 +99,22 @@ paths:
         '200':
           description: OK
           content:
-            '*/*':
+            'application/json':
               schema:
                 $ref: '#/components/schemas/UserUpdateDTO'
-  /tags/{id}:
+        '404':
+          description: User not found
+  /tags/{tagID}:
     get:
       tags:
         - tag-controller
-      operationId: getOne_1
+      operationId: getTag
+      summary: Fing tag by ID
+      description: Return a single tag.
       parameters:
-        - name: id
+        - name: tagID
           in: path
+          description: ID of tag to return
           required: true
           schema:
             type: integer
@@ -103,16 +123,19 @@ paths:
         '200':
           description: OK
           content:
-            '*/*':
+            'appliction/json':
               schema:
                 $ref: '#/components/schemas/TagDTO'
     put:
       tags:
         - tag-controller
-      operationId: update_1
+      operationId: updateTag
+      summary: Update tag by ID
+      description: Update an existing tag by ID
       parameters:
-        - name: id
+        - name: tagID
           in: path
+          description: ID of tag that needs to be updated
           required: true
           schema:
             type: integer
@@ -130,13 +153,18 @@ paths:
             '*/*':
               schema:
                 $ref: '#/components/schemas/TagDTO'
+        '404':
+          description: Tag not found
     delete:
       tags:
         - tag-controller
-      operationId: delete_1
+      operationId: deleteTag
+      summary: Delete tag by ID
+      description: Delete an existing tag by ID
       parameters:
-        - name: id
+        - name: tagID
           in: path
+          description: ID of tag that needs to be deleted
           required: true
           schema:
             type: integer
@@ -144,14 +172,19 @@ paths:
       responses:
         '200':
           description: OK
-  /statistics/{id}:
+        '404':
+          description: Tag not found
+  /statistics/{statisticID}:
     get:
       tags:
         - statistic-controller
-      operationId: getOne_2
+      operationId: getStatistic
+      summary: Find statistic by ID
+      description: Return a single statistic by ID
       parameters:
-        - name: id
+        - name: statisticID
           in: path
+          description: ID of statistic
           required: true
           schema:
             type: integer
@@ -160,16 +193,21 @@ paths:
         '200':
           description: OK
           content:
-            '*/*':
+            'application/json':
               schema:
                 $ref: '#/components/schemas/StatisticDTO'
+        '404':
+          description: Statistic not found
     put:
       tags:
         - statistic-controller
-      operationId: update_2
+      operationId: updateStatistic
+      summary: Update statistic by ID
+      description: Update an existing statistic by ID
       parameters:
-        - name: id
+        - name: statisticID
           in: path
+          description: ID of statistic
           required: true
           schema:
             type: integer
@@ -184,16 +222,21 @@ paths:
         '200':
           description: OK
           content:
-            '*/*':
+            'application/json':
               schema:
                 $ref: '#/components/schemas/StatisticDTO'
+        '404':
+          description: Statistic not found
     delete:
       tags:
         - statistic-controller
-      operationId: delete_2
+      operationId: deleteStatistic
+      summary: Delete Statistic
+      description: Delete an existing statistic by ID
       parameters:
-        - name: id
+        - name: statisticID
           in: path
+          description: ID of statistic
           required: true
           schema:
             type: integer
@@ -201,14 +244,19 @@ paths:
       responses:
         '200':
           description: OK
+        '404':
+          description: Statistic not found
   /statisticTypes/{id}:
     get:
       tags:
         - statistic-type-controller
-      operationId: getOne_3
+      operationId: getstatisticType
+      summary: Find statistic type by ID
+      description: Return a single statistic type by ID
       parameters:
         - name: id
           in: path
+          description: ID of statistic type
           required: true
           schema:
             type: string
@@ -219,13 +267,18 @@ paths:
             '*/*':
               schema:
                 $ref: '#/components/schemas/StatisticTypeDTO'
+        '404':
+          description: Statistic type not found
     put:
       tags:
         - statistic-type-controller
-      operationId: update_3
+      operationId: updateStatisticType
+      summary: Update statistic type by ID
+      description: Update an existing Statistic type by ID
       parameters:
         - name: id
           in: path
+          description: ID of statistic type
           required: true
           schema:
             type: string
@@ -242,24 +295,31 @@ paths:
             '*/*':
               schema:
                 $ref: '#/components/schemas/StatisticTypeDTO'
+        '404':
+          description: Statistic type not found
     delete:
       tags:
         - statistic-type-controller
-      operationId: delete_3
+      operationId: deleteStatisticType
+      summary: Delete statistic type by ID
+      description: Delete an existing Statistic type by ID
       parameters:
         - name: id
           in: path
+          description: ID of statistic type
           required: true
           schema:
             type: string
       responses:
         '200':
           description: OK
+        '404':
+          description: Statistic type not found
   /roles/{roleName}:
     put:
       tags:
         - role-controller
-      operationId: update_4
+      operationId: updateRole
       parameters:
         - name: roleName
           in: path
@@ -283,7 +343,7 @@ paths:
     put:
       tags:
         - repository-controller
-      operationId: update_5
+      operationId: updateRepository
       parameters:
         - name: id
           in: path
@@ -337,7 +397,7 @@ paths:
     get:
       tags:
         - project-controller
-      operationId: getOne_6
+      operationId: getProject
       parameters:
         - name: id
           in: path
@@ -355,7 +415,7 @@ paths:
     put:
       tags:
         - project-controller
-      operationId: update_6
+      operationId: updateProject
       parameters:
         - name: id
           in: path
@@ -379,7 +439,7 @@ paths:
     delete:
       tags:
         - project-controller
-      operationId: delete_6
+      operationId: deleteProject
       parameters:
         - name: id
           in: path
@@ -394,7 +454,7 @@ paths:
     get:
       tags:
         - commit-controller
-      operationId: getOne_7
+      operationId: getCommit
       parameters:
         - name: id
           in: path
@@ -412,7 +472,7 @@ paths:
     put:
       tags:
         - commit-controller
-      operationId: update_7
+      operationId: updateCommit
       parameters:
         - name: id
           in: path
@@ -436,7 +496,7 @@ paths:
     delete:
       tags:
         - commit-controller
-      operationId: delete_7
+      operationId: deleteCommit
       parameters:
         - name: id
           in: path
@@ -451,7 +511,7 @@ paths:
     get:
       tags:
         - comment-controller
-      operationId: getOne_8
+      operationId: getComment
       parameters:
         - name: id
           in: path
@@ -469,7 +529,7 @@ paths:
     put:
       tags:
         - comment-controller
-      operationId: update_8
+      operationId: updateComment
       parameters:
         - name: id
           in: path
@@ -493,7 +553,7 @@ paths:
     delete:
       tags:
         - comment-controller
-      operationId: delete_8
+      operationId: deleteComment
       parameters:
         - name: id
           in: path
@@ -508,12 +568,14 @@ paths:
     get:
       tags:
         - user-controller
-      operationId: getAll
+      operationId: getUsers
+      summary: Get all users
+      description: Returns all users.
       responses:
         '200':
           description: OK
           content:
-            '*/*':
+            'application/json':
               schema:
                 type: array
                 items:
@@ -521,7 +583,8 @@ paths:
     post:
       tags:
         - user-controller
-      operationId: create
+      operationId: createUser
+      summary: Create user
       requestBody:
         content:
           application/json:
@@ -540,6 +603,8 @@ paths:
       tags:
         - user-controller
       operationId: saveUserPhoto
+      summary: Upload user's photo
+      description: Find user by username and save photo
       parameters:
         - name: username
           in: path
@@ -548,7 +613,7 @@ paths:
             type: string
       requestBody:
         content:
-          application/json:
+          multipart/form-data:
             schema:
               required:
                 - photo
@@ -564,12 +629,14 @@ paths:
     get:
       tags:
         - tag-controller
-      operationId: getAll_1
+      operationId: getTags
+      summary: Get all tags
+      description: Return all tags
       responses:
         '200':
           description: OK
           content:
-            '*/*':
+            'application/json':
               schema:
                 type: array
                 items:
@@ -577,7 +644,9 @@ paths:
     post:
       tags:
         - tag-controller
-      operationId: create_1
+      operationId: createTag
+      summary: Add new tag to the project
+      description: Create new tag
       requestBody:
         content:
           application/json:
@@ -595,7 +664,7 @@ paths:
     get:
       tags:
         - statistic-controller
-      operationId: getAll_2
+      operationId: getStatistics
       responses:
         '200':
           description: OK
@@ -608,7 +677,7 @@ paths:
     post:
       tags:
         - statistic-controller
-      operationId: create_2
+      operationId: createStatistic
       requestBody:
         content:
           application/json:
@@ -626,7 +695,7 @@ paths:
     get:
       tags:
         - statistic-type-controller
-      operationId: getAll_3
+      operationId: getStatisticTypes
       responses:
         '200':
           description: OK
@@ -639,7 +708,7 @@ paths:
     post:
       tags:
         - statistic-type-controller
-      operationId: create_3
+      operationId: createStatisticType
       requestBody:
         content:
           application/json:
@@ -657,7 +726,7 @@ paths:
     get:
       tags:
         - role-controller
-      operationId: getAll_4
+      operationId: getRoles
       responses:
         '200':
           description: OK
@@ -670,7 +739,7 @@ paths:
     post:
       tags:
         - role-controller
-      operationId: create_4
+      operationId: createRole
       requestBody:
         content:
           application/json:
@@ -688,7 +757,7 @@ paths:
     post:
       tags:
         - repository-controller
-      operationId: create_5
+      operationId: createRepository
       parameters:
         - name: tokenAuth
           in: path
@@ -712,7 +781,7 @@ paths:
     get:
       tags:
         - project-controller
-      operationId: getAll_6
+      operationId: getProjects
       responses:
         '200':
           description: OK
@@ -725,7 +794,7 @@ paths:
     post:
       tags:
         - project-controller
-      operationId: create_6
+      operationId: createProject
       requestBody:
         content:
           application/json:
@@ -743,7 +812,7 @@ paths:
     get:
       tags:
         - commit-controller
-      operationId: getAll_7
+      operationId: getCommits
       responses:
         '200':
           description: OK
@@ -756,7 +825,7 @@ paths:
     post:
       tags:
         - commit-controller
-      operationId: create_7
+      operationId: createCommit
       requestBody:
         content:
           application/json:
@@ -774,7 +843,7 @@ paths:
     get:
       tags:
         - comment-controller
-      operationId: getAll_8
+      operationId: getComments
       responses:
         '200':
           description: OK
@@ -787,7 +856,7 @@ paths:
     post:
       tags:
         - comment-controller
-      operationId: create_8
+      operationId: createComment
       requestBody:
         content:
           application/json:
@@ -801,14 +870,17 @@ paths:
             '*/*':
               schema:
                 $ref: '#/components/schemas/CommentDTO'
-  /users/{id}/projects:
+  /users/{userID}/projects:
     get:
       tags:
         - user-controller
-      operationId: getAllUserProjects
+      operationId: getUserProjects
+      summary: Find user projects
+      description: Find all user ptojects by userID
       parameters:
-        - name: id
+        - name: userID
           in: path
+          description: ID of User
           required: true
           schema:
             type: integer
@@ -817,18 +889,22 @@ paths:
         '200':
           description: OK
           content:
-            '*/*':
+            'application/json':
               schema:
                 type: array
                 items:
                   $ref: '#/components/schemas/ProjectDTO'
-  /users/{id}/photo:
+        '404':
+          description: User not found
+  /users/{userID}/photo:
     get:
       tags:
         - user-controller
       operationId: getImageWithMediaType
+      summary: Get user profile photo
+      description: Return a user profile photo
       parameters:
-        - name: id
+        - name: userID
           in: path
           required: true
           schema:
@@ -844,11 +920,15 @@ paths:
                 items:
                   type: string
                   format: byte
+        '404':
+          description: User not found
   /users/username/{username}:
     get:
       tags:
         - user-controller
-      operationId: getOneByUsername
+      operationId: getUserByUsername
+      summary: Find user by username
+      description: Return a single user by username
       parameters:
         - name: username
           in: path
@@ -859,14 +939,18 @@ paths:
         '200':
           description: OK
           content:
-            '*/*':
+            'application/json':
               schema:
                 $ref: '#/components/schemas/UserDTO'
+        '404':
+          description: User not found
   /users/token/refresh:
     get:
       tags:
         - user-controller
       operationId: refreshToken
+      summary: Get new accsess token
+      description: Return a new access token
       responses:
         '200':
           description: OK
@@ -874,7 +958,7 @@ paths:
     get:
       tags:
         - role-controller
-      operationId: getOne_4
+      operationId: getRole
       parameters:
         - name: id
           in: path
@@ -891,7 +975,7 @@ paths:
     delete:
       tags:
         - role-controller
-      operationId: delete_4
+      operationId: deleteRole
       parameters:
         - name: id
           in: path
@@ -905,7 +989,7 @@ paths:
     get:
       tags:
         - repository-controller
-      operationId: getAll_5
+      operationId: getRepositories
       responses:
         '200':
           description: OK
@@ -919,7 +1003,7 @@ paths:
     get:
       tags:
         - repository-controller
-      operationId: getOne_5
+      operationId: getRepository
       parameters:
         - name: id
           in: path
@@ -937,7 +1021,7 @@ paths:
     delete:
       tags:
         - repository-controller
-      operationId: delete_5
+      operationId: deleteRepository
       parameters:
         - name: id
           in: path
@@ -956,93 +1040,116 @@ components:
         userId:
           type: integer
           format: int64
+          example: 26
         username:
           type: string
+          example: username
         email:
           type: string
+          example: email@gmail.com
         password:
           type: string
+          example: ???DELETE THIS FIELD???
         pathToFileWithPhoto:
           type: string
+          example: /somePath
         commentsIDs:
           type: array
           items:
             type: integer
             format: int64
+          example: [ 555, 1001, 1520 ]
         projectsIDs:
           type: array
           items:
             type: integer
             format: int64
+          example: [ 5, 10, 12 ]
         createdProjectsIDs:
           type: array
           items:
             type: integer
             format: int64
+          example: [ 5, 10 ]
         statisticsIDs:
           type: array
           items:
             type: integer
             format: int64
+          example: [ 12, 15, 99 ]
         rolesIDs:
           type: array
           items:
             type: string
+          example: [ ROLE_ADMIN, ROLE_DEVELOPER ]
     TagDTO:
       type: object
       properties:
         tagID:
           type: integer
           format: int64
+          example: 26
         tagName:
           type: string
+          example: TODO
         projectID:
           type: integer
           format: int64
+          example: 12
         commitsIDs:
           type: array
           items:
             type: integer
             format: int64
+          example: [244, 255, 300]
     StatisticDTO:
       type: object
       properties:
         statisticId:
           type: integer
           format: int64
+          example: 4
         createdDate:
           type: string
           format: date-time
         statisticTypeName:
           type: string
+          example: Best employees
         authorID:
           type: integer
           format: int64
+          example: 13
         projectID:
           type: integer
           format: int64
+          example: 12
         pathToFileWithGeneratedStat:
           type: string
+          example: /somePath
     StatisticTypeDTO:
       type: object
       properties:
         statisticName:
           type: string
+          example: Best employees
         statisticsIDs:
           type: array
           items:
             type: integer
             format: int64
+          example: [1, 3, 8]
     RoleDTO:
       type: object
       properties:
         roleName:
           type: string
+          example: ROLE_ADMIN
         usersIDs:
           type: array
           items:
             type: integer
             format: int64
+          example: [1, 5, 10]
     RepositoryUpdateDTO:
       type: object
       properties:
@@ -1062,136 +1169,171 @@ components:
         repositoryID:
           type: integer
           format: int64
+          example: 1
         repositoryName:
           type: string
+          example: Some name
         repositoryURL:
           type: string
+          example: githubUsername/repositoryName
         projectID:
           type: integer
           format: int64
+          example: 13
         commitsIDs:
           type: array
           items:
             type: integer
             format: int64
+          example: [228, 229, 230, 231, 232, 233]
     ProjectDTO:
       type: object
       properties:
         projectID:
           type: integer
           format: int64
+          example: 13
         createdDate:
           type: string
           format: date-time
         projectName:
           type: string
+          example: Some Name
         description:
           type: string
+          example: My first project...
         authorID:
           type: integer
           format: int64
+          example: 1
         repositoriesIDs:
           type: array
           items:
             type: integer
             format: int64
+          example: [1, 12]
         statisticsIDs:
           type: array
           items:
             type: integer
             format: int64
+          example: [1, 2]
         usersIDs:
           type: array
           items:
             type: integer
             format: int64
+          example: [4, 26]
         tagsIDs:
           type: array
           items:
             type: integer
             format: int64
+          example: [17, 43, 44]
     CommitDTO:
       type: object
       properties:
         commitID:
           type: integer
           format: int64
+          example: 228
         createdDate:
           type: string
           format: date-time
         hashHubID:
           type: string
+          example: 37c2af
         loginAuthor:
           type: string
+          example: login
         description:
           type: string
+          example: My first commit
         repositoryID:
           type: integer
           format: int64
+          example: 12
         tagsIDs:
           type: array
           items:
             type: integer
             format: int64
+          example: [26, 28, 45]
         commentsIDs:
           type: array
           items:
             type: integer
             format: int64
+          example: [322, 323, 333, 592]
         deleted:
           type: boolean
+          example: false
     CommentDTO:
       type: object
       properties:
         commentID:
           type: integer
           format: int64
+          example: 1
         text:
           type: string
+          example: Good job, Oleg
         createdDate:
           type: string
           format: date-time
         authorID:
           type: integer
           format: int64
+          example: 26
         authorUsername:
           type: string
+          example: username
         commitID:
           type: integer
           format: int64
+          example: 322
     UserUpdateDTO:
       type: object
       properties:
         userId:
           type: integer
           format: int64
+          example: 13
         username:
           type: string
+          example: username
         email:
           type: string
+          example: email@gmail.com
         pathToFileWithPhoto:
           type: string
+          example: ?????????????????????
         commentsIDs:
           type: array
+          example: [124, 53, 322, 324]
           items:
             type: integer
             format: int64
         projectsIDs:
           type: array
+          example: [2, 12]
           items:
             type: integer
             format: int64
         createdProjectsIDs:
           type: array
+          example: [12]
           items:
             type: integer
             format: int64
         statisticsIDs:
           type: array
+          example: [23]
           items:
             type: integer
             format: int64
         rolesIDs:
           type: array
+          example: [ROLE_ADMIN, ROLE_ANALYST]
           items:
             type: string
