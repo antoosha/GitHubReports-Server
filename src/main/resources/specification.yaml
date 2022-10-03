@@ -6,7 +6,7 @@ servers:
   - url: http://localhost:8080
     description: Generated server url
 paths:
-  /users/{userID}:
+  /users/{id}:
     get:
       tags:
         - user-controller
@@ -14,7 +14,7 @@ paths:
       description: Return a single user.
       operationId: getUser
       parameters:
-        - name: userID
+        - name: id
           in: path
           description: ID of user to return
           required: true
@@ -39,7 +39,7 @@ paths:
       summary: Update user by ID
       description: Update an existing user by ID
       parameters:
-        - name: userID
+        - name: id
           in: path
           description: ID of user to update
           required: true
@@ -67,7 +67,7 @@ paths:
       operationId: deleteUser
       summary: Delete user by ID
       parameters:
-        - name: userID
+        - name: id
           in: path
           description: ID of user to delete
           required: true
@@ -83,7 +83,7 @@ paths:
       operationId: updateUser1
       summary: Delete user by ID
       parameters:
-        - name: userID
+        - name: id
           in: path
           required: true
           schema:
@@ -104,7 +104,7 @@ paths:
                 $ref: '#/components/schemas/UserUpdateDTO'
         '404':
           description: User not found
-  /tags/{tagID}:
+  /tags/{id}:
     get:
       tags:
         - tag-controller
@@ -112,7 +112,7 @@ paths:
       summary: Fing tag by ID
       description: Return a single tag.
       parameters:
-        - name: tagID
+        - name: id
           in: path
           description: ID of tag to return
           required: true
@@ -133,7 +133,7 @@ paths:
       summary: Update tag by ID
       description: Update an existing tag by ID
       parameters:
-        - name: tagID
+        - name: id
           in: path
           description: ID of tag that needs to be updated
           required: true
@@ -162,7 +162,7 @@ paths:
       summary: Delete tag by ID
       description: Delete an existing tag by ID
       parameters:
-        - name: tagID
+        - name: id
           in: path
           description: ID of tag that needs to be deleted
           required: true
@@ -174,7 +174,7 @@ paths:
           description: OK
         '404':
           description: Tag not found
-  /statistics/{statisticID}:
+  /statistics/{id}:
     get:
       tags:
         - statistic-controller
@@ -182,7 +182,7 @@ paths:
       summary: Find statistic by ID
       description: Return a single statistic by ID
       parameters:
-        - name: statisticID
+        - name: id
           in: path
           description: ID of statistic
           required: true
@@ -205,7 +205,7 @@ paths:
       summary: Update statistic by ID
       description: Update an existing statistic by ID
       parameters:
-        - name: statisticID
+        - name: id
           in: path
           description: ID of statistic
           required: true
@@ -234,7 +234,7 @@ paths:
       summary: Delete Statistic
       description: Delete an existing statistic by ID
       parameters:
-        - name: statisticID
+        - name: id
           in: path
           description: ID of statistic
           required: true
@@ -393,7 +393,7 @@ paths:
             '*/*':
               schema:
                 $ref: '#/components/schemas/RepositoryDTO'
-  /projects/{projectID}:
+  /projects/{id}:
     get:
       tags:
         - project-controller
@@ -401,7 +401,7 @@ paths:
       summary: Find project by ID
       description: Return a single project by ID
       parameters:
-        - name: projectID
+        - name: id
           in: path
           description: ID of project
           required: true
@@ -424,7 +424,7 @@ paths:
       summary: Update project by ID
       description: Update an existing project by ID
       parameters:
-        - name: projectID
+        - name: id
           in: path
           description: ID of project
           required: true
@@ -453,7 +453,7 @@ paths:
       summary: Delete project by ID
       description: Delete an existing project by ID
       parameters:
-        - name: projectID
+        - name: id
           in: path
           description: ID of project
           required: true
@@ -465,7 +465,7 @@ paths:
           description: OK
         '404':
           description: Project not found
-  /commits/{commitsID}:
+  /commits/{id}:
     get:
       tags:
         - commit-controller
@@ -473,7 +473,7 @@ paths:
       summary: Find commit by ID
       description: Return a single commit by ID
       parameters:
-        - name: commitsID
+        - name: id
           in: path
           description: ID of commit
           required: true
@@ -496,7 +496,7 @@ paths:
       summary: Update commit by ID
       description: Update an existing commit by ID
       parameters:
-        - name: commitsID
+        - name: id
           in: path
           description: ID of commit
           required: true
@@ -525,7 +525,7 @@ paths:
       summary: Delete commit by ID
       description: Delete an existing commit by ID
       parameters:
-        - name: commitsID
+        - name: id
           in: path
           description: ID of commit
           required: true
@@ -537,7 +537,7 @@ paths:
           description: OK
         '404':
           description: Commit not found
-  /comments/{commentID}:
+  /comments/{id}:
     get:
       tags:
         - comment-controller
@@ -545,7 +545,7 @@ paths:
       summary: Find comment by ID
       description: Return a single comment by ID
       parameters:
-        - name: commentID
+        - name: id
           in: path
           description: ID of comment
           required: true
@@ -568,7 +568,7 @@ paths:
       summary: Update comment by ID
       description: Update an existing comment by ID
       parameters:
-        - name: commentID
+        - name: id
           in: path
           description: ID of comment
           required: true
@@ -597,7 +597,7 @@ paths:
       summary: Delete comment by ID
       description: Delete an existing comment by ID
       parameters:
-        - name: commentID
+        - name: id
           in: path
           description: ID of comment
           required: true
@@ -916,7 +916,7 @@ paths:
             '*/*':
               schema:
                 $ref: '#/components/schemas/CommentDTO'
-  /users/{userID}/projects:
+  /users/{id}/projects:
     get:
       tags:
         - user-controller
@@ -924,7 +924,7 @@ paths:
       summary: Find user projects
       description: Find all user ptojects by userID
       parameters:
-        - name: userID
+        - name: id
           in: path
           description: ID of User
           required: true
@@ -942,7 +942,7 @@ paths:
                   $ref: '#/components/schemas/ProjectDTO'
         '404':
           description: User not found
-  /users/{userID}/photo:
+  /users/{id}/photo:
     get:
       tags:
         - user-controller
@@ -950,7 +950,7 @@ paths:
       summary: Get user profile photo
       description: Return a user profile photo
       parameters:
-        - name: userID
+        - name: id
           in: path
           required: true
           schema:
@@ -1000,7 +1000,7 @@ paths:
       responses:
         '200':
           description: OK
-  /roles/{roleID}:
+  /roles/{id}:
     get:
       tags:
         - role-controller
@@ -1008,7 +1008,7 @@ paths:
       summary: Find role by ID
       description: Return a single role by ID
       parameters:
-        - name: roleID
+        - name: id
           in: path
           description: ID of role
           required: true
@@ -1030,7 +1030,7 @@ paths:
       summary: Delete role by ID
       description: Delete an existing role by ID
       parameters:
-        - name: roleID
+        - name: id
           in: path
           description: ID of role
           required: true
@@ -1057,7 +1057,7 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/RepositoryDTO'
-  /repositories/{repositoryID}:
+  /repositories/{id}:
     get:
       tags:
         - repository-controller
@@ -1065,7 +1065,7 @@ paths:
       summary: Find repository by ID
       description: Return a single repository by ID
       parameters:
-        - name: repositoryID
+        - name: id
           in: path
           description: ID of repository
           required: true
@@ -1088,7 +1088,7 @@ paths:
       summary: Delete repository by ID
       description: Delete an existing repository by ID
       parameters:
-        - name: repositoryID
+        - name: id
           in: path
           description: ID of repository
           required: true
@@ -1121,31 +1121,31 @@ components:
         pathToFileWithPhoto:
           type: string
           example: /somePath
-        commentsIDs:
+        commentsIds:
           type: array
           items:
             type: integer
             format: int64
           example: [ 555, 1001, 1520 ]
-        projectsIDs:
+        projectsIds:
           type: array
           items:
             type: integer
             format: int64
           example: [ 5, 10, 12 ]
-        createdProjectsIDs:
+        createdProjectsIds:
           type: array
           items:
             type: integer
             format: int64
           example: [ 5, 10 ]
-        statisticsIDs:
+        statisticsIds:
           type: array
           items:
             type: integer
             format: int64
           example: [ 12, 15, 99 ]
-        rolesIDs:
+        rolesIds:
           type: array
           items:
             type: string
@@ -1153,18 +1153,18 @@ components:
     TagDTO:
       type: object
       properties:
-        tagID:
+        tagId:
           type: integer
           format: int64
           example: 26
         tagName:
           type: string
           example: TODO
-        projectID:
+        projectId:
           type: integer
           format: int64
           example: 12
-        commitsIDs:
+        commitsIds:
           type: array
           items:
             type: integer
@@ -1183,11 +1183,11 @@ components:
         statisticTypeName:
           type: string
           example: Best employees
-        authorID:
+        authorId:
           type: integer
           format: int64
           example: 13
-        projectID:
+        projectId:
           type: integer
           format: int64
           example: 12
@@ -1200,7 +1200,7 @@ components:
         statisticName:
           type: string
           example: Best employees
-        statisticsIDs:
+        statisticsIds:
           type: array
           items:
             type: integer
@@ -1212,7 +1212,7 @@ components:
         roleName:
           type: string
           example: ROLE_ADMIN
-        usersIDs:
+        usersIds:
           type: array
           items:
             type: integer
@@ -1221,20 +1221,20 @@ components:
     RepositoryUpdateDTO:
       type: object
       properties:
-        repositoryID:
+        repositoryId:
           type: integer
           format: int64
         repositoryName:
           type: string
         repositoryURL:
           type: string
-        projectID:
+        projectId:
           type: integer
           format: int64
     RepositoryDTO:
       type: object
       properties:
-        repositoryID:
+        repositoryId:
           type: integer
           format: int64
           example: 1
@@ -1244,11 +1244,11 @@ components:
         repositoryURL:
           type: string
           example: githubUsername/repositoryName
-        projectID:
+        projectId:
           type: integer
           format: int64
           example: 13
-        commitsIDs:
+        commitsIds:
           type: array
           items:
             type: integer
@@ -1257,7 +1257,7 @@ components:
     ProjectDTO:
       type: object
       properties:
-        projectID:
+        projectId:
           type: integer
           format: int64
           example: 13
@@ -1270,29 +1270,29 @@ components:
         description:
           type: string
           example: My first project...
-        authorID:
+        authorId:
           type: integer
           format: int64
           example: 1
-        repositoriesIDs:
+        repositoriesIds:
           type: array
           items:
             type: integer
             format: int64
           example: [1, 12]
-        statisticsIDs:
+        statisticsIds:
           type: array
           items:
             type: integer
             format: int64
           example: [1, 2]
-        usersIDs:
+        usersIds:
           type: array
           items:
             type: integer
             format: int64
           example: [4, 26]
-        tagsIDs:
+        tagsIds:
           type: array
           items:
             type: integer
@@ -1301,14 +1301,14 @@ components:
     CommitDTO:
       type: object
       properties:
-        commitID:
+        commitId:
           type: integer
           format: int64
           example: 228
         createdDate:
           type: string
           format: date-time
-        hashHubID:
+        hashHubId:
           type: string
           example: 37c2af
         loginAuthor:
@@ -1317,17 +1317,17 @@ components:
         description:
           type: string
           example: My first commit
-        repositoryID:
+        repositoryId:
           type: integer
           format: int64
           example: 12
-        tagsIDs:
+        tagsIds:
           type: array
           items:
             type: integer
             format: int64
           example: [26, 28, 45]
-        commentsIDs:
+        commentsIds:
           type: array
           items:
             type: integer
@@ -1339,7 +1339,7 @@ components:
     CommentDTO:
       type: object
       properties:
-        commentID:
+        commentId:
           type: integer
           format: int64
           example: 1
@@ -1349,14 +1349,14 @@ components:
         createdDate:
           type: string
           format: date-time
-        authorID:
+        authorId:
           type: integer
           format: int64
           example: 26
         authorUsername:
           type: string
           example: username
-        commitID:
+        commitId:
           type: integer
           format: int64
           example: 322
@@ -1376,31 +1376,31 @@ components:
         pathToFileWithPhoto:
           type: string
           example: ?????????????????????
-        commentsIDs:
+        commentsIds:
           type: array
           example: [124, 53, 322, 324]
           items:
             type: integer
             format: int64
-        projectsIDs:
+        projectsIds:
           type: array
           example: [2, 12]
           items:
             type: integer
             format: int64
-        createdProjectsIDs:
+        createdProjectsIds:
           type: array
           example: [12]
           items:
             type: integer
             format: int64
-        statisticsIDs:
+        statisticsIds:
           type: array
           example: [23]
           items:
             type: integer
             format: int64
-        rolesIDs:
+        rolesIds:
           type: array
           example: [ROLE_ADMIN, ROLE_ANALYST]
           items:

@@ -20,21 +20,37 @@ repositories {
 }
 
 dependencies {
+	//spring boot
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
+
+	//auth jwt
 	implementation 'com.auth0:java-jwt:3.19.1'
+
+	//mapstruct - mappers
+	implementation 'org.mapstruct:mapstruct:1.5.2.Final'
+	annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.2.Final'
+
+	//github api
 	implementation 'org.kohsuke:github-api:1.306'
+
+	//openapi
 	implementation 'io.swagger.core.v3:swagger-core:2.2.2'
 	implementation 'org.openapitools:jackson-databind-nullable:0.2.0'
-//  implementation 'org.flywaydb:flyway-core'
+
+	//lombok
 	compileOnly 'org.projectlombok:lombok'
-	runtimeOnly 'org.postgresql:postgresql'
 	annotationProcessor 'org.projectlombok:lombok'
+
+	//database
+	runtimeOnly 'org.postgresql:postgresql'
+	//implementation 'org.flywaydb:flyway-core'
+
+	//tests
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'
 }
-
 
 springBoot {
 	mainClass = 'cz.cvut.fit.sp1.githubreports.GithubReportsApplication'
