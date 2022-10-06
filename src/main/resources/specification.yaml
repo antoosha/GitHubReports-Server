@@ -1,7 +1,7 @@
 openapi: 3.0.1
 info:
   title: OpenAPI definition
-  version: v0
+  version: v1.0.0
 servers:
   - url: http://localhost:8080
     description: Generated server url
@@ -104,6 +104,7 @@ paths:
                 $ref: '#/components/schemas/UserUpdateDTO'
         '404':
           description: User not found
+
   /tags/{id}:
     get:
       tags:
@@ -174,6 +175,7 @@ paths:
           description: OK
         '404':
           description: Tag not found
+
   /statistics/{id}:
     get:
       tags:
@@ -246,6 +248,7 @@ paths:
           description: OK
         '404':
           description: Statistic not found
+
   /statisticTypes/{id}:
     get:
       tags:
@@ -315,6 +318,7 @@ paths:
           description: OK
         '404':
           description: Statistic type not found
+
   /roles/{roleName}:
     put:
       tags:
@@ -339,6 +343,7 @@ paths:
             '*/*':
               schema:
                 $ref: '#/components/schemas/RoleDTO'
+
   /repositories/{id}/{tokenAuth}:
     put:
       tags:
@@ -369,6 +374,7 @@ paths:
             '*/*':
               schema:
                 $ref: '#/components/schemas/RepositoryDTO'
+
   /repositories/synchronize/{id}/{tokenAuth}:
     put:
       tags:
@@ -393,6 +399,7 @@ paths:
             '*/*':
               schema:
                 $ref: '#/components/schemas/RepositoryDTO'
+
   /projects/{id}:
     get:
       tags:
@@ -465,6 +472,7 @@ paths:
           description: OK
         '404':
           description: Project not found
+
   /commits/{id}:
     get:
       tags:
@@ -537,6 +545,7 @@ paths:
           description: OK
         '404':
           description: Commit not found
+
   /comments/{id}:
     get:
       tags:
@@ -609,6 +618,7 @@ paths:
           description: OK
         '404':
           description: Comment not found
+
   /users:
     get:
       tags:
@@ -643,6 +653,7 @@ paths:
             '*/*':
               schema:
                 $ref: '#/components/schemas/UserDTO'
+
   /users/{username}/save/photo:
     post:
       tags:
@@ -670,6 +681,7 @@ paths:
       responses:
         '200':
           description: OK
+
   /tags:
     get:
       tags:
@@ -705,6 +717,7 @@ paths:
             '*/*':
               schema:
                 $ref: '#/components/schemas/TagDTO'
+
   /statistics:
     get:
       tags:
@@ -736,6 +749,7 @@ paths:
             '*/*':
               schema:
                 $ref: '#/components/schemas/StatisticDTO'
+
   /statisticTypes:
     get:
       tags:
@@ -767,6 +781,7 @@ paths:
             '*/*':
               schema:
                 $ref: '#/components/schemas/StatisticTypeDTO'
+
   /roles:
     get:
       tags:
@@ -798,6 +813,7 @@ paths:
             '*/*':
               schema:
                 $ref: '#/components/schemas/RoleDTO'
+
   /repositories/{tokenAuth}:
     post:
       tags:
@@ -823,6 +839,7 @@ paths:
             '*/*':
               schema:
                 $ref: '#/components/schemas/RepositoryDTO'
+
   /projects:
     get:
       tags:
@@ -854,6 +871,7 @@ paths:
             '*/*':
               schema:
                 $ref: '#/components/schemas/ProjectDTO'
+
   /commits:
     get:
       tags:
@@ -885,6 +903,7 @@ paths:
             '*/*':
               schema:
                 $ref: '#/components/schemas/CommitDTO'
+
   /comments:
     get:
       tags:
@@ -916,6 +935,7 @@ paths:
             '*/*':
               schema:
                 $ref: '#/components/schemas/CommentDTO'
+
   /users/{id}/projects:
     get:
       tags:
@@ -942,6 +962,7 @@ paths:
                   $ref: '#/components/schemas/ProjectDTO'
         '404':
           description: User not found
+
   /users/{id}/photo:
     get:
       tags:
@@ -968,6 +989,7 @@ paths:
                   format: byte
         '404':
           description: User not found
+
   /users/username/{username}:
     get:
       tags:
@@ -990,6 +1012,7 @@ paths:
                 $ref: '#/components/schemas/UserDTO'
         '404':
           description: User not found
+
   /users/token/refresh:
     get:
       tags:
@@ -1000,6 +1023,7 @@ paths:
       responses:
         '200':
           description: OK
+
   /roles/{id}:
     get:
       tags:
@@ -1041,6 +1065,7 @@ paths:
           description: OK
         '404':
           description: Role not found
+
   /repositories:
     get:
       tags:
@@ -1057,6 +1082,7 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/RepositoryDTO'
+
   /repositories/{id}:
     get:
       tags:
@@ -1115,41 +1141,30 @@ components:
         email:
           type: string
           example: email@gmail.com
-        password:
-          type: string
-          example: ???DELETE THIS FIELD???
         pathToFileWithPhoto:
           type: string
           example: /somePath
-        commentsIds:
+        commentsSlimDTOs:
           type: array
           items:
-            type: integer
-            format: int64
-          example: [ 555, 1001, 1520 ]
-        projectsIds:
+            $ref: '#/components/schemas/CommentSlimDTO'
+        projectsSlimDTOs:
           type: array
           items:
-            type: integer
-            format: int64
-          example: [ 5, 10, 12 ]
-        createdProjectsIds:
+            $ref: '#/components/schemas/ProjectSlimDTO'
+        createdProjectsSlimDTOs:
           type: array
           items:
-            type: integer
-            format: int64
-          example: [ 5, 10 ]
-        statisticsIds:
+            $ref: '#/components/schemas/ProjectSlimDTO'
+        statisticsSlimDTOs:
           type: array
           items:
-            type: integer
-            format: int64
-          example: [ 12, 15, 99 ]
-        rolesIds:
+            $ref: '#/components/schemas/StatisticSlimDTO'
+        rolesSlimDTOs:
           type: array
           items:
-            type: string
-          example: [ ROLE_ADMIN, ROLE_DEVELOPER ]
+            $ref: '#/components/schemas/RoleSlimDTO'
+
     TagDTO:
       type: object
       properties:
@@ -1160,16 +1175,13 @@ components:
         tagName:
           type: string
           example: TODO
-        projectId:
-          type: integer
-          format: int64
-          example: 12
-        commitsIds:
+        projectsSlimDTO:
+          $ref: '#/components/schemas/ProjectSlimDTO'
+        commitsSlimDTOs:
           type: array
           items:
-            type: integer
-            format: int64
-          example: [244, 255, 300]
+            $ref: '#/components/schemas/CommitSlimDTO'
+
     StatisticDTO:
       type: object
       properties:
@@ -1180,57 +1192,50 @@ components:
         createdDate:
           type: string
           format: date-time
-        statisticTypeName:
-          type: string
-          example: Best employees
-        authorId:
-          type: integer
-          format: int64
-          example: 13
-        projectId:
-          type: integer
-          format: int64
-          example: 12
+        statisticTypeSlimDTO:
+          $ref: '#/components/schemas/StatisticTypeSlimDTO'
+        authorSlimDTO:
+          $ref: '#/components/schemas/UserSlimDTO'
+        projectSlimDTO:
+          $ref: '#/components/schemas/ProjectSlimDTO'
         pathToFileWithGeneratedStat:
           type: string
           example: /somePath
+
     StatisticTypeDTO:
       type: object
       properties:
         statisticName:
           type: string
           example: Best employees
-        statisticsIds:
+        statisticsSlimDTOs:
           type: array
           items:
-            type: integer
-            format: int64
-          example: [1, 3, 8]
+            $ref: '#/components/schemas/StatisticSlimDTO'
+
     RoleDTO:
       type: object
       properties:
         roleName:
           type: string
           example: ROLE_ADMIN
-        usersIds:
+        usersSlimDTOs:
           type: array
           items:
-            type: integer
-            format: int64
-          example: [1, 5, 10]
+            $ref: '#/components/schemas/UserSlimDTO'
+
     RepositoryUpdateDTO:
       type: object
       properties:
-        repositoryId:
-          type: integer
-          format: int64
+        repositorySlimDTO:
+          $ref: '#/components/schemas/RepositorySlimDTO'
         repositoryName:
           type: string
         repositoryURL:
           type: string
-        projectId:
-          type: integer
-          format: int64
+        projectSlimDTO:
+          $ref: '#/components/schemas/ProjectSlimDTO'
+
     RepositoryDTO:
       type: object
       properties:
@@ -1244,16 +1249,13 @@ components:
         repositoryURL:
           type: string
           example: githubUsername/repositoryName
-        projectId:
-          type: integer
-          format: int64
-          example: 13
-        commitsIds:
+        projectSlimDTO:
+          $ref: '#/components/schemas/ProjectSlimDTO'
+        commitsSlimDTOs:
           type: array
           items:
-            type: integer
-            format: int64
-          example: [228, 229, 230, 231, 232, 233]
+            $ref: '#/components/schemas/CommitSlimDTO'
+
     ProjectDTO:
       type: object
       properties:
@@ -1270,34 +1272,25 @@ components:
         description:
           type: string
           example: My first project...
-        authorId:
-          type: integer
-          format: int64
-          example: 1
-        repositoriesIds:
+        authorSlimDTO:
+          $ref: '#/components/schemas/UserSlimDTO'
+        repositoriesSlimDTOs:
           type: array
           items:
-            type: integer
-            format: int64
-          example: [1, 12]
-        statisticsIds:
+            $ref: '#/components/schemas/RepositorySlimDTO'
+        statisticsSlimDTOs:
           type: array
           items:
-            type: integer
-            format: int64
-          example: [1, 2]
-        usersIds:
+            $ref: '#/components/schemas/StatisticSlimDTO'
+        usersSlimDTOs:
           type: array
           items:
-            type: integer
-            format: int64
-          example: [4, 26]
-        tagsIds:
+            $ref: '#/components/schemas/UserSlimDTO'
+        tagsSlimDTOs:
           type: array
           items:
-            type: integer
-            format: int64
-          example: [17, 43, 44]
+            $ref: '#/components/schemas/TagSlimDTO'
+
     CommitDTO:
       type: object
       properties:
@@ -1317,25 +1310,20 @@ components:
         description:
           type: string
           example: My first commit
-        repositoryId:
-          type: integer
-          format: int64
-          example: 12
-        tagsIds:
+        repositorySlimDTO:
+          $ref: '#/components/schemas/RepositorySlimDTO'
+        tagsSlimDTOs:
           type: array
           items:
-            type: integer
-            format: int64
-          example: [26, 28, 45]
-        commentsIds:
+            $ref: '#/components/schemas/TagSlimDTO'
+        commentsSlimDTOs:
           type: array
           items:
-            type: integer
-            format: int64
-          example: [322, 323, 333, 592]
+            $ref: '#/components/schemas/CommentSlimDTO'
         deleted:
           type: boolean
           example: false
+
     CommentDTO:
       type: object
       properties:
@@ -1349,17 +1337,14 @@ components:
         createdDate:
           type: string
           format: date-time
-        authorId:
-          type: integer
-          format: int64
-          example: 26
-        authorUsername:
+        authorSlimDTO:
+          $ref: '#/components/schemas/UserSlimDTO'
+        authorUsername: ##TODO what is it
           type: string
           example: username
-        commitId:
-          type: integer
-          format: int64
-          example: 322
+        commitSlimDTO:
+          $ref: '#/components/schemas/CommitSlimDTO'
+
     UserUpdateDTO:
       type: object
       properties:
@@ -1375,33 +1360,95 @@ components:
           example: email@gmail.com
         pathToFileWithPhoto:
           type: string
-          example: ?????????????????????
-        commentsIds:
+          example: ##TODO resolve it
+        commentsSlimDTOs:
           type: array
-          example: [124, 53, 322, 324]
           items:
-            type: integer
-            format: int64
-        projectsIds:
+            $ref: '#/components/schemas/CommentSlimDTO'
+        projectsSlimDTOs:
           type: array
-          example: [2, 12]
           items:
-            type: integer
-            format: int64
-        createdProjectsIds:
+            $ref: '#/components/schemas/ProjectSlimDTO'
+        createdProjectsSlimDTOs:
           type: array
-          example: [12]
           items:
-            type: integer
-            format: int64
-        statisticsIds:
+            $ref: '#/components/schemas/ProjectSlimDTO'
+        statisticsSlimDTOs:
           type: array
-          example: [23]
           items:
-            type: integer
-            format: int64
-        rolesIds:
+            $ref: '#/components/schemas/StatisticSlimDTO'
+        rolesSlimDTOs:
           type: array
-          example: [ROLE_ADMIN, ROLE_ANALYST]
           items:
-            type: string
+            $ref: '#/components/schemas/RoleSlimDTO'
+
+    ## TODO add parameters that frontend needs
+    CommentSlimDTO:
+      type: object
+      properties:
+        commentId:
+          type: integer
+          format: int64
+          example: 13
+
+    CommitSlimDTO:
+      type: object
+      properties:
+        commitId:
+          type: integer
+          format: int64
+          example: 13
+
+    ProjectSlimDTO:
+      type: object
+      properties:
+        projectId:
+          type: integer
+          format: int64
+          example: 13
+
+    RepositorySlimDTO:
+      type: object
+      properties:
+        repositoryId:
+          type: integer
+          format: int64
+          example: 13
+
+    TagSlimDTO:
+      type: object
+      properties:
+        tagId:
+          type: integer
+          format: int64
+          example: 13
+
+    StatisticSlimDTO:
+      type: object
+      properties:
+        statisticId:
+          type: integer
+          format: int64
+          example: 13
+
+    StatisticTypeSlimDTO:
+      type: object
+      properties:
+        statisticName:
+          type: string
+          example: Graph
+
+    RoleSlimDTO:
+      type: object
+      properties:
+        roleName:
+          type: string
+          example: ROLE_ADMIN
+
+    UserSlimDTO:
+      type: object
+      properties:
+        userId:
+          type: integer
+          format: int64
+          example: 13
