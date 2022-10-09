@@ -38,6 +38,8 @@ public class Comment {
     @JoinColumn(name = "commit_id", nullable = false)
     private Commit commit;
 
+    private Boolean isEdited; // TODO change logic
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

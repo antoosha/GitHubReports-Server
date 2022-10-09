@@ -26,7 +26,8 @@ public class CommentConverter {
                 commentDTO.getCreatedDate(),
                 userSPI.readById(commentDTO.getAuthorID()).orElseThrow(IncorrectRequestException::new),
                 commentDTO.getAuthorUsername(),
-                commitSPI.readById(commentDTO.getCommitID()).orElseThrow(IncorrectRequestException::new)
+                commitSPI.readById(commentDTO.getCommitID()).orElseThrow(IncorrectRequestException::new),
+                false
         );
     }
 

@@ -1,16 +1,26 @@
 package cz.cvut.fit.sp1.githubreports.service.project.tag;
 
 import cz.cvut.fit.sp1.githubreports.model.project.Tag;
+import cz.cvut.fit.sp1.githubreports.model.project.Tag;
+import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.openapi.model.TagDTO;
+import org.openapi.model.TagSlimDTO;
+import org.openapi.model.TagDTO;
 
+import java.util.List;
+
+@Mapper(componentModel = "spring")
 public interface TagMapper {
 
-    @Mapping(source = "project.projectId", target = "projectId")
-    @Mapping(source = "commits", target = "commitsIds")
-    TagDTO fromModel(Tag tag);
+    TagDTO toDTO(Tag tag);
 
-    @Mapping(target = "project.projectId", source = "projectId")
-    @Mapping(target = "commits", source = "commitsIds")
-    Tag toModel(TagDTO tagDTO);
+    TagSlimDTO toSlimDTO(Tag tag);
+
+    Tag fromSlimDTO(TagSlimDTO tagSlimDTO);
+
+    List<TagDTO> toDTOs(List<Tag> tags);
+
+    List<TagSlimDTO> toSlimDTOs(List<Tag> tags);
+    
 }

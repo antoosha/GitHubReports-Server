@@ -12,7 +12,6 @@ import cz.cvut.fit.sp1.githubreports.model.project.Project;
 import cz.cvut.fit.sp1.githubreports.model.user.Role;
 import cz.cvut.fit.sp1.githubreports.model.user.User;
 import lombok.AllArgsConstructor;
-import org.springframework.lang.NonNull;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -186,7 +185,7 @@ public class UserService implements UserSPI {
         String fileName = StringUtils.cleanPath(Objects.requireNonNull(multipartFile.getOriginalFilename()));
         User user = userJpaRepository.findUserByUsername(username).orElseThrow(NoEntityFoundException::new);
         String uploadDir = "src/main/resources/serverData/images/userPhotos/" + user.getUserId();
-        user.setPathToFileWithPhoto(uploadDir);
+        user.setProfilePhotoURL(uploadDir);
         saveFile(uploadDir, "photo." + fileName.split("\\.")[1], multipartFile);
         userJpaRepository.save(user);
     }

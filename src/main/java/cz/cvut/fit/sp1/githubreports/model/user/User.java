@@ -30,7 +30,7 @@ public class User {
     @Column(nullable = false)
     private String password;
 
-    private String pathToFileWithPhoto;
+    private String profilePhotoURL;
 
     @OneToMany(mappedBy = "author")
     private List<Comment> comments;
@@ -72,7 +72,7 @@ public class User {
                 ", username='" + username + '\'' +
                 ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
-                ", pathToFileWithPhoto='" + pathToFileWithPhoto + '\'' +
+                ", pathToFileWithPhoto='" + profilePhotoURL + '\'' +
                 ", commentsIDs=" + comments.stream().map(Comment::getCommentId) +
                 ", projectsIDs=" + projects.stream().map(Project::getProjectId) +
                 ", createdProjectsIDs=" + createdProjects.stream().map(Project::getProjectId) +

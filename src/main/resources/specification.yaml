@@ -6,15 +6,51 @@ servers:
   - url: http://localhost:8080
     description: Generated server url
 paths:
-  /users/{id}:
+  ######### USERS ############
+  /users:
     get:
       tags:
         - user-controller
-      summary: Find user by ID
+      operationId: getUsers
+      summary: Get all users
+      description: Returns all users.
+      responses:
+        '200':
+          description: OK
+          content:
+            'application/json':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UserSlimDTO'
+    post:
+      tags:
+        - user-controller
+      operationId: createUser
+      summary: Create user
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserSlimDTO'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            'application/json':
+              schema:
+                $ref: '#/components/schemas/UserDTO'
+
+  /users/{username}:
+    get:
+      tags:
+        - user-controller
+      summary: Find user by username
       description: Return a single user.
       operationId: getUser
       parameters:
-        - name: id
+        - name: username
           in: path
           description: ID of user to return
           required: true
@@ -29,19 +65,19 @@ paths:
               schema:
                 $ref: '#/components/schemas/UserDTO'
         '400':
-          description: Invalid ID supplied
+          description: Invalid username supplied
         '404':
           description: User not found
     put:
       tags:
         - user-controller
       operationId: updateUser
-      summary: Update user by ID
-      description: Update an existing user by ID
+      summary: Update user by username
+      description: Update an existing user by username
       parameters:
-        - name: id
+        - name: username
           in: path
-          description: ID of user to update
+          description: username of user to update
           required: true
           schema:
             type: integer
@@ -50,7 +86,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/UserDTO'
+              $ref: '#/components/schemas/UserSlimDTO'
         required: true
       responses:
         '200':
@@ -65,11 +101,11 @@ paths:
       tags:
         - user-controller
       operationId: deleteUser
-      summary: Delete user by ID
+      summary: Delete user by username
       parameters:
-        - name: id
+        - name: username
           in: path
-          description: ID of user to delete
+          description: username of user to delete
           required: true
           schema:
             type: integer
@@ -77,34 +113,150 @@ paths:
       responses:
         '200':
           description: OK
-    patch:
+
+  /users/{username}/roles:
+    post:
       tags:
         - user-controller
-      operationId: updateUser1
-      summary: Delete user by ID
+      operationId: addRole
       parameters:
-        - name: id
+        - name: username
           in: path
           required: true
           schema:
-            type: integer
-            format: int64
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/UserUpdateDTO'
-        required: true
+            type: string
+        - name: roleName
+          in: query
+          required: true
+          schema:
+            type: string
+            example: ROLE_DEVELOPER
       responses:
         '200':
           description: OK
           content:
             'application/json':
               schema:
-                $ref: '#/components/schemas/UserUpdateDTO'
+                $ref: '#/components/schemas/UserDTO'
+    delete:
+      tags:
+        - user-controller
+      operationId: deleteRole
+      parameters:
+        - name: username
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: roleName
+          in: query
+          required: true
+          schema:
+            type: string
+            example: ROLE_DEVELOPER
+      responses:
+        '200':
+          description: OK
+          content:
+            'application/json':
+              schema:
+                $ref: '#/components/schemas/UserDTO'
+
+  /users/{username}/save/photo:
+    post:
+      tags:
+        - user-controller
+      operationId: saveUserPhoto
+      summary: Upload user's photo
+      description: Find user by username and save photo
+      parameters:
+        - name: username
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              required:
+                - photo
+              type: object
+              properties:
+                photo:
+                  type: string
+                  format: binary
+      responses:
+        '200':
+          description: OK
+
+
+  /users/{id}/projects:
+    get:
+      tags:
+        - user-controller
+      operationId: getUserProjects
+      summary: Find user projects
+      description: Find all user ptojects by userID
+      parameters:
+        - name: id
+          in: path
+          description: ID of User
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: OK
+          content:
+            'application/json':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ProjectDTO'
         '404':
           description: User not found
 
+  /users/{id}/photo:
+    get:
+      tags:
+        - user-controller
+      operationId: getImageWithMediaType
+      summary: Get user profile photo
+      description: Return a user profile photo
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: OK
+          content:
+            image/jpeg:
+              schema:
+                type: array
+                items:
+                  type: string
+                  format: byte
+        '404':
+          description: User not found
+
+  /users/token/refresh:
+    get:
+      tags:
+        - user-controller
+      operationId: refreshToken
+      summary: Get new accsess token
+      description: Return a new access token
+      responses:
+        '200':
+          description: OK
+
+  ######### TAGS #########
   /tags/{id}:
     get:
       tags:
@@ -145,13 +297,13 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/TagDTO'
+              $ref: '#/components/schemas/TagSlimDTO'
         required: true
       responses:
         '200':
           description: OK
           content:
-            '*/*':
+            'application/json':
               schema:
                 $ref: '#/components/schemas/TagDTO'
         '404':
@@ -176,6 +328,22 @@ paths:
         '404':
           description: Tag not found
 
+  ######### STATISTICS #########
+  /statistics:
+    get:
+      tags:
+        - statistic-controller
+      operationId: getStatistics
+      responses:
+        '200':
+          description: OK
+          content:
+            'application/json':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/StatisticDTO'
+
   /statistics/{id}:
     get:
       tags:
@@ -191,35 +359,6 @@ paths:
           schema:
             type: integer
             format: int64
-      responses:
-        '200':
-          description: OK
-          content:
-            'application/json':
-              schema:
-                $ref: '#/components/schemas/StatisticDTO'
-        '404':
-          description: Statistic not found
-    put:
-      tags:
-        - statistic-controller
-      operationId: updateStatistic
-      summary: Update statistic by ID
-      description: Update an existing statistic by ID
-      parameters:
-        - name: id
-          in: path
-          description: ID of statistic
-          required: true
-          schema:
-            type: integer
-            format: int64
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/StatisticDTO'
-        required: true
       responses:
         '200':
           description: OK
@@ -249,6 +388,22 @@ paths:
         '404':
           description: Statistic not found
 
+  ######### statisticTypes #########
+  /statisticTypes:
+    get:
+      tags:
+        - statistic-type-controller
+      operationId: getStatisticTypes
+      responses:
+        '200':
+          description: OK
+          content:
+            'application/json':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/StatisticTypeSlimDTO'
+
   /statisticTypes/{id}:
     get:
       tags:
@@ -267,7 +422,7 @@ paths:
         '200':
           description: OK
           content:
-            '*/*':
+            'application/json':
               schema:
                 $ref: '#/components/schemas/StatisticTypeDTO'
         '404':
@@ -289,13 +444,13 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/StatisticTypeDTO'
+              $ref: '#/components/schemas/StatisticTypeSlimDTO'
         required: true
       responses:
         '200':
           description: OK
           content:
-            '*/*':
+            'application/json':
               schema:
                 $ref: '#/components/schemas/StatisticTypeDTO'
         '404':
@@ -319,86 +474,38 @@ paths:
         '404':
           description: Statistic type not found
 
-  /roles/{roleName}:
-    put:
+  ######### Project #########
+  /projects:
+    get:
       tags:
-        - role-controller
-      operationId: updateRole
-      parameters:
-        - name: roleName
-          in: path
-          required: true
-          schema:
-            type: string
+        - project-controller
+      operationId: getProjects
+      responses:
+        '200':
+          description: OK
+          content:
+            'application/json':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ProjectDTO'
+    post:
+      tags:
+        - project-controller
+      operationId: createProject
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/RoleDTO'
+              $ref: '#/components/schemas/ProjectDTO'
         required: true
       responses:
         '200':
           description: OK
           content:
-            '*/*':
+            'application/json':
               schema:
-                $ref: '#/components/schemas/RoleDTO'
-
-  /repositories/{id}/{tokenAuth}:
-    put:
-      tags:
-        - repository-controller
-      operationId: updateRepository
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: integer
-            format: int64
-        - name: tokenAuth
-          in: path
-          required: true
-          schema:
-            type: string
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/RepositoryUpdateDTO'
-        required: true
-      responses:
-        '200':
-          description: OK
-          content:
-            '*/*':
-              schema:
-                $ref: '#/components/schemas/RepositoryDTO'
-
-  /repositories/synchronize/{id}/{tokenAuth}:
-    put:
-      tags:
-        - repository-controller
-      operationId: synchronize
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: integer
-            format: int64
-        - name: tokenAuth
-          in: path
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          description: OK
-          content:
-            '*/*':
-              schema:
-                $ref: '#/components/schemas/RepositoryDTO'
+                $ref: '#/components/schemas/ProjectDTO'
 
   /projects/{id}:
     get:
@@ -473,6 +580,136 @@ paths:
         '404':
           description: Project not found
 
+  /projects/{id}/repositories/:
+    post:
+      tags:
+        - project-controller
+      operationId: createRepository
+      parameters:
+        - name: id
+          description: ID of project
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: githubToken
+          description: Authorization token from github account
+          in: query
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RepositorySlimDTO'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            'application/json':
+              schema:
+                $ref: '#/components/schemas/RepositoryDTO'
+
+  /projects/{id}/tags:
+    post:
+      tags:
+        - project-controller
+      operationId: createTag
+      summary: Add new tag to the project
+      description: Create new tag
+      parameters:
+        - name: id
+          in: path
+          description: ID of project for which the tag will be created
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TagSlimDTO'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            'application/json':
+              schema:
+                $ref: '#/components/schemas/TagDTO'
+
+  /projects/{id}/statistics:
+    post:
+      tags:
+        - project-controller
+      operationId: createStatistic
+      parameters:
+        - name: id
+          in: path
+          description: ID of statistic type
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: statisticType
+          in: query
+          description: ID of statistic type
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            'application/json':
+              schema:
+                $ref: '#/components/schemas/StatisticDTO'
+
+  ######### Roles #########
+  /roles:
+    get:
+      tags:
+        - role-controller
+      operationId: getRoles
+      responses:
+        '200':
+          description: OK
+          content:
+            'application/json':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/RoleSlimDTO'
+
+  /roles/{id}:
+    get:
+      tags:
+        - role-controller
+      operationId: getRole
+      summary: Find role by ID
+      description: Return a single role by ID
+      parameters:
+        - name: id
+          in: path
+          description: ID of role
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            'application/json':
+              schema:
+                $ref: '#/components/schemas/RoleDTO'
+        '404':
+          description: Role not found
+
+  ######### Commits #########
   /commits/{id}:
     get:
       tags:
@@ -497,12 +734,12 @@ paths:
                 $ref: '#/components/schemas/CommitDTO'
         '404':
           description: Commit not found
-    put:
+
+  /commits/{id}/comments:
+    post:
       tags:
         - commit-controller
-      operationId: updateCommit
-      summary: Update commit by ID
-      description: Update an existing commit by ID
+      operationId: addComment
       parameters:
         - name: id
           in: path
@@ -515,8 +752,71 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CommitDTO'
+              $ref: '#/components/schemas/CommentUpdateSlimDTO'
         required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            'application/json':
+              schema:
+                $ref: '#/components/schemas/CommitDTO'
+        '404':
+          description: Commit not found
+
+  /commits/{id}/comments/{commentId}:
+    delete:
+      tags:
+        - commit-controller
+      operationId: deleteComment
+      summary: Delete comment by ID
+      description: Delete an existing comment by ID
+      parameters:
+        - name: id
+          in: path
+          description: ID of commit
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: commentId
+          in: path
+          description: ID of comment
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: OK
+          content:
+            'application/json':
+              schema:
+                $ref: '#/components/schemas/CommitDTO'
+        '404':
+          description: Commit not found
+
+
+  /commits/{id}/tags/{tagId}:
+    post:
+      tags:
+        - commit-controller
+      operationId: addTag
+      parameters:
+        - name: id
+          in: path
+          description: ID of commit
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: tagId
+          in: path
+          description: ID of tag
+          required: true
+          schema:
+            type: integer
+            format: int64
       responses:
         '200':
           description: OK
@@ -529,9 +829,7 @@ paths:
     delete:
       tags:
         - commit-controller
-      operationId: deleteCommit
-      summary: Delete commit by ID
-      description: Delete an existing commit by ID
+      operationId: removeTag
       parameters:
         - name: id
           in: path
@@ -540,12 +838,24 @@ paths:
           schema:
             type: integer
             format: int64
+        - name: tagId
+          in: path
+          description: ID of tag
+          required: true
+          schema:
+            type: integer
+            format: int64
       responses:
         '200':
           description: OK
+          content:
+            'application/json':
+              schema:
+                $ref: '#/components/schemas/CommitDTO'
         '404':
           description: Commit not found
 
+  ######### Comment #########
   /comments/{id}:
     get:
       tags:
@@ -588,7 +898,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CommentDTO'
+              $ref: '#/components/schemas/CommentUpdateSlimDTO'
         required: true
       responses:
         '200':
@@ -596,493 +906,11 @@ paths:
           content:
             'application/json':
               schema:
-                $ref: '#/components/schemas/CommentDTO'
-        '404':
-          description: Comment not found
-    delete:
-      tags:
-        - comment-controller
-      operationId: deleteComment
-      summary: Delete comment by ID
-      description: Delete an existing comment by ID
-      parameters:
-        - name: id
-          in: path
-          description: ID of comment
-          required: true
-          schema:
-            type: integer
-            format: int64
-      responses:
-        '200':
-          description: OK
+                $ref: '#/components/schemas/CommentSlimDTO'
         '404':
           description: Comment not found
 
-  /users:
-    get:
-      tags:
-        - user-controller
-      operationId: getUsers
-      summary: Get all users
-      description: Returns all users.
-      responses:
-        '200':
-          description: OK
-          content:
-            'application/json':
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/UserDTO'
-    post:
-      tags:
-        - user-controller
-      operationId: createUser
-      summary: Create user
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/UserDTO'
-        required: true
-      responses:
-        '200':
-          description: OK
-          content:
-            '*/*':
-              schema:
-                $ref: '#/components/schemas/UserDTO'
-
-  /users/{username}/save/photo:
-    post:
-      tags:
-        - user-controller
-      operationId: saveUserPhoto
-      summary: Upload user's photo
-      description: Find user by username and save photo
-      parameters:
-        - name: username
-          in: path
-          required: true
-          schema:
-            type: string
-      requestBody:
-        content:
-          multipart/form-data:
-            schema:
-              required:
-                - photo
-              type: object
-              properties:
-                photo:
-                  type: string
-                  format: binary
-      responses:
-        '200':
-          description: OK
-
-  /tags:
-    get:
-      tags:
-        - tag-controller
-      operationId: getTags
-      summary: Get all tags
-      description: Return all tags
-      responses:
-        '200':
-          description: OK
-          content:
-            'application/json':
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/TagDTO'
-    post:
-      tags:
-        - tag-controller
-      operationId: createTag
-      summary: Add new tag to the project
-      description: Create new tag
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/TagDTO'
-        required: true
-      responses:
-        '200':
-          description: OK
-          content:
-            '*/*':
-              schema:
-                $ref: '#/components/schemas/TagDTO'
-
-  /statistics:
-    get:
-      tags:
-        - statistic-controller
-      operationId: getStatistics
-      responses:
-        '200':
-          description: OK
-          content:
-            '*/*':
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/StatisticDTO'
-    post:
-      tags:
-        - statistic-controller
-      operationId: createStatistic
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/StatisticDTO'
-        required: true
-      responses:
-        '200':
-          description: OK
-          content:
-            '*/*':
-              schema:
-                $ref: '#/components/schemas/StatisticDTO'
-
-  /statisticTypes:
-    get:
-      tags:
-        - statistic-type-controller
-      operationId: getStatisticTypes
-      responses:
-        '200':
-          description: OK
-          content:
-            '*/*':
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/StatisticTypeDTO'
-    post:
-      tags:
-        - statistic-type-controller
-      operationId: createStatisticType
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/StatisticTypeDTO'
-        required: true
-      responses:
-        '200':
-          description: OK
-          content:
-            '*/*':
-              schema:
-                $ref: '#/components/schemas/StatisticTypeDTO'
-
-  /roles:
-    get:
-      tags:
-        - role-controller
-      operationId: getRoles
-      responses:
-        '200':
-          description: OK
-          content:
-            '*/*':
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/RoleDTO'
-    post:
-      tags:
-        - role-controller
-      operationId: createRole
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/RoleDTO'
-        required: true
-      responses:
-        '200':
-          description: OK
-          content:
-            '*/*':
-              schema:
-                $ref: '#/components/schemas/RoleDTO'
-
-  /repositories/{tokenAuth}:
-    post:
-      tags:
-        - repository-controller
-      operationId: createRepository
-      parameters:
-        - name: tokenAuth
-          description: Authorization token from an github account
-          in: path
-          required: true
-          schema:
-            type: string
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/RepositoryDTO'
-        required: true
-      responses:
-        '200':
-          description: OK
-          content:
-            '*/*':
-              schema:
-                $ref: '#/components/schemas/RepositoryDTO'
-
-  /projects:
-    get:
-      tags:
-        - project-controller
-      operationId: getProjects
-      responses:
-        '200':
-          description: OK
-          content:
-            '*/*':
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/ProjectDTO'
-    post:
-      tags:
-        - project-controller
-      operationId: createProject
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/ProjectDTO'
-        required: true
-      responses:
-        '200':
-          description: OK
-          content:
-            '*/*':
-              schema:
-                $ref: '#/components/schemas/ProjectDTO'
-
-  /commits:
-    get:
-      tags:
-        - commit-controller
-      operationId: getCommits
-      responses:
-        '200':
-          description: OK
-          content:
-            '*/*':
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/CommitDTO'
-    post:
-      tags:
-        - commit-controller
-      operationId: createCommit
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CommitDTO'
-        required: true
-      responses:
-        '200':
-          description: OK
-          content:
-            '*/*':
-              schema:
-                $ref: '#/components/schemas/CommitDTO'
-
-  /comments:
-    get:
-      tags:
-        - comment-controller
-      operationId: getComments
-      responses:
-        '200':
-          description: OK
-          content:
-            '*/*':
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/CommentDTO'
-    post:
-      tags:
-        - comment-controller
-      operationId: createComment
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CommentDTO'
-        required: true
-      responses:
-        '200':
-          description: OK
-          content:
-            '*/*':
-              schema:
-                $ref: '#/components/schemas/CommentDTO'
-
-  /users/{id}/projects:
-    get:
-      tags:
-        - user-controller
-      operationId: getUserProjects
-      summary: Find user projects
-      description: Find all user ptojects by userID
-      parameters:
-        - name: id
-          in: path
-          description: ID of User
-          required: true
-          schema:
-            type: integer
-            format: int64
-      responses:
-        '200':
-          description: OK
-          content:
-            'application/json':
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/ProjectDTO'
-        '404':
-          description: User not found
-
-  /users/{id}/photo:
-    get:
-      tags:
-        - user-controller
-      operationId: getImageWithMediaType
-      summary: Get user profile photo
-      description: Return a user profile photo
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: integer
-            format: int64
-      responses:
-        '200':
-          description: OK
-          content:
-            image/jpeg:
-              schema:
-                type: array
-                items:
-                  type: string
-                  format: byte
-        '404':
-          description: User not found
-
-  /users/username/{username}:
-    get:
-      tags:
-        - user-controller
-      operationId: getUserByUsername
-      summary: Find user by username
-      description: Return a single user by username
-      parameters:
-        - name: username
-          in: path
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          description: OK
-          content:
-            'application/json':
-              schema:
-                $ref: '#/components/schemas/UserDTO'
-        '404':
-          description: User not found
-
-  /users/token/refresh:
-    get:
-      tags:
-        - user-controller
-      operationId: refreshToken
-      summary: Get new accsess token
-      description: Return a new access token
-      responses:
-        '200':
-          description: OK
-
-  /roles/{id}:
-    get:
-      tags:
-        - role-controller
-      operationId: getRole
-      summary: Find role by ID
-      description: Return a single role by ID
-      parameters:
-        - name: id
-          in: path
-          description: ID of role
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          description: OK
-          content:
-            'application/json':
-              schema:
-                $ref: '#/components/schemas/RoleDTO'
-        '404':
-          description: Role not found
-    delete:
-      tags:
-        - role-controller
-      operationId: deleteRole
-      summary: Delete role by ID
-      description: Delete an existing role by ID
-      parameters:
-        - name: id
-          in: path
-          description: ID of role
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          description: OK
-        '404':
-          description: Role not found
-
-  /repositories:
-    get:
-      tags:
-        - repository-controller
-      operationId: getRepositories
-      summary: Get all repositories
-      description: Get all repositories
-      responses:
-        '200':
-          description: OK
-          content:
-            'application/json':
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/RepositoryDTO'
-
+  ######### Repository #########
   /repositories/{id}:
     get:
       tags:
@@ -1107,6 +935,30 @@ paths:
                 $ref: '#/components/schemas/RepositoryDTO'
         '404':
           description: Repository not found
+    put:
+      tags:
+        - repository-controller
+      operationId: updateRepository
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RepositoryUpdateSlimDTO'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            'application/json':
+              schema:
+                $ref: '#/components/schemas/RepositoryDTO'
     delete:
       tags:
         - repository-controller
@@ -1126,6 +978,32 @@ paths:
           description: OK
         '404':
           description: Repository not found
+
+  /repositories/synchronize/{id}/{tokenAuth}:
+    put:
+      tags:
+        - repository-controller
+      operationId: synchronize
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: tokenAuth
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            'application/json':
+              schema:
+                $ref: '#/components/schemas/RepositoryDTO'
+
 components:
   schemas:
     UserDTO:
@@ -1141,26 +1019,26 @@ components:
         email:
           type: string
           example: email@gmail.com
-        pathToFileWithPhoto:
+        profilePhotoURL:
           type: string
-          example: /somePath
-        commentsSlimDTOs:
+          example: localhost:8080/users/26/photo
+        comments:
           type: array
           items:
             $ref: '#/components/schemas/CommentSlimDTO'
-        projectsSlimDTOs:
+        projects:
           type: array
           items:
             $ref: '#/components/schemas/ProjectSlimDTO'
-        createdProjectsSlimDTOs:
+        createdProjects:
           type: array
           items:
             $ref: '#/components/schemas/ProjectSlimDTO'
-        statisticsSlimDTOs:
+        statistics:
           type: array
           items:
             $ref: '#/components/schemas/StatisticSlimDTO'
-        rolesSlimDTOs:
+        roles:
           type: array
           items:
             $ref: '#/components/schemas/RoleSlimDTO'
@@ -1175,9 +1053,9 @@ components:
         tagName:
           type: string
           example: TODO
-        projectsSlimDTO:
+        project:
           $ref: '#/components/schemas/ProjectSlimDTO'
-        commitsSlimDTOs:
+        commits:
           type: array
           items:
             $ref: '#/components/schemas/CommitSlimDTO'
@@ -1192,11 +1070,11 @@ components:
         createdDate:
           type: string
           format: date-time
-        statisticTypeSlimDTO:
+        statisticType:
           $ref: '#/components/schemas/StatisticTypeSlimDTO'
-        authorSlimDTO:
+        author:
           $ref: '#/components/schemas/UserSlimDTO'
-        projectSlimDTO:
+        project:
           $ref: '#/components/schemas/ProjectSlimDTO'
         pathToFileWithGeneratedStat:
           type: string
@@ -1208,7 +1086,7 @@ components:
         statisticName:
           type: string
           example: Best employees
-        statisticsSlimDTOs:
+        statistics:
           type: array
           items:
             $ref: '#/components/schemas/StatisticSlimDTO'
@@ -1219,7 +1097,7 @@ components:
         roleName:
           type: string
           example: ROLE_ADMIN
-        usersSlimDTOs:
+        users:
           type: array
           items:
             $ref: '#/components/schemas/UserSlimDTO'
@@ -1227,13 +1105,13 @@ components:
     RepositoryUpdateDTO:
       type: object
       properties:
-        repositorySlimDTO:
+        repository:
           $ref: '#/components/schemas/RepositorySlimDTO'
         repositoryName:
           type: string
         repositoryURL:
           type: string
-        projectSlimDTO:
+        project:
           $ref: '#/components/schemas/ProjectSlimDTO'
 
     RepositoryDTO:
@@ -1249,9 +1127,9 @@ components:
         repositoryURL:
           type: string
           example: githubUsername/repositoryName
-        projectSlimDTO:
+        project:
           $ref: '#/components/schemas/ProjectSlimDTO'
-        commitsSlimDTOs:
+        commits:
           type: array
           items:
             $ref: '#/components/schemas/CommitSlimDTO'
@@ -1272,21 +1150,21 @@ components:
         description:
           type: string
           example: My first project...
-        authorSlimDTO:
+        author:
           $ref: '#/components/schemas/UserSlimDTO'
-        repositoriesSlimDTOs:
+        repositories:
           type: array
           items:
             $ref: '#/components/schemas/RepositorySlimDTO'
-        statisticsSlimDTOs:
+        statistics:
           type: array
           items:
             $ref: '#/components/schemas/StatisticSlimDTO'
-        usersSlimDTOs:
+        users:
           type: array
           items:
             $ref: '#/components/schemas/UserSlimDTO'
-        tagsSlimDTOs:
+        tags:
           type: array
           items:
             $ref: '#/components/schemas/TagSlimDTO'
@@ -1310,13 +1188,13 @@ components:
         description:
           type: string
           example: My first commit
-        repositorySlimDTO:
+        repository:
           $ref: '#/components/schemas/RepositorySlimDTO'
-        tagsSlimDTOs:
+        tags:
           type: array
           items:
             $ref: '#/components/schemas/TagSlimDTO'
-        commentsSlimDTOs:
+        comments:
           type: array
           items:
             $ref: '#/components/schemas/CommentSlimDTO'
@@ -1337,52 +1215,17 @@ components:
         createdDate:
           type: string
           format: date-time
-        authorSlimDTO:
+        author:
           $ref: '#/components/schemas/UserSlimDTO'
         authorUsername: ##TODO what is it
           type: string
           example: username
-        commitSlimDTO:
+        commit:
           $ref: '#/components/schemas/CommitSlimDTO'
+        isEdited:
+          type: boolean
+          example: false
 
-    UserUpdateDTO:
-      type: object
-      properties:
-        userId:
-          type: integer
-          format: int64
-          example: 13
-        username:
-          type: string
-          example: username
-        email:
-          type: string
-          example: email@gmail.com
-        pathToFileWithPhoto:
-          type: string
-          example: ##TODO resolve it
-        commentsSlimDTOs:
-          type: array
-          items:
-            $ref: '#/components/schemas/CommentSlimDTO'
-        projectsSlimDTOs:
-          type: array
-          items:
-            $ref: '#/components/schemas/ProjectSlimDTO'
-        createdProjectsSlimDTOs:
-          type: array
-          items:
-            $ref: '#/components/schemas/ProjectSlimDTO'
-        statisticsSlimDTOs:
-          type: array
-          items:
-            $ref: '#/components/schemas/StatisticSlimDTO'
-        rolesSlimDTOs:
-          type: array
-          items:
-            $ref: '#/components/schemas/RoleSlimDTO'
-
-    ## TODO add parameters that frontend needs
     CommentSlimDTO:
       type: object
       properties:
@@ -1390,6 +1233,26 @@ components:
           type: integer
           format: int64
           example: 13
+        text:
+          type: string
+          example: Good job, Oleg
+        createdDate:
+          type: string
+          format: date-time
+        isEdited:
+          type: boolean
+          example: false
+
+    CommentUpdateSlimDTO:
+      type: object
+      properties:
+        commentId:
+          type: integer
+          format: int64
+          example: 13
+        text:
+          type: string
+          example: Good job, Oleg
 
     CommitSlimDTO:
       type: object
@@ -1398,6 +1261,18 @@ components:
           type: integer
           format: int64
           example: 13
+        createdDate:
+          type: string
+          format: date-time
+        hashHubId:
+          type: string
+          example: 37c2af
+        loginAuthor:
+          type: string
+          example: login
+        description:
+          type: string
+          example: My first commit
 
     ProjectSlimDTO:
       type: object
@@ -1406,6 +1281,15 @@ components:
           type: integer
           format: int64
           example: 13
+        createdDate:
+          type: string
+          format: date-time
+        projectName:
+          type: string
+          example: Some Name
+        description:
+          type: string
+          example: My first project...
 
     RepositorySlimDTO:
       type: object
@@ -1414,6 +1298,23 @@ components:
           type: integer
           format: int64
           example: 13
+        repositoryName:
+          type: string
+          example: Some name
+        repositoryURL:
+          type: string
+          example: githubUsername/githubRepositoryName
+
+    RepositoryUpdateSlimDTO:
+      type: object
+      properties:
+        repositoryId:
+          type: integer
+          format: int64
+          example: 13
+        repositoryName:
+          type: string
+          example: Some name
 
     TagSlimDTO:
       type: object
@@ -1422,6 +1323,9 @@ components:
           type: integer
           format: int64
           example: 13
+        tagName:
+          type: string
+          example: TODO
 
     StatisticSlimDTO:
       type: object
@@ -1430,6 +1334,9 @@ components:
           type: integer
           format: int64
           example: 13
+        createdDate:
+          type: string
+          format: date-time
 
     StatisticTypeSlimDTO:
       type: object
@@ -1452,3 +1359,12 @@ components:
           type: integer
           format: int64
           example: 13
+        username:
+          type: string
+          example: username
+        email:
+          type: string
+          example: email@gmail.com
+        profilePhotoURL:
+          type: string
+          example: localhost:8080/users/26/photo

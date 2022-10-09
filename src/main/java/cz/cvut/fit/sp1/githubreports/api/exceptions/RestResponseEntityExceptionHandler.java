@@ -39,4 +39,9 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
     public ResponseEntity<Object> handleHasRelations(RuntimeException ex, WebRequest request) {
         return handleExceptionInternal(ex, "[HasRelationsException] Message: " + ex.getMessage(), new HttpHeaders(), HttpStatus.CONFLICT, request);
     }
+
+    @ExceptionHandler(value = {Exception.class})
+    public ResponseEntity<Object> handleUnknownException(RuntimeException ex, WebRequest request) {
+        return handleExceptionInternal(ex, "[Unknown exception] Message: " + ex.getMessage(), new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
+    }
 }

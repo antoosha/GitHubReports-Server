@@ -2,16 +2,22 @@ package cz.cvut.fit.sp1.githubreports.service.statistic.statisticType;
 
 import cz.cvut.fit.sp1.githubreports.model.statistic.StatisticType;
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
 import org.openapi.model.StatisticTypeDTO;
+import org.openapi.model.StatisticTypeSlimDTO;
 
-@Mapper
+import java.util.List;
+
+@Mapper(componentModel = "spring")
 public interface StatisticTypeMapper {
 
-    @Mapping(source = "statistics", target = "statisticsIds")
-    StatisticTypeDTO fromModel(StatisticType statisticType);
+    StatisticTypeDTO toDTO(StatisticType statisticType);
 
-    @Mapping(target = "statistics", source = "statisticsIds")
-    StatisticType toModel(StatisticTypeDTO statisticTypeDTO);
+    StatisticTypeSlimDTO toSlimDTO(StatisticType statisticType);
 
+    StatisticType fromSlimDTO(StatisticTypeSlimDTO statisticTypeSlimDTO);
+
+    List<StatisticTypeDTO> toDTOs(List<StatisticType> statisticTypes);
+
+    List<StatisticTypeSlimDTO> toSlimDTOs(List<StatisticType> statisticTypes);
+    
 }

@@ -55,7 +55,7 @@ public class UserUpdateConverter {
                 user.getUserId(),
                 user.getUsername(),
                 user.getEmail(),
-                user.getPathToFileWithPhoto(),
+                user.getProfilePhotoURL(),
                 user.getComments().stream().map(Comment::getCommentId).collect(Collectors.toList()),
                 user.getProjects().stream().map(Project::getProjectId).collect(Collectors.toList()),
                 user.getCreatedProjects().stream().map(Project::getProjectId).collect(Collectors.toList()),

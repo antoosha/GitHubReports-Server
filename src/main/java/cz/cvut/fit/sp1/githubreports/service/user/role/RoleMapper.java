@@ -2,15 +2,21 @@ package cz.cvut.fit.sp1.githubreports.service.user.role;
 
 import cz.cvut.fit.sp1.githubreports.model.user.Role;
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.openapi.model.RoleDTO;
+import org.openapi.model.*;
 
-@Mapper
+import java.util.List;
+
+@Mapper(componentModel = "spring")
 public interface RoleMapper {
 
-    @Mapping(source = "users", target = "usersIds")
-    RoleDTO fromModel(Role role);
+    RoleDTO toDTO(Role role);
 
-    @Mapping(target = "users", source = "usersIds")
-    Role toModel(RoleDTO roleDTO);
+    RoleSlimDTO toSlimDTO(Role role);
+
+    Role fromSlimDTO(RoleSlimDTO roleSlimDTO);
+
+    List<RoleDTO> toDTOs(List<Role> roles);
+
+    List<RoleSlimDTO> toSlimDTOs(List<Role> roles);
+
 }
