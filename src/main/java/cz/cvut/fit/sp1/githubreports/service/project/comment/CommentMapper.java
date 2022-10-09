@@ -2,17 +2,23 @@ package cz.cvut.fit.sp1.githubreports.service.project.comment;
 
 import cz.cvut.fit.sp1.githubreports.model.project.Comment;
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
 import org.openapi.model.CommentDTO;
+import org.openapi.model.CommentSlimDTO;
+
+import java.util.List;
 
 @Mapper
 public interface CommentMapper {
 
-    @Mapping(source = "author.userId", target = "authorId")
-    @Mapping(source = "commit.commitId", target = "commitId")
-    CommentDTO fromModel(Comment comment);
+    CommentDTO toDTO(Comment comment);
 
-    @Mapping(target = "author.userId", source = "authorId")
-    @Mapping(target = "commit.commitId", source = "commitId")
-    Comment toModel(CommentDTO commentDTO);
+    List<CommentDTO> toDTOsMany(List<Comment> comments);
+
+    CommentSlimDTO toSlimDTO(Comment comment);
+
+    List<CommentSlimDTO> toSlimDTOsMany(List<Comment> comments);
+
+    Comment fromDTO(CommentDTO commentDTO);
+
+    Comment fromSlimDTO(CommentSlimDTO commentSlimDTO);
 }

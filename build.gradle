@@ -28,6 +28,10 @@ dependencies {
 	//auth jwt
 	implementation 'com.auth0:java-jwt:3.19.1'
 
+	//lombok
+	compileOnly 'org.projectlombok:lombok'
+	annotationProcessor 'org.projectlombok:lombok'
+
 	//mapstruct - mappers
 	implementation 'org.mapstruct:mapstruct:1.5.2.Final'
 	annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.2.Final'
@@ -38,10 +42,6 @@ dependencies {
 	//openapi
 	implementation 'io.swagger.core.v3:swagger-core:2.2.2'
 	implementation 'org.openapitools:jackson-databind-nullable:0.2.0'
-
-	//lombok
-	compileOnly 'org.projectlombok:lombok'
-	annotationProcessor 'org.projectlombok:lombok'
 
 	//database
 	runtimeOnly 'org.postgresql:postgresql'
