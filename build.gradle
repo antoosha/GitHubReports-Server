@@ -59,13 +59,22 @@ springBoot {
 openApiGenerate {
 	generatorName = "spring"
 	inputSpec = "$rootDir/src/main/resources/specification.yaml".toString()
-	outputDir = "$rootDir/src/main/java/cz/cvut/fit/sp1/githubreports/api/generated".toString()
+	outputDir = "${buildDir}/generated/openapi".toString()
 	apiPackage = "org.openapi.api"
 	modelPackage = "org.openapi.model"
 	configOptions = [
 			dateLibrary: "java17",
 			interfaceOnly: "true"
 	]
+}
+
+sourceSets {
+	main {
+		java {
+			srcDir "${buildDir}/generated/openapi/src/main/java"
+			srcDir "${rootDir}/src/main/java"
+		}
+	}
 }
 
 bootJar {
@@ -79,3 +88,5 @@ jar {
 tasks.named('test') {
 	useJUnitPlatform()
 }
+
+compileJava.dependsOn tasks.openApiGenerate
