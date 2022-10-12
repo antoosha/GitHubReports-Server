@@ -497,7 +497,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/ProjectDTO'
+              $ref: '#/components/schemas/ProjectSlimDTO'
         required: true
       responses:
         '200':
@@ -549,7 +549,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/ProjectDTO'
+              $ref: '#/components/schemas/ProjectSlimDTO'
         required: true
       responses:
         '200':
