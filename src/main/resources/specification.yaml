@@ -408,7 +408,7 @@ paths:
     get:
       tags:
         - statistic-type-controller
-      operationId: getstatisticType
+      operationId: getStatisticType
       summary: Find statistic type by ID
       description: Return a single statistic type by ID
       parameters:

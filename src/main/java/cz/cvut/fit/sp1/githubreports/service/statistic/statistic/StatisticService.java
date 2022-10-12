@@ -25,8 +25,8 @@ public class StatisticService implements StatisticSPI {
     }
 
     @Override
-    public Optional<Statistic> readById(Long id) {
-        return repository.findById(id);
+    public Statistic readById(Long id) {
+        return repository.findById(id).orElseThrow(NoEntityFoundException::new);
     }
 
     @Override

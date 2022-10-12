@@ -9,7 +9,7 @@ import java.util.Optional;
 public interface StatisticTypeSPI {
     Collection<StatisticType> readAll();
 
-    Optional<StatisticType> readById(String id);
+    StatisticType readById(String id);
 
     StatisticType create(StatisticType statisticType) throws EntityStateException;
 

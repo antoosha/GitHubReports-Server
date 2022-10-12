@@ -23,8 +23,8 @@ public class StatisticTypeService implements StatisticTypeSPI {
     }
 
     @Override
-    public Optional<StatisticType> readById(String id) {
-        return repository.findById(id);
+    public StatisticType readById(String id) {
+        return repository.findById(id).orElseThrow(NoEntityFoundException::new);
     }
 
     @Override
