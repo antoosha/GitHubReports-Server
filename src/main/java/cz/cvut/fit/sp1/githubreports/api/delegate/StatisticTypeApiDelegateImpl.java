@@ -26,7 +26,7 @@ public class StatisticTypeApiDelegateImpl implements StatisticTypesApi {
     @Override
     public ResponseEntity<List<StatisticTypeSlimDTO>> getStatisticTypes() {
         return ResponseEntity.ok
-                (statisticTypeMapper.toSlimDTOs(statisticTypeSPI.readAll().stream().toList()));
+                (statisticTypeMapper.toSlimDTOs(statisticTypeSPI.readAll()));
     }
 
     @Override
@@ -39,11 +39,7 @@ public class StatisticTypeApiDelegateImpl implements StatisticTypesApi {
 
     @Override
     public ResponseEntity<Void> deleteStatisticType(String id) {
-        try {
             statisticTypeSPI.delete(id);
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.UNPROCESSABLE_ENTITY);
-        }
+            return new ResponseEntity<>(HttpStatus.OK);
     }
 }

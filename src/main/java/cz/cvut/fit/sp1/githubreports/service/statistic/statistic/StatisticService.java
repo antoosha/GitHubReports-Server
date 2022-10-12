@@ -8,8 +8,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.Collection;
-import java.util.Optional;
+import java.util.List;
 
 
 @AllArgsConstructor
@@ -20,7 +19,7 @@ public class StatisticService implements StatisticSPI {
 
 
     @Override
-    public Collection<Statistic> readAll() {
+    public List<Statistic> readAll() {
         return repository.findAll();
     }
 

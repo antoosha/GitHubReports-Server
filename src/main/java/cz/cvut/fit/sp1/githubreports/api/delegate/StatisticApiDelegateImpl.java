@@ -26,16 +26,12 @@ public class StatisticApiDelegateImpl implements StatisticsApi {
     @Override
     public ResponseEntity<List<StatisticDTO>> getStatistics() {
         return ResponseEntity.ok
-                (statisticMapper.toDTOs(statisticSPI.readAll().stream().toList()));
+                (statisticMapper.toDTOs(statisticSPI.readAll()));
     }
 
     @Override
     public ResponseEntity<Void> deleteStatistic(Long id) {
-        try {
             statisticSPI.delete(id);
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.UNPROCESSABLE_ENTITY);
-        }
+            return new ResponseEntity<>(HttpStatus.OK);
     }
 }

@@ -7,8 +7,7 @@ import cz.cvut.fit.sp1.githubreports.model.statistic.StatisticType;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.Collection;
-import java.util.Optional;
+import java.util.List;
 
 @AllArgsConstructor
 @Service("StatisticTypeService")
@@ -18,7 +17,7 @@ public class StatisticTypeService implements StatisticTypeSPI {
 
 
     @Override
-    public Collection<StatisticType> readAll() {
+    public List<StatisticType> readAll() {
         return repository.findAll();
     }
 
