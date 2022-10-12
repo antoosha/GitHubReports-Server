@@ -21,16 +21,22 @@ public interface UserSPI {
 
     User create(User user) throws EntityStateException;
 
-    User WithPassword(Long id, User user) throws EntityStateException;
+    User update(String username, User updatedUser);
 
-    User updateWithoutPassword(Long id, User user) throws EntityStateException;
+    User changePassword(String username, String password);
 
-    void delete(Long id);
+    User addRole(String username, String roleName);
 
-    Collection<Project> getAllUserProjects(Long id);
+    User removeRole(String username, String roleName);
 
-    void refreshToken(HttpServletRequest request, HttpServletResponse response, String secret, Integer expirationTimeAccessToken) throws IOException;
+    void delete(String username);
+
+    Collection<Project> getAllUserProjects(String username);
+
+    void refreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException;
 
     void savePhoto(String username, MultipartFile multipartFile);
+
+    byte[] getImage(String username);
 
 }

@@ -2,6 +2,7 @@ package cz.cvut.fit.sp1.githubreports.service.user.role;
 
 import cz.cvut.fit.sp1.githubreports.model.user.Role;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.openapi.model.*;
 
 import java.util.List;
@@ -13,6 +14,7 @@ public interface RoleMapper {
 
     RoleSlimDTO toSlimDTO(Role role);
 
+    @Mapping(target = "users", ignore = true)
     Role fromSlimDTO(RoleSlimDTO roleSlimDTO);
 
     List<RoleDTO> toDTOs(List<Role> roles);

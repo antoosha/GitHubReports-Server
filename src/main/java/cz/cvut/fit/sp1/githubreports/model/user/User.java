@@ -6,6 +6,7 @@ import cz.cvut.fit.sp1.githubreports.model.statistic.Statistic;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -33,16 +34,16 @@ public class User {
     private String profilePhotoURL;
 
     @OneToMany(mappedBy = "author")
-    private List<Comment> comments;
+    private List<Comment> comments = new ArrayList<>();
 
     @ManyToMany(mappedBy = "users")
-    private List<Project> projects;
+    private List<Project> projects = new ArrayList<>();
 
     @OneToMany(mappedBy = "author")
-    private List<Project> createdProjects;
+    private List<Project> createdProjects = new ArrayList<>();
 
     @OneToMany(mappedBy = "statisticId")
-    private List<Statistic> statistics;
+    private List<Statistic> statistics = new ArrayList<>();
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
@@ -50,7 +51,7 @@ public class User {
             joinColumns = {@JoinColumn(name = "user_id")},
             inverseJoinColumns = {@JoinColumn(name = "role_name")}
     )
-    private List<Role> roles;
+    private List<Role> roles = new ArrayList<>();
 
     @Override
     public boolean equals(Object o) {

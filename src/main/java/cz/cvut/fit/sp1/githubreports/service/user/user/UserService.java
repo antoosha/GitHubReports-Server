@@ -6,12 +6,15 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import cz.cvut.fit.sp1.githubreports.api.exceptions.*;
-import cz.cvut.fit.sp1.githubreports.dao.project.ProjectJpaRepository;
+import cz.cvut.fit.sp1.githubreports.dao.user.RoleJpaRepository;
 import cz.cvut.fit.sp1.githubreports.dao.user.UserJpaRepository;
 import cz.cvut.fit.sp1.githubreports.model.project.Project;
 import cz.cvut.fit.sp1.githubreports.model.user.Role;
 import cz.cvut.fit.sp1.githubreports.model.user.User;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import org.apache.commons.io.IOUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -22,6 +25,8 @@ import org.springframework.web.server.ResponseStatusException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -35,7 +40,7 @@ import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.HttpStatus.FORBIDDEN;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Transactional
 @Service("UserService")
 public class UserService implements UserSPI {
@@ -43,7 +48,16 @@ public class UserService implements UserSPI {
     private final PasswordEncoder passwordEncoder;
 
     private final UserJpaRepository userJpaRepository;
-    private final ProjectJpaRepository projectJpaRepository;
+
+    private final RoleJpaRepository roleJpaRepository;
+
+    @Value("${my.secret}")
+    private String secret;
+
+    private String baseURL = "localhost:8080"; //TODO
+
+    @Value("${expiration.time.access}")
+    private Integer expirationTimeAccessToken;
 
     private void delegateUserCommentsToDeletedUser(User toDeleteUser, User deletedUser) {
         toDeleteUser.getComments()
@@ -83,66 +97,95 @@ public class UserService implements UserSPI {
         return userJpaRepository.findUserByUsername(username);
     }
 
+    private boolean correctPassword(String password) {
+        if (password.length() < 8) {
+            return false;
+        }
+        //place for password regex expression
+        return true;
+    }
+
     @Override
     public User create(User user) throws EntityStateException {
         if (userJpaRepository.findUserByUsername(user.getUsername()).isPresent() ||
                 userJpaRepository.findUserByEmail(user.getEmail()).isPresent())
             throw new EntityStateException();
         user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setProfilePhotoURL(baseURL + "/" + user.getUsername() + "/photos");
         return userJpaRepository.save(user);
     }
 
-    private void update(Long id, User user) {
-        if (id == null || !userJpaRepository.existsById(id))
-            throw new NoEntityFoundException();
-        User userOld = userJpaRepository.getById(id);
-        if (!userOld.getEmail().equals(user.getEmail()))
-            if (userJpaRepository.findUserByEmail(user.getEmail()).isPresent())
+    public User update(String username, User updatedUser) {
+        if (username == null)
+            throw new IncorrectRequestException();
+
+        User userOld = userJpaRepository.findUserByUsername(username).orElseThrow(NoEntityFoundException::new);
+
+        // email address has been changed
+        if (!userOld.getEmail().equals(updatedUser.getEmail())) {
+            if (userJpaRepository.findUserByEmail(updatedUser.getEmail()).isPresent()) {
                 throw new EntityStateException();
-        if (!userOld.getUsername().equals(user.getUsername()))
-            if (userJpaRepository.findUserByUsername(user.getUsername()).isPresent())
-                throw new EntityStateException();
-        if (!user.getUsername().equals(userOld.getUsername())) {
-            user.getComments().forEach(comment -> comment.setAuthorUsername(user.getUsername()));
+            }
         }
+        // username has been changed
+        if (!userOld.getUsername().equals(updatedUser.getUsername())) {
+            if (userJpaRepository.findUserByUsername(updatedUser.getUsername()).isPresent()) {
+                throw new EntityStateException();
+            }
+        }
+
+        userOld.setEmail(updatedUser.getEmail()); // update email
+        userOld.setUsername(updatedUser.getUsername());
+        userOld.getComments().forEach(comment -> comment.setAuthorUsername(userOld.getUsername()));
+        userOld.setProfilePhotoURL(baseURL + "/" + userOld.getUsername() + "/photo");
+        return userJpaRepository.save(userOld);
     }
 
     @Override
-    public User WithPassword(Long id, User user) throws EntityStateException {
-        update(id, user);
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-
+    public User changePassword(String username, String password) {
+        if (!correctPassword(password)) {
+            throw new EntityStateException();
+        }
+        User user = userJpaRepository.findUserByUsername(username).orElseThrow(NoEntityFoundException::new);
+        user.setPassword(passwordEncoder.encode(password));
         return userJpaRepository.save(user);
     }
 
     @Override
-    public User updateWithoutPassword(Long id, User user) throws EntityStateException {
-        update(id, user);
-        user.setPassword(userJpaRepository.getById(id).getPassword());
+    public User addRole(String username, String roleName) {
+        User user = userJpaRepository.findUserByUsername(username).orElseThrow(NoEntityFoundException::new);
+        Role role = roleJpaRepository.findById(roleName).orElseThrow(NoEntityFoundException::new);
+        user.getRoles().add(role);
         return userJpaRepository.save(user);
     }
 
     @Override
-    public void delete(Long id) {
-        if (userJpaRepository.existsById(id)) {
-            if (!userJpaRepository.getById(id).getCreatedProjects().isEmpty())
-                throw new HasRelationsException();
-            User deletedUser = userJpaRepository.findUserByUsername("deletedUser").get(); //should exist
-            User toDeleteUser = userJpaRepository.getById(id);
-            delegateUserCommentsToDeletedUser(toDeleteUser, deletedUser);
-            removeAllRelationProjects(toDeleteUser);
-            userJpaRepository.deleteById(id);
-        } else throw new NoEntityFoundException();
+    public User removeRole(String username, String roleName) {
+        User user = userJpaRepository.findUserByUsername(username).orElseThrow(NoEntityFoundException::new);
+        Role role = roleJpaRepository.findById(roleName).orElseThrow(NoEntityFoundException::new);
+        user.getRoles().remove(role);
+        return userJpaRepository.save(user);
     }
 
     @Override
-    public Collection<Project> getAllUserProjects(Long id) {
-        if (!userJpaRepository.existsById(id)) throw new NoEntityFoundException();
-        return userJpaRepository.getById(id).getProjects();
+    public void delete(String username) {
+        User userToDelete = userJpaRepository.findUserByUsername(username).orElseThrow(NoEntityFoundException::new);
+        if (!userToDelete.getCreatedProjects().isEmpty())
+            throw new HasRelationsException();
+        User deletedUser = userJpaRepository.findUserByUsername("deletedUser").orElseThrow(NoEntityFoundException::new);
+        delegateUserCommentsToDeletedUser(userToDelete, deletedUser);
+        removeAllRelationProjects(userToDelete);
+        userJpaRepository.delete(userToDelete);
     }
 
     @Override
-    public void refreshToken(HttpServletRequest request, HttpServletResponse response, String secret, Integer expirationTimeAccessToken) throws IOException {
+    public Collection<Project> getAllUserProjects(String username) {
+        User user = userJpaRepository.findUserByUsername(username).orElseThrow(NoEntityFoundException::new);
+        return user.getProjects();
+    }
+
+    @Override
+    public void refreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String authorizationHeader = request.getHeader(AUTHORIZATION);
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
             try {
@@ -185,9 +228,26 @@ public class UserService implements UserSPI {
         String fileName = StringUtils.cleanPath(Objects.requireNonNull(multipartFile.getOriginalFilename()));
         User user = userJpaRepository.findUserByUsername(username).orElseThrow(NoEntityFoundException::new);
         String uploadDir = "src/main/resources/serverData/images/userPhotos/" + user.getUserId();
-        user.setProfilePhotoURL(uploadDir);
         saveFile(uploadDir, "photo." + fileName.split("\\.")[1], multipartFile);
         userJpaRepository.save(user);
+    }
+
+    @Override
+    public byte[] getImage(String username) {
+        User user = userJpaRepository.findUserByUsername(username).orElseThrow(NoEntityFoundException::new);
+        InputStream is = null;
+        byte[] bytes = null;
+        try {
+            is = new FileInputStream("src/main/resources/serverData/images/userPhotos/" + user.getUserId() + "/photo.jpg");
+        } catch (FileNotFoundException e) {
+            throw new NoEntityFoundException();
+        }
+        try {
+            bytes = IOUtils.toByteArray(is);
+        } catch (IOException ioe) {
+            throw new EntityStateException("Problem with sending response bytes");
+        }
+        return bytes;
     }
 
 

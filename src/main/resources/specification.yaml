@@ -32,7 +32,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/UserSlimDTO'
+              $ref: '#/components/schemas/UserCreateSlimDTO'
         required: true
       responses:
         '200':
@@ -55,8 +55,7 @@ paths:
           description: ID of user to return
           required: true
           schema:
-            type: integer
-            format: int64
+            type: string
       responses:
         '200':
           description: OK
@@ -80,13 +79,12 @@ paths:
           description: username of user to update
           required: true
           schema:
-            type: integer
-            format: int64
+            type: string
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/UserSlimDTO'
+              $ref: '#/components/schemas/UserUpdateSlimDTO'
         required: true
       responses:
         '200':
@@ -108,11 +106,34 @@ paths:
           description: username of user to delete
           required: true
           schema:
-            type: integer
-            format: int64
+            type: string
       responses:
         '200':
           description: OK
+
+  /users/{username}/passwords:
+    put:
+      tags:
+        - user-controller
+      operationId: changePassword
+      parameters:
+        - name: username
+          in: path
+          required: true
+          schema:
+            type: string
+            example: username
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PasswordDTO'
+        required: true
+
+      responses:
+        '200':
+          description: OK
+
 
   /users/{username}/roles:
     post:
@@ -162,7 +183,30 @@ paths:
               schema:
                 $ref: '#/components/schemas/UserDTO'
 
-  /users/{username}/save/photo:
+  /users/{username}/photos:
+    get:
+      tags:
+        - user-controller
+      operationId: getImageWithMediaType
+      summary: Get user profile photo
+      description: Return a user profile photo
+      parameters:
+        - name: username
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            image/jpeg:
+              schema:
+                type: string
+                format: binary
+        '404':
+          description: User not found
+
     post:
       tags:
         - user-controller
@@ -191,7 +235,7 @@ paths:
           description: OK
 
 
-  /users/{id}/projects:
+  /users/{username}/projects:
     get:
       tags:
         - user-controller
@@ -199,13 +243,12 @@ paths:
       summary: Find user projects
       description: Find all user ptojects by userID
       parameters:
-        - name: id
+        - name: username
           in: path
           description: ID of User
           required: true
           schema:
-            type: integer
-            format: int64
+            type: string
       responses:
         '200':
           description: OK
@@ -215,33 +258,6 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/ProjectDTO'
-        '404':
-          description: User not found
-
-  /users/{id}/photo:
-    get:
-      tags:
-        - user-controller
-      operationId: getImageWithMediaType
-      summary: Get user profile photo
-      description: Return a user profile photo
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: integer
-            format: int64
-      responses:
-        '200':
-          description: OK
-          content:
-            image/jpeg:
-              schema:
-                type: array
-                items:
-                  type: string
-                  format: byte
         '404':
           description: User not found
 
@@ -685,17 +701,17 @@ paths:
                 items:
                   $ref: '#/components/schemas/RoleSlimDTO'
 
-  /roles/{id}:
+  /roles/{roleName}:
     get:
       tags:
         - role-controller
       operationId: getRole
-      summary: Find role by ID
-      description: Return a single role by ID
+      summary: Find role by role name
+      description: Return a single role by name
       parameters:
-        - name: id
+        - name: roleName
           in: path
-          description: ID of role
+          description: Name of role
           required: true
           schema:
             type: string
@@ -1049,6 +1065,29 @@ components:
           items:
             $ref: '#/components/schemas/RoleSlimDTO'
 
+    UserCreateSlimDTO:
+      type: object
+      properties:
+        username:
+          type: string
+          example: username
+        password:
+          type: string
+          example: PaSsWoRD1234
+        email:
+          type: string
+          example: email@gmail.com
+
+    UserUpdateSlimDTO:
+      type: object
+      properties:
+        username:
+          type: string
+          example: username
+        email:
+          type: string
+          example: email@gmail.com
+
     TagDTO:
       type: object
       properties:
@@ -1374,3 +1413,10 @@ components:
         profilePhotoURL:
           type: string
           example: localhost:8080/users/26/photo
+
+    PasswordDTO:
+      type: object
+      properties:
+        password:
+          type: string
+          example: PaSsWoRd123
