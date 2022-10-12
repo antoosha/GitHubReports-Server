@@ -3,14 +3,13 @@ package cz.cvut.fit.sp1.githubreports.service.project.repository;
 import cz.cvut.fit.sp1.githubreports.api.exceptions.EntityStateException;
 import cz.cvut.fit.sp1.githubreports.model.project.Repository;
 
-import java.util.Collection;
-import java.util.Optional;
+import java.util.List;
 
 public interface RepositorySPI {
 
-    Collection<Repository> readAll();
+    List<Repository> readAll();
 
-    Optional<Repository> readById(Long id);
+    Repository readById(Long id);
 
     Repository create(Repository repository, String tokenAuth) throws EntityStateException;
 

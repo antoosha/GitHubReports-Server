@@ -65,7 +65,6 @@ public class ProjectService implements ProjectSPI {
     @Override
     public Repository createRepository(Long id, String githubToken, Repository repository) {
         repository.setProject(readById(id));
-
         return repositorySPI.create(repository, githubToken);
     }
 
