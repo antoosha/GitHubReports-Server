@@ -251,7 +251,7 @@ paths:
         - user-controller
       operationId: refreshToken
       summary: Get new accsess token
-      description: Return a new access token
+      description: Return a new access token # TODO improve security - not to send tokens
       responses:
         '200':
           description: OK
@@ -594,7 +594,7 @@ paths:
             type: integer
             format: int64
         - name: githubToken
-          description: Authorization token from github account
+          description: Authorization token from github account # TODO improve security - not to send tokens
           in: query
           required: true
           schema:
@@ -946,6 +946,12 @@ paths:
           schema:
             type: integer
             format: int64
+        - name: githubToken
+          description: Authorization token from github account
+          in: query
+          required: true
+          schema:
+            type: string
       requestBody:
         content:
           application/json:
@@ -991,7 +997,7 @@ paths:
           schema:
             type: integer
             format: int64
-        - name: tokenAuth
+        - name: tokenAuth # TODO improve security - not to send tokens
           in: path
           required: true
           schema:

@@ -127,13 +127,13 @@ public class RepositoryService implements RepositorySPI {
     }
 
     @Override
-    public Collection<Repository> readAll() {
+    public List<Repository> readAll() {
         return jpaRepository.findAll();
     }
 
     @Override
-    public Optional<Repository> readById(Long id) {
-        return jpaRepository.findById(id);
+    public Repository readById(Long id) {
+        return jpaRepository.findById(id).orElseThrow(NoEntityFoundException::new);
     }
 
     @Override
