@@ -5,11 +5,19 @@ import cz.cvut.fit.sp1.githubreports.api.exceptions.NoEntityFoundException;
 import cz.cvut.fit.sp1.githubreports.dao.project.ProjectJpaRepository;
 import cz.cvut.fit.sp1.githubreports.dao.user.UserJpaRepository;
 import cz.cvut.fit.sp1.githubreports.model.project.Project;
+import cz.cvut.fit.sp1.githubreports.model.project.Repository;
+import cz.cvut.fit.sp1.githubreports.model.project.Tag;
+import cz.cvut.fit.sp1.githubreports.model.statistic.Statistic;
+import cz.cvut.fit.sp1.githubreports.service.project.repository.RepositorySPI;
+import cz.cvut.fit.sp1.githubreports.service.project.tag.TagSPI;
+import cz.cvut.fit.sp1.githubreports.service.statistic.statistic.StatisticSPI;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
 @AllArgsConstructor
@@ -18,6 +26,9 @@ public class ProjectService implements ProjectSPI {
 
     private final ProjectJpaRepository projectJpaRepository;
     private final UserJpaRepository userJpaRepository;
+    private final RepositorySPI repositorySPI;
+    private final StatisticSPI statisticSPI;
+    private final TagSPI tagSPI;
 
     private void checkValidation(Project project) {
         if (project.getAuthor() == null)
@@ -27,13 +38,13 @@ public class ProjectService implements ProjectSPI {
     }
 
     @Override
-    public Collection<Project> readAll() {
+    public List<Project> readAll() {
         return projectJpaRepository.findAll();
     }
 
     @Override
-    public Optional<Project> readById(Long id) {
-        return projectJpaRepository.findById(id);
+    public Project readById(Long id) {
+        return projectJpaRepository.findById(id).orElseThrow(NoEntityFoundException::new);
     }
 
     @Override
@@ -49,6 +60,25 @@ public class ProjectService implements ProjectSPI {
         }
         project.setCreatedDate(LocalDateTime.now());
         return projectJpaRepository.save(project);
+    }
+
+    @Override
+    public Repository createRepository(Long id, String githubToken, Repository repository) {
+        repository.setProject(readById(id));
+
+        return repositorySPI.create(repository, githubToken);
+    }
+
+//    @Override
+//    public Statistic createStatistic(Long id, String statisticType) {
+//        //TODO implement logic;
+//    }
+
+    @Override
+    public Tag createTag(Long id, Tag tag) {
+        tag.setProject(readById(id));
+        tag.setCommits(new ArrayList<>());
+        return tagSPI.create(tag);
     }
 
     @Override
