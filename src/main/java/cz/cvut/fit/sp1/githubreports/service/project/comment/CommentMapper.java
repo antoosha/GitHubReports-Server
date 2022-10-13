@@ -16,8 +16,16 @@ public interface CommentMapper {
 
     CommentSlimDTO toSlimDTO(Comment comment);
 
+    @Mapping(target = "author", ignore = true)
+    @Mapping(target = "authorUsername", ignore = true)
+    @Mapping(target = "commit", ignore = true)
     Comment fromSlimDTO(CommentSlimDTO commentSlimDTO);
 
+    @Mapping(target = "createdDate", ignore = true)
+    @Mapping(target = "author", ignore = true)
+    @Mapping(target = "authorUsername", ignore = true)
+    @Mapping(target = "commit", ignore = true)
+    @Mapping(target = "isEdited", ignore = true)
     Comment fromUpdateSlimDTO(CommentUpdateSlimDTO commentUpdateSlimDTO);
 
     List<CommentDTO> toDTOs(List<Comment> comments);

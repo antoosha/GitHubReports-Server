@@ -17,6 +17,8 @@ public interface TagMapper {
 
     TagSlimDTO toSlimDTO(Tag tag);
 
+    @Mapping(target = "project", ignore = true)
+    @Mapping(target = "commits", ignore = true)
     Tag fromSlimDTO(TagSlimDTO tagSlimDTO);
 
     List<TagDTO> toDTOs(List<Tag> tags);
