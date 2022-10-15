@@ -28,7 +28,7 @@ public class TagsApiDelegateImpl implements TagsApi {
     @Override
     public ResponseEntity<TagDTO> getTag(Long id) {
         return ResponseEntity.ok(
-            tagMapper.toDTO(tagSPI.readById(id).orElseThrow(NoEntityFoundException::new)));
+            tagMapper.toDTO(tagSPI.readById(id)));
     }
 
     @Override

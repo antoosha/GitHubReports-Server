@@ -8,10 +8,13 @@ import cz.cvut.fit.sp1.githubreports.model.project.Project;
 import cz.cvut.fit.sp1.githubreports.model.project.Repository;
 import cz.cvut.fit.sp1.githubreports.model.project.Tag;
 import cz.cvut.fit.sp1.githubreports.model.statistic.Statistic;
+import cz.cvut.fit.sp1.githubreports.model.user.User;
 import cz.cvut.fit.sp1.githubreports.service.project.repository.RepositorySPI;
 import cz.cvut.fit.sp1.githubreports.service.project.tag.TagSPI;
 import cz.cvut.fit.sp1.githubreports.service.statistic.statistic.StatisticSPI;
+import cz.cvut.fit.sp1.githubreports.service.user.user.UserSPI;
 import lombok.AllArgsConstructor;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -25,20 +28,13 @@ import java.util.Optional;
 public class ProjectService implements ProjectSPI {
 
     private final ProjectJpaRepository projectJpaRepository;
-    private final UserJpaRepository userJpaRepository;
+
+    private final UserSPI userSPI;
     private final RepositorySPI repositorySPI;
-    private final StatisticSPI statisticSPI;
     private final TagSPI tagSPI;
 
-    private void checkValidation(Project project) {
-        if (project.getAuthor() == null)
-            throw new EntityStateException();
-        if (!userJpaRepository.existsById(project.getAuthor().getUserId()))
-            throw new EntityStateException();
-    }
-
     @Override
-    public List<Project> readAll() {
+    public Collection<Project> readAll() {
         return projectJpaRepository.findAll();
     }
 
@@ -49,15 +45,15 @@ public class ProjectService implements ProjectSPI {
 
     @Override
     public Project create(Project project) throws EntityStateException {
-        if (project.getProjectId() != null) {
-            if (projectJpaRepository.existsById(project.getProjectId()))
-                throw new EntityStateException();
-        }
-        checkValidation(project);
+        User user = userSPI.readUserFromToken();
+        project.setAuthor(user);
+        project.getUsers().add(user);
+
         if (project.getAuthor().getProjects()
                 .stream().anyMatch(project1 -> project1.getProjectName().equals(project.getProjectName()))) {
             throw new EntityStateException();
         }
+
         project.setCreatedDate(LocalDateTime.now());
         return projectJpaRepository.save(project);
     }
@@ -81,18 +77,19 @@ public class ProjectService implements ProjectSPI {
     }
 
     @Override
-    public Project update(Long id, Project project) throws EntityStateException {
+    public Project update(Long id, Project projectToUpdate) throws EntityStateException {
         if (id == null || !projectJpaRepository.existsById(id))
             throw new EntityStateException();
-        checkValidation(project);
-        Project project1 = projectJpaRepository.getById(id);
-        if (!project.getProjectName().equals(project1.getProjectName())) {
-            if (project.getAuthor().getProjects()
-                    .stream().anyMatch(project2 -> project2.getProjectName().equals(project.getProjectName()))) {
+        Project projectFromDB = projectJpaRepository.getById(id);
+        if (!projectToUpdate.getProjectName().equals(projectFromDB.getProjectName())) {
+            if (projectFromDB.getAuthor().getProjects()
+                    .stream().anyMatch(project -> project.getProjectName().equals(projectToUpdate.getProjectName()))) {
                 throw new EntityStateException();
             }
         }
-        return projectJpaRepository.save(project);
+        projectFromDB.setDescription(projectToUpdate.getDescription());
+        projectFromDB.setProjectName(projectToUpdate.getProjectName());
+        return projectJpaRepository.save(projectFromDB);
     }
 
     @Override

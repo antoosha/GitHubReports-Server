@@ -22,8 +22,8 @@ public class RoleService implements RoleSPI {
     }
 
     @Override
-    public Optional<Role> readById(String id) {
-        return repository.findById(id);
+    public Role readById(String id) {
+        return repository.findById(id).orElseThrow(NoEntityFoundException::new);
     }
 
     @Override

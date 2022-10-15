@@ -12,7 +12,7 @@ import java.util.Optional;
 
 public interface ProjectSPI {
 
-    List<Project> readAll();
+    Collection<Project> readAll();
 
     Project readById(Long id);
 

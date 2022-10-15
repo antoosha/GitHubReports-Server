@@ -7,6 +7,7 @@ import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -35,10 +36,10 @@ public class Project {
     private User author;
 
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
-    private List<Repository> repositories;
+    private List<Repository> repositories = new ArrayList<>();
 
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
-    private List<Statistic> statistics;
+    private List<Statistic> statistics = new ArrayList<>();
 
     @ManyToMany
     @JoinTable(
@@ -46,10 +47,10 @@ public class Project {
             joinColumns = {@JoinColumn(name = "project_id")},
             inverseJoinColumns = {@JoinColumn(name = "user_id")}
     )
-    private List<User> users;
+    private List<User> users = new ArrayList<>();
 
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
-    private List<Tag> tags;
+    private List<Tag> tags = new ArrayList<>();
 
     @Override
     public boolean equals(Object o) {

@@ -23,8 +23,8 @@ public class CommentService implements CommentSPI {
     }
 
     @Override
-    public Optional<Comment> readById(Long id) {
-        return repository.findById(id);
+    public Comment readById(Long id) {
+        return repository.findById(id).orElseThrow(NoEntityFoundException::new);
     }
 
     @Override
@@ -37,8 +37,11 @@ public class CommentService implements CommentSPI {
     }
 
     @Override
-    public Comment update(Long id, Comment comment) throws EntityStateException {
-        if (!repository.existsById(id)) throw new EntityStateException();
+    public Comment update(Long id, Comment commentToUpdate) throws EntityStateException {
+        Comment comment = readById(id);
+        comment.setText(commentToUpdate.getText());
+        comment.setIsEdited(true);
+
         return repository.save(comment);
     }
 

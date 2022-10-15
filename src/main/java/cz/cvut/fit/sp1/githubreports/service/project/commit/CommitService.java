@@ -6,23 +6,18 @@ import cz.cvut.fit.sp1.githubreports.api.exceptions.NoEntityFoundException;
 import cz.cvut.fit.sp1.githubreports.dao.project.CommentJpaRepository;
 import cz.cvut.fit.sp1.githubreports.dao.project.CommitJpaRepository;
 import cz.cvut.fit.sp1.githubreports.dao.project.TagJpaRepository;
-import cz.cvut.fit.sp1.githubreports.dao.user.UserJpaRepository;
 import cz.cvut.fit.sp1.githubreports.model.project.Comment;
 import cz.cvut.fit.sp1.githubreports.model.project.Commit;
 import cz.cvut.fit.sp1.githubreports.model.project.Tag;
 import cz.cvut.fit.sp1.githubreports.service.project.comment.CommentMapper;
-import cz.cvut.fit.sp1.githubreports.service.project.comment.CommentService;
-import cz.cvut.fit.sp1.githubreports.service.project.tag.TagMapper;
-import cz.cvut.fit.sp1.githubreports.service.user.user.UserService;
-import lombok.AllArgsConstructor;
+import cz.cvut.fit.sp1.githubreports.service.project.comment.CommentSPI;
+import cz.cvut.fit.sp1.githubreports.service.user.user.UserSPI;
 import lombok.RequiredArgsConstructor;
 import org.openapi.model.CommentUpdateSlimDTO;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.time.LocalDateTime;
 import java.util.Collection;
-import java.util.Optional;
 
 @RequiredArgsConstructor
 @Transactional
@@ -37,10 +32,9 @@ public class CommitService implements CommitSPI {
 
     private final CommentMapper commentMapper;
 
-    private final CommentService commentService;
+    private final CommentSPI commentSPI;
 
-    private final UserJpaRepository userJpaRepository;
-
+    private final UserSPI userSPI;
 
     private void checkValidation(Commit commit) {
         if (commit.getRepository() == null)
@@ -54,8 +48,8 @@ public class CommitService implements CommitSPI {
     }
 
     @Override
-    public Optional<Commit> readById(Long id) {
-        return commitJpaRepository.findById(id);
+    public Commit readById(Long id) {
+        return commitJpaRepository.findById(id).orElseThrow(NoEntityFoundException::new);
     }
 
     @Override
@@ -93,9 +87,9 @@ public class CommitService implements CommitSPI {
     public Commit addComment(Long id, CommentUpdateSlimDTO commentUpdateSlimDTO) {
         Commit commit = commitJpaRepository.findById(id).orElseThrow(NoEntityFoundException::new);
         Comment comment = commentMapper.fromUpdateSlimDTO(commentUpdateSlimDTO);
-        comment.setAuthor(userJpaRepository.findUserByUsername(commit.getLoginAuthor()).orElseThrow(NoEntityFoundException::new));
-        commentService.create(comment);
-        commit.getComments().add(comment);
+        comment.setAuthor(userSPI.readUserFromToken());
+        comment.setCommit(commit);
+        commentSPI.create(comment);
         return commitJpaRepository.save(commit);
     }
 

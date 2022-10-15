@@ -8,7 +8,9 @@ import org.openapi.model.RepositoryDTO;
 import org.openapi.model.RepositoryUpdateSlimDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 
+@Controller
 @AllArgsConstructor
 public class RepositoryApiDelegateImpl implements RepositoriesApi {
 
@@ -36,9 +38,9 @@ public class RepositoryApiDelegateImpl implements RepositoriesApi {
     }
 
     @Override
-    public ResponseEntity<RepositoryDTO> updateRepository(Long id, String gitHubToken, RepositoryUpdateSlimDTO repositoryUpdateSlimDTO) {
+    public ResponseEntity<RepositoryDTO> updateRepository(Long id, RepositoryUpdateSlimDTO repositoryUpdateSlimDTO) {
         return ResponseEntity.ok(
                 repositoryMapper.toDTO(
-                        repositorySPI.update(id, repositoryMapper.fromUpdateSlimDTO(repositoryUpdateSlimDTO), gitHubToken)));
+                        repositorySPI.update(id, repositoryMapper.fromUpdateSlimDTO(repositoryUpdateSlimDTO))));
     }
 }

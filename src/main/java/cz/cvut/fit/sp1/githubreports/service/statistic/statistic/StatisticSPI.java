@@ -3,10 +3,11 @@ package cz.cvut.fit.sp1.githubreports.service.statistic.statistic;
 import cz.cvut.fit.sp1.githubreports.api.exceptions.EntityStateException;
 import cz.cvut.fit.sp1.githubreports.model.statistic.Statistic;
 
+import java.util.Collection;
 import java.util.List;
 
 public interface StatisticSPI {
-    List<Statistic> readAll();
+    Collection<Statistic> readAll();
 
     Statistic readById(Long id);
 

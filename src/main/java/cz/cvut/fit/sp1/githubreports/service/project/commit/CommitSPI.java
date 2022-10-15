@@ -10,7 +10,7 @@ public interface CommitSPI {
 
     Collection<Commit> readAll();
 
-    Optional<Commit> readById(Long id);
+    Commit readById(Long id);
 
     Commit create(Commit commit) throws EntityStateException;
 

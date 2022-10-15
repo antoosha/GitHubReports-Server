@@ -6,6 +6,7 @@ import cz.cvut.fit.sp1.githubreports.api.exceptions.NoEntityFoundException;
 import cz.cvut.fit.sp1.githubreports.dao.project.ProjectJpaRepository;
 import cz.cvut.fit.sp1.githubreports.dao.project.RepositoryJpaRepository;
 import cz.cvut.fit.sp1.githubreports.model.project.Commit;
+import cz.cvut.fit.sp1.githubreports.model.project.Project;
 import cz.cvut.fit.sp1.githubreports.model.project.Repository;
 import cz.cvut.fit.sp1.githubreports.service.project.commit.CommitSPI;
 import lombok.AllArgsConstructor;
@@ -127,7 +128,7 @@ public class RepositoryService implements RepositorySPI {
     }
 
     @Override
-    public List<Repository> readAll() {
+    public Collection<Repository> readAll() {
         return jpaRepository.findAll();
     }
 
@@ -154,20 +155,18 @@ public class RepositoryService implements RepositorySPI {
 
     @Override
     @Transactional
-    public Repository update(Long id, Repository repository, String tokenAuth) throws EntityStateException {
+    public Repository update(Long id, Repository repositoryToUpdate) throws EntityStateException {
         if (id == null || !jpaRepository.existsById(id))
             throw new NoEntityFoundException();
-        checkValidation(repository);
-        String formattedURL = getFormattedURL(repository.getRepositoryURL());
-        checkName(repository, formattedURL.split("/")[1]);
-        if (!repository.getRepositoryName().equals(jpaRepository.getById(id).getRepositoryName()))
+
+        Repository repository = jpaRepository.getById(id);
+        repository.setRepositoryName(repositoryToUpdate.getRepositoryName());
+
+        if (!repository.getRepositoryName().equals(repositoryToUpdate.getRepositoryName())) {
             checkSameRepositoryNames(repository);
-        repository.setCommits(jpaRepository.getById(repository.getRepositoryId()).getCommits());
-        if (!repository.getRepositoryURL().equals(jpaRepository.getById(id).getRepositoryURL())) {
-            repository = pullUpRepositoryFromGitHub(formattedURL, repository, tokenAuth);
-            entityManager.refresh(repository);
         }
-        return repository;
+
+        return jpaRepository.save(repository);
     }
 
     @Override

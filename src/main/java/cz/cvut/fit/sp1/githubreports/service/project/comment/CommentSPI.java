@@ -10,7 +10,7 @@ public interface CommentSPI {
 
     Collection<Comment> readAll();
 
-    Optional<Comment> readById(Long id);
+    Comment readById(Long id);
 
     Comment create(Comment comment) throws EntityStateException;
 

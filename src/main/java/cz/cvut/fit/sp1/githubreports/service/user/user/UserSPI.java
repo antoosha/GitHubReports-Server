@@ -15,9 +15,11 @@ public interface UserSPI {
 
     Collection<User> readAll();
 
-    Optional<User> readById(Long id);
+    User readById(Long id);
 
-    Optional<User> readByUsername(String username);
+    User readByUsername(String username);
+
+    User readUserFromToken();
 
     User create(User user) throws EntityStateException;
 

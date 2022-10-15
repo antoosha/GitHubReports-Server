@@ -10,7 +10,7 @@ public interface TagSPI {
 
     Collection<Tag> readAll();
 
-    Optional<Tag> readById(Long id);
+    Tag readById(Long id);
 
     Tag create(Tag tag) throws EntityStateException;
 

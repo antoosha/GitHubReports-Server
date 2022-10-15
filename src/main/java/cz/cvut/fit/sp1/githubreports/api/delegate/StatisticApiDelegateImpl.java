@@ -7,9 +7,11 @@ import org.openapi.api.StatisticsApi;
 import org.openapi.model.StatisticDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 
 import java.util.List;
 
+@Controller
 @AllArgsConstructor
 public class StatisticApiDelegateImpl implements StatisticsApi {
 
@@ -26,7 +28,7 @@ public class StatisticApiDelegateImpl implements StatisticsApi {
     @Override
     public ResponseEntity<List<StatisticDTO>> getStatistics() {
         return ResponseEntity.ok
-                (statisticMapper.toDTOs(statisticSPI.readAll()));
+                (statisticMapper.toDTOs(statisticSPI.readAll().stream().toList()));
     }
 
     @Override

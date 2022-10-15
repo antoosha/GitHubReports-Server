@@ -22,7 +22,7 @@ public class CommentsApiDelegateImpl implements CommentsApi {
     @Override
     public ResponseEntity<CommentDTO> getComment(Long id) {
         return ResponseEntity.ok(
-            commentMapper.toDTO(commentSPI.readById(id).orElseThrow(NoEntityFoundException::new)));
+            commentMapper.toDTO(commentSPI.readById(id)));
     }
 
     @Override

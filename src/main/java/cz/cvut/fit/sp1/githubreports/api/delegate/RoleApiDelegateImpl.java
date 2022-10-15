@@ -23,7 +23,7 @@ public class RoleApiDelegateImpl implements RolesApi {
 
     @Override
     public ResponseEntity<RoleDTO> getRole(String roleName) {
-        Role role = roleSPI.readById(roleName).orElseThrow(NoEntityFoundException::new);
+        Role role = roleSPI.readById(roleName);
         return ResponseEntity.ok(roleMapper.toDTO(role));
     }
 

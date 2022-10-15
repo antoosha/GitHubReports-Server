@@ -46,7 +46,7 @@ public class CommitApiDelegateImpl implements CommitsApi {
 
     @Override
     public ResponseEntity<CommitDTO> getCommit(Long id) {
-        CommitDTO commitDTO = commitMapper.toDTO(commitSPI.readById(id).orElseThrow(NoEntityFoundException::new));
+        CommitDTO commitDTO = commitMapper.toDTO(commitSPI.readById(id));
         return ResponseEntity.ok(commitDTO);
     }
 

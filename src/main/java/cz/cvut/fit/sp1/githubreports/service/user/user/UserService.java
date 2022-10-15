@@ -74,12 +74,12 @@ public class UserService implements UserSPI {
 
     public boolean hasId(Long id) {
         var auth = SecurityContextHolder.getContext().getAuthentication();
-        return readByUsername(auth.getName()).orElseThrow(AccessDeniedException::new).getUserId().equals(id);
+        return readByUsername(auth.getName()).getUserId().equals(id);
     }
 
     public boolean hasUsername(String username) {
         var auth = SecurityContextHolder.getContext().getAuthentication();
-        return readByUsername(auth.getName()).orElseThrow(AccessDeniedException::new).getUsername().equals(username);
+        return readByUsername(auth.getName()).getUsername().equals(username);
     }
 
     @Override
@@ -88,13 +88,19 @@ public class UserService implements UserSPI {
     }
 
     @Override
-    public Optional<User> readById(Long id) {
-        return userJpaRepository.findById(id);
+    public User readById(Long id) {
+        return userJpaRepository.findById(id).orElseThrow(NoEntityFoundException::new);
     }
 
     @Override
-    public Optional<User> readByUsername(String username) {
-        return userJpaRepository.findUserByUsername(username);
+    public User readByUsername(String username) {
+        return userJpaRepository.findUserByUsername(username).orElseThrow(NoEntityFoundException::new);
+    }
+
+    @Override
+    public User readUserFromToken() {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        return userJpaRepository.findUserByUsername(username).orElseThrow(NoEntityFoundException::new);
     }
 
     private boolean correctPassword(String password) {
@@ -194,7 +200,7 @@ public class UserService implements UserSPI {
                 JWTVerifier verifier = JWT.require(algorithm).build();
                 DecodedJWT decodedJWT = verifier.verify(refresh_token);
                 String username = decodedJWT.getSubject();
-                User user = readByUsername(username).orElseThrow(RuntimeException::new);
+                User user = readByUsername(username);
 
                 String access_token = JWT.create()
                         .withSubject(user.getUsername())

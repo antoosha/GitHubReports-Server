@@ -14,6 +14,7 @@ public interface CommitMapper {
 
     CommitSlimDTO toSlimDTO(Commit commit);
 
+    @Mapping(target = "deleted", ignore = true)
     @Mapping(target = "repository", ignore = true)
     @Mapping(target = "tags", ignore = true)
     @Mapping(target = "comments", ignore = true)

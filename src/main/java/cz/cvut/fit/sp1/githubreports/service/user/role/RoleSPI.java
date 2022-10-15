@@ -11,7 +11,7 @@ public interface RoleSPI {
 
     Collection<Role> readAll();
 
-    Optional<Role> readById(String id);
+    Role readById(String id);
 
     Role create(Role role) throws EntityStateException;
 

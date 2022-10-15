@@ -43,7 +43,7 @@ public class UserApiDelegateImpl implements UsersApi {
     @Override
     @PreAuthorize("hasRole('ROLE_ADMIN') || @UserService.hasUsername(#username)")
     public ResponseEntity<UserDTO> getUser(String username) {
-        UserDTO userDTO = userMapper.toDTO(userSPI.readByUsername(username).orElseThrow(NoEntityFoundException::new));
+        UserDTO userDTO = userMapper.toDTO(userSPI.readByUsername(username));
         return ResponseEntity.ok(userDTO);
     }
 

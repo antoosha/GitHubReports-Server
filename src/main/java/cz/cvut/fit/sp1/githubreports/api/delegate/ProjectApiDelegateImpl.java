@@ -11,9 +11,11 @@ import org.openapi.api.ProjectsApi;
 import org.openapi.model.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 
 import java.util.List;
 
+@Controller
 @AllArgsConstructor
 public class ProjectApiDelegateImpl implements ProjectsApi {
     private final ProjectSPI projectSPI;
@@ -23,10 +25,10 @@ public class ProjectApiDelegateImpl implements ProjectsApi {
     private final TagMapper tagMapper;
 
     @Override
-    public ResponseEntity<ProjectDTO> createProject(ProjectSlimDTO projectSlimDTO) {
+    public ResponseEntity<ProjectDTO> createProject(ProjectUpdateSlimDTO projectUpdateSlimDTO) {
         return ResponseEntity.ok(
                 projectMapper.toDTO(
-                        projectSPI.create(projectMapper.fromSlimDTO(projectSlimDTO))));
+                        projectSPI.create(projectMapper.fromUpdateSlimDTO(projectUpdateSlimDTO))));
     }
 
     @Override
@@ -63,13 +65,13 @@ public class ProjectApiDelegateImpl implements ProjectsApi {
 
     @Override
     public ResponseEntity<List<ProjectDTO>> getProjects() {
-        return ResponseEntity.ok(projectMapper.toDTOs(projectSPI.readAll()));
+        return ResponseEntity.ok(projectMapper.toDTOs(projectSPI.readAll().stream().toList()));
     }
 
     @Override
-    public ResponseEntity<ProjectDTO> updateProject(Long id, ProjectSlimDTO projectSlimDTO) {
+    public ResponseEntity<ProjectDTO> updateProject(Long id, ProjectUpdateSlimDTO projectUpdateSlimDTO) {
         return ResponseEntity.ok(
                 projectMapper.toDTO(
-                        projectSPI.update(id, projectMapper.fromSlimDTO(projectSlimDTO))));
+                        projectSPI.update(id, projectMapper.fromUpdateSlimDTO(projectUpdateSlimDTO))));
     }
 }

@@ -18,8 +18,13 @@ public interface RepositoryMapper {
 
     RepositorySlimDTO toSlimDTO(Repository repository);
 
+    @Mapping(target = "project", ignore = true)
+    @Mapping(target = "commits", ignore = true)
     Repository fromSlimDTO(RepositorySlimDTO repositorySlimDTO);
 
+    @Mapping(target = "repositoryURL", ignore = true)
+    @Mapping(target = "project", ignore = true)
+    @Mapping(target = "commits", ignore = true)
     Repository fromUpdateSlimDTO(RepositoryUpdateSlimDTO repositoryUpdateSlimDTO);
 
     List<RepositoryDTO> toDTOs(List<Repository> repositorys);

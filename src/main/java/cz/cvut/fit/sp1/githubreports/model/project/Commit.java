@@ -5,6 +5,7 @@ import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -45,10 +46,10 @@ public class Commit {
             joinColumns = {@JoinColumn(name = "commit_id")},
             inverseJoinColumns = {@JoinColumn(name = "tag_id")}
     )
-    private List<Tag> tags;
+    private List<Tag> tags = new ArrayList<>();
 
     @OneToMany(mappedBy = "commit", cascade = CascadeType.ALL)
-    private List<Comment> comments;
+    private List<Comment> comments = new ArrayList<>();
 
     @Override
     public boolean equals(Object o) {

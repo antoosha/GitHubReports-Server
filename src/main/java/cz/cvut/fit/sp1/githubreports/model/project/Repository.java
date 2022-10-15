@@ -2,6 +2,7 @@ package cz.cvut.fit.sp1.githubreports.model.project;
 
 import lombok.*;
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -27,7 +28,7 @@ public class Repository {
     private Project project;
 
     @OneToMany(mappedBy = "repository", cascade = CascadeType.ALL)
-    private List<Commit> commits;
+    private List<Commit> commits = new ArrayList<>();
 
     @Override
     public boolean equals(Object o) {

@@ -513,7 +513,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/ProjectSlimDTO'
+              $ref: '#/components/schemas/ProjectUpdateSlimDTO'
         required: true
       responses:
         '200':
@@ -565,7 +565,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/ProjectSlimDTO'
+              $ref: '#/components/schemas/ProjectUpdateSlimDTO'
         required: true
       responses:
         '200':
@@ -596,7 +596,7 @@ paths:
         '404':
           description: Project not found
 
-  /projects/{id}/repositories/:
+  /projects/{id}/repositories:
     post:
       tags:
         - project-controller
@@ -615,6 +615,7 @@ paths:
           required: true
           schema:
             type: string
+          example: "https://github.com/nikisav01/eshop-client"
       requestBody:
         content:
           application/json:
@@ -962,12 +963,6 @@ paths:
           schema:
             type: integer
             format: int64
-        - name: githubToken
-          description: Authorization token from github account
-          in: query
-          required: true
-          schema:
-            type: string
       requestBody:
         content:
           application/json:
@@ -1329,6 +1324,16 @@ components:
         createdDate:
           type: string
           format: date-time
+        projectName:
+          type: string
+          example: Some Name
+        description:
+          type: string
+          example: My first project...
+
+    ProjectUpdateSlimDTO:
+      type: object
+      properties:
         projectName:
           type: string
           example: Some Name

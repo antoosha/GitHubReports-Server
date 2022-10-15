@@ -37,8 +37,8 @@ public class TagService implements TagSPI {
     }
 
     @Override
-    public Optional<Tag> readById(Long id) {
-        return repository.findById(id);
+    public Tag readById(Long id) {
+        return repository.findById(id).orElseThrow(NoEntityFoundException::new);
     }
 
     @Override

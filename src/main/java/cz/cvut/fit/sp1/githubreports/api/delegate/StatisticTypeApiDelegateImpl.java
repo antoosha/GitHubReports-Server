@@ -8,9 +8,11 @@ import org.openapi.model.StatisticTypeDTO;
 import org.openapi.model.StatisticTypeSlimDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 
 import java.util.List;
 
+@Controller
 @AllArgsConstructor
 public class StatisticTypeApiDelegateImpl implements StatisticTypesApi {
 
@@ -26,7 +28,7 @@ public class StatisticTypeApiDelegateImpl implements StatisticTypesApi {
     @Override
     public ResponseEntity<List<StatisticTypeSlimDTO>> getStatisticTypes() {
         return ResponseEntity.ok
-                (statisticTypeMapper.toSlimDTOs(statisticTypeSPI.readAll()));
+                (statisticTypeMapper.toSlimDTOs(statisticTypeSPI.readAll().stream().toList()));
     }
 
     @Override

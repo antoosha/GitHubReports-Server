@@ -19,62 +19,62 @@ public class GithubReportsApplication {
 		SpringApplication.run(GithubReportsApplication.class, args);
 	}
 
-	@Bean
-	CommandLineRunner run(UserService userService, RoleService roleService) {
-		return args -> {
-			roleService.create(new Role("ROLE_ADMIN", Collections.emptyList()));
-			roleService.create(new Role("ROLE_DEVELOPER", Collections.emptyList()));
-
-			//DO NOT CHANGE USERNAME of deletedUser! HAS RELATIONS IN UserService by username!
-			userService.create(
-					new User(
-							null,
-							"deletedUser",
-							"mailDeletedUser",
-							"pass",
-							"photoDeletedUser",
-							Collections.emptyList(),
-							Collections.emptyList(),
-							Collections.emptyList(),
-							Collections.emptyList(),
-							Collections.emptyList()));
-			userService.create(
-					new User(
-							null,
-							"user",
-							"mail1",
-							"pass",
-							"photo",
-							Collections.emptyList(),
-							Collections.emptyList(),
-							Collections.emptyList(),
-							Collections.emptyList(),
-							List.of(roleService.readById("ROLE_ADMIN").get(), roleService.readById("ROLE_DEVELOPER").get())));
-			userService.create(
-					new User(
-							null,
-							"admin",
-							"mail2",
-							"pass",
-							"photo",
-							Collections.emptyList(),
-							Collections.emptyList(),
-							Collections.emptyList(),
-							Collections.emptyList(),
-							List.of(roleService.readById("ROLE_ADMIN").get())));
-			userService.create(
-					new User(
-							null,
-							"dev",
-							"mail3",
-							"pass",
-							"photo",
-							Collections.emptyList(),
-							Collections.emptyList(),
-							Collections.emptyList(),
-							Collections.emptyList(),
-							List.of(roleService.readById("ROLE_DEVELOPER").get())));
-		};
-	}
+//	@Bean
+//	CommandLineRunner run(UserService userService, RoleService roleService) {
+//		return args -> {
+//			roleService.create(new Role("ROLE_ADMIN", Collections.emptyList()));
+//			roleService.create(new Role("ROLE_DEVELOPER", Collections.emptyList()));
+//
+//			//DO NOT CHANGE USERNAME of deletedUser! HAS RELATIONS IN UserService by username!
+//			userService.create(
+//					new User(
+//							null,
+//							"deletedUser",
+//							"mailDeletedUser",
+//							"pass",
+//							"photoDeletedUser",
+//							Collections.emptyList(),
+//							Collections.emptyList(),
+//							Collections.emptyList(),
+//							Collections.emptyList(),
+//							Collections.emptyList()));
+//			userService.create(
+//					new User(
+//							null,
+//							"user",
+//							"mail1",
+//							"pass",
+//							"photo",
+//							Collections.emptyList(),
+//							Collections.emptyList(),
+//							Collections.emptyList(),
+//							Collections.emptyList(),
+//							List.of(roleService.readById("ROLE_ADMIN"), roleService.readById("ROLE_DEVELOPER"))));
+//			userService.create(
+//					new User(
+//							null,
+//							"admin",
+//							"mail2",
+//							"pass",
+//							"photo",
+//							Collections.emptyList(),
+//							Collections.emptyList(),
+//							Collections.emptyList(),
+//							Collections.emptyList(),
+//							List.of(roleService.readById("ROLE_ADMIN"))));
+//			userService.create(
+//					new User(
+//							null,
+//							"dev",
+//							"mail3",
+//							"pass",
+//							"photo",
+//							Collections.emptyList(),
+//							Collections.emptyList(),
+//							Collections.emptyList(),
+//							Collections.emptyList(),
+//							List.of(roleService.readById("ROLE_DEVELOPER"))));
+//		};
+//	}
 
 }

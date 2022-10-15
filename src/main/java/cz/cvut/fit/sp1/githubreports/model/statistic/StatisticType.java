@@ -6,6 +6,7 @@ import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -20,7 +21,7 @@ public class StatisticType {
     private String statisticName;
 
     @OneToMany(mappedBy = "statisticType", cascade = CascadeType.ALL)
-    private List<Statistic> statistics;
+    private List<Statistic> statistics = new ArrayList<>();
 
     @Override
     public boolean equals(Object o) {
