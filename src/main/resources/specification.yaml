@@ -615,7 +615,6 @@ paths:
           required: true
           schema:
             type: string
-          example: "https://github.com/nikisav01/eshop-client"
       requestBody:
         content:
           application/json:
@@ -996,6 +995,44 @@ paths:
         '404':
           description: Repository not found
 
+  /repositories/{id}/commits:
+    get:
+      tags:
+        - repository-controller
+      operationId: getRepositoryCommits
+      summary: Find repository commits by ID
+      parameters:
+        - name: id
+          in: path
+          description: ID of repository
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: page
+          in: query
+          required: true
+          schema:
+            type: integer
+            format: int32
+        - name: size
+          in: query
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: OK
+          content:
+            'application/json':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CommitSlimDTO'
+        '404':
+          description: Repository not found
+
   /repositories/synchronize/{id}/{tokenAuth}:
     put:
       tags:
@@ -1169,10 +1206,6 @@ components:
           example: githubUsername/repositoryName
         project:
           $ref: '#/components/schemas/ProjectSlimDTO'
-        commits:
-          type: array
-          items:
-            $ref: '#/components/schemas/CommitSlimDTO'
 
     ProjectDTO:
       type: object

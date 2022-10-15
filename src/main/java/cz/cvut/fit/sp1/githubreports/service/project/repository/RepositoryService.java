@@ -3,16 +3,22 @@ package cz.cvut.fit.sp1.githubreports.service.project.repository;
 import cz.cvut.fit.sp1.githubreports.api.exceptions.EntityStateException;
 import cz.cvut.fit.sp1.githubreports.api.exceptions.IncorrectRequestException;
 import cz.cvut.fit.sp1.githubreports.api.exceptions.NoEntityFoundException;
+import cz.cvut.fit.sp1.githubreports.dao.project.CommitJpaRepository;
 import cz.cvut.fit.sp1.githubreports.dao.project.ProjectJpaRepository;
 import cz.cvut.fit.sp1.githubreports.dao.project.RepositoryJpaRepository;
 import cz.cvut.fit.sp1.githubreports.model.project.Commit;
 import cz.cvut.fit.sp1.githubreports.model.project.Project;
 import cz.cvut.fit.sp1.githubreports.model.project.Repository;
+import cz.cvut.fit.sp1.githubreports.service.project.commit.CommitMapper;
 import cz.cvut.fit.sp1.githubreports.service.project.commit.CommitSPI;
 import lombok.AllArgsConstructor;
 import org.kohsuke.github.GHCommit;
 import org.kohsuke.github.GHRepository;
 import org.kohsuke.github.GitHub;
+import org.openapi.model.CommitSlimDTO;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,14 +28,19 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @AllArgsConstructor
 @Service("RepositoryService")
 public class RepositoryService implements RepositorySPI {
 
-    RepositoryJpaRepository jpaRepository;
-    ProjectJpaRepository projectJpaRepository;
-    CommitSPI commitSPI;
+    private final RepositoryJpaRepository jpaRepository;
+
+    private final CommitJpaRepository commitJpaRepository;
+
+    private final CommitSPI commitSPI;
+
+    private final CommitMapper commitMapper;
 
     @PersistenceContext
     private final EntityManager entityManager;
@@ -135,6 +146,14 @@ public class RepositoryService implements RepositorySPI {
     @Override
     public Repository readById(Long id) {
         return jpaRepository.findById(id).orElseThrow(NoEntityFoundException::new);
+    }
+
+    @Override
+    public List<CommitSlimDTO> readCommitsByRepositoryId(Long id, Integer page, Integer size) {
+        Repository repository = readById(id);
+        Pageable pageable = PageRequest.of(page, size);
+
+        return commitJpaRepository.findAllByRepository(repository, pageable).stream().map(commitMapper::toSlimDTO).toList();
     }
 
     @Override
