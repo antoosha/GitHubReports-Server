@@ -1,11 +1,11 @@
 package cz.cvut.fit.sp1.githubreports.api.exceptions;
 
 public class HasRelationsException extends RuntimeException {
-    public HasRelationsException() {
-        super();
+    public HasRelationsException(String message) {
+        super(message);
     }
 
-    public HasRelationsException(String errorMessage) {
-        super(errorMessage);
+    public HasRelationsException() {
+        super("Has other relations.");
     }
 }

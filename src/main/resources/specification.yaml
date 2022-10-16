@@ -23,6 +23,16 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/UserSlimDTO'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
     post:
       tags:
         - user-controller
@@ -41,6 +51,16 @@ paths:
             'application/json':
               schema:
                 $ref: '#/components/schemas/UserDTO'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
 
   /users/{username}:
     get:
@@ -64,9 +84,15 @@ paths:
               schema:
                 $ref: '#/components/schemas/UserDTO'
         '400':
-          description: Invalid username supplied
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
         '404':
-          description: User not found
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
     put:
       tags:
         - user-controller
@@ -93,8 +119,16 @@ paths:
             'application/json':
               schema:
                 $ref: '#/components/schemas/UserDTO'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
         '404':
-          description: User not found
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
     delete:
       tags:
         - user-controller
@@ -110,6 +144,16 @@ paths:
       responses:
         '200':
           description: OK
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
 
   /users/{username}/passwords:
     put:
@@ -133,6 +177,16 @@ paths:
       responses:
         '200':
           description: OK
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
 
 
   /users/{username}/roles:
@@ -159,6 +213,16 @@ paths:
             'application/json':
               schema:
                 $ref: '#/components/schemas/UserDTO'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
     delete:
       tags:
         - user-controller
@@ -182,6 +246,16 @@ paths:
             'application/json':
               schema:
                 $ref: '#/components/schemas/UserDTO'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
 
   /users/{username}/photos:
     get:
@@ -204,8 +278,16 @@ paths:
               schema:
                 type: string
                 format: binary
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
         '404':
-          description: User not found
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
 
     post:
       tags:
@@ -233,6 +315,16 @@ paths:
       responses:
         '200':
           description: OK
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
 
 
   /users/{username}/projects:
@@ -258,8 +350,16 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/ProjectDTO'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
         '404':
-          description: User not found
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
 
   /users/token/refresh:
     get:
@@ -271,6 +371,16 @@ paths:
       responses:
         '200':
           description: OK
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
 
   ######### TAGS #########
   /tags/{id}:
@@ -295,6 +405,16 @@ paths:
             'appliction/json':
               schema:
                 $ref: '#/components/schemas/TagDTO'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
     put:
       tags:
         - tag-controller
@@ -322,8 +442,16 @@ paths:
             'application/json':
               schema:
                 $ref: '#/components/schemas/TagDTO'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
         '404':
-          description: Tag not found
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
     delete:
       tags:
         - tag-controller
@@ -341,8 +469,16 @@ paths:
       responses:
         '200':
           description: OK
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
         '404':
-          description: Tag not found
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
 
   ######### STATISTICS #########
   /statistics:
@@ -359,6 +495,16 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/StatisticDTO'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
 
   /statistics/{id}:
     get:
@@ -382,8 +528,16 @@ paths:
             'application/json':
               schema:
                 $ref: '#/components/schemas/StatisticDTO'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
         '404':
-          description: Statistic not found
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
     delete:
       tags:
         - statistic-controller
@@ -401,8 +555,16 @@ paths:
       responses:
         '200':
           description: OK
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
         '404':
-          description: Statistic not found
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
 
   ######### statisticTypes #########
   /statisticTypes:
@@ -419,6 +581,16 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/StatisticTypeSlimDTO'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
 
   /statisticTypes/{id}:
     get:
@@ -441,8 +613,16 @@ paths:
             'application/json':
               schema:
                 $ref: '#/components/schemas/StatisticTypeDTO'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
         '404':
-          description: Statistic type not found
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
     put:
       tags:
         - statistic-type-controller
@@ -469,8 +649,16 @@ paths:
             'application/json':
               schema:
                 $ref: '#/components/schemas/StatisticTypeDTO'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
         '404':
-          description: Statistic type not found
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
     delete:
       tags:
         - statistic-type-controller
@@ -487,8 +675,16 @@ paths:
       responses:
         '200':
           description: OK
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
         '404':
-          description: Statistic type not found
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
 
   ######### Project #########
   /projects:
@@ -505,6 +701,16 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/ProjectDTO'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
     post:
       tags:
         - project-controller
@@ -522,6 +728,16 @@ paths:
             'application/json':
               schema:
                 $ref: '#/components/schemas/ProjectDTO'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
 
   /projects/{id}:
     get:
@@ -545,8 +761,16 @@ paths:
             'application/json':
               schema:
                 $ref: '#/components/schemas/ProjectDTO'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
         '404':
-          description: Project not found
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
     put:
       tags:
         - project-controller
@@ -574,8 +798,16 @@ paths:
             'application/json':
               schema:
                 $ref: '#/components/schemas/ProjectDTO'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
         '404':
-          description: Project not found
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
     delete:
       tags:
         - project-controller
@@ -593,8 +825,16 @@ paths:
       responses:
         '200':
           description: OK
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
         '404':
-          description: Project not found
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
 
   /projects/{id}/repositories:
     post:
@@ -628,6 +868,16 @@ paths:
             'application/json':
               schema:
                 $ref: '#/components/schemas/RepositoryDTO'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
 
   /projects/{id}/tags:
     post:
@@ -657,6 +907,16 @@ paths:
             'application/json':
               schema:
                 $ref: '#/components/schemas/TagDTO'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
 
   /projects/{id}/statistics:
     post:
@@ -684,6 +944,16 @@ paths:
             'application/json':
               schema:
                 $ref: '#/components/schemas/StatisticDTO'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
 
   ######### Roles #########
   /roles:
@@ -700,6 +970,16 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/RoleSlimDTO'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
 
   /roles/{roleName}:
     get:
@@ -722,8 +1002,16 @@ paths:
             'application/json':
               schema:
                 $ref: '#/components/schemas/RoleDTO'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
         '404':
-          description: Role not found
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
 
   ######### Commits #########
   /commits/{id}:
@@ -748,8 +1036,16 @@ paths:
             'application/json':
               schema:
                 $ref: '#/components/schemas/CommitDTO'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
         '404':
-          description: Commit not found
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
 
   /commits/{id}/comments:
     post:
@@ -777,8 +1073,16 @@ paths:
             'application/json':
               schema:
                 $ref: '#/components/schemas/CommitDTO'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
         '404':
-          description: Commit not found
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
 
   /commits/{id}/comments/{commentId}:
     delete:
@@ -809,8 +1113,16 @@ paths:
             'application/json':
               schema:
                 $ref: '#/components/schemas/CommitDTO'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
         '404':
-          description: Commit not found
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
 
 
   /commits/{id}/tags/{tagId}:
@@ -840,8 +1152,16 @@ paths:
             'application/json':
               schema:
                 $ref: '#/components/schemas/CommitDTO'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
         '404':
-          description: Commit not found
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
     delete:
       tags:
         - commit-controller
@@ -868,8 +1188,16 @@ paths:
             'application/json':
               schema:
                 $ref: '#/components/schemas/CommitDTO'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
         '404':
-          description: Commit not found
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
 
   ######### Comment #########
   /comments/{id}:
@@ -894,8 +1222,16 @@ paths:
             'application/json':
               schema:
                 $ref: '#/components/schemas/CommentDTO'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
         '404':
-          description: Comment not found
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
     put:
       tags:
         - comment-controller
@@ -923,8 +1259,16 @@ paths:
             'application/json':
               schema:
                 $ref: '#/components/schemas/CommentSlimDTO'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
         '404':
-          description: Comment not found
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
 
   ######### Repository #########
   /repositories/{id}:
@@ -949,8 +1293,16 @@ paths:
             'application/json':
               schema:
                 $ref: '#/components/schemas/RepositoryDTO'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
         '404':
-          description: Repository not found
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
     put:
       tags:
         - repository-controller
@@ -975,6 +1327,16 @@ paths:
             'application/json':
               schema:
                 $ref: '#/components/schemas/RepositoryDTO'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
     delete:
       tags:
         - repository-controller
@@ -992,8 +1354,16 @@ paths:
       responses:
         '200':
           description: OK
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
         '404':
-          description: Repository not found
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
 
   /repositories/{id}/commits:
     get:
@@ -1057,9 +1427,60 @@ paths:
             'application/json':
               schema:
                 $ref: '#/components/schemas/RepositoryDTO'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
 
 components:
+  responses:
+    BadRequest:
+      description: Indicates a nonspecific client error.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/GithubReportsException'
+    NotFound:
+      description: The specified resource was not found.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/GithubReportsException'
+    Forbidden:
+      description: Forbidden request - sent when the client either provided invalid credentials or client does not have access.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/GithubReportsException'
+    Conflict:
+      description: The request could not be processed because of conflict in the request.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/GithubReportsException'
+    InternalServerError:
+      description: Internal server error.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/GithubReportsException'
   schemas:
+    GithubReportsException:
+      type: object
+      properties:
+        type:
+          type: string
+          example: Wrong input parameter
+        message:
+          type: string
+          example: Wrong parameter for endpoint /example/endpoint, wrong endpointId value.
+
     UserDTO:
       type: object
       properties:
