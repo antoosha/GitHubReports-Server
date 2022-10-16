@@ -39,6 +39,6 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
 
     @ExceptionHandler(value = {Exception.class})
     public ResponseEntity<ExceptionDTO> handleUnknownException(Exception ex) {
-        return status(HttpStatus.INTERNAL_SERVER_ERROR).contentType(MediaType.APPLICATION_JSON).body(new ExceptionDTO(RuntimeException.class.getSimpleName(), ex.getMessage()));
+        return status(HttpStatus.INTERNAL_SERVER_ERROR).contentType(MediaType.APPLICATION_JSON).body(new ExceptionDTO(RuntimeException.class.getSimpleName(), "Something went wrong."));
     }
 }
