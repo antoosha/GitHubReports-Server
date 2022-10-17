@@ -371,6 +371,10 @@ paths:
       responses:
         '200':
           description: OK
+          content:
+            'application/json':
+              schema:
+                $ref: '#/components/schemas/TokensDTO'
         '400':
           $ref: '#/components/responses/BadRequest'
         '403':
@@ -1887,3 +1891,13 @@ components:
         password:
           type: string
           example: PaSsWoRd123
+
+    TokensDTO:
+      type: object
+      properties:
+        access_token:
+          type: string
+          example: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsInJvbGVzIjpbIlJPTEVfQURNSU4iXSwiZXhwIjoxNjY3MjI5MDI2fQ.WWlzHuIviyg_LQC2sT5wapQ3UPUEh5udj8auXxhQlAY
+        refresh_token:
+          type: string
+          example: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImV4cCI6MTY2NjExNTQyNn0.SIK9Z1HElR90Sv1Lr6SQ7mSi1AXdSPQBxIRWDOGnpII

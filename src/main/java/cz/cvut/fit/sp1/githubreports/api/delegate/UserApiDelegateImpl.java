@@ -4,6 +4,7 @@ import cz.cvut.fit.sp1.githubreports.api.exceptions.EntityStateException;
 import cz.cvut.fit.sp1.githubreports.api.exceptions.NoEntityFoundException;
 import cz.cvut.fit.sp1.githubreports.model.project.Project;
 import cz.cvut.fit.sp1.githubreports.model.user.User;
+import cz.cvut.fit.sp1.githubreports.service.jwt.JwtTokenSPI;
 import cz.cvut.fit.sp1.githubreports.service.project.project.ProjectMapper;
 import cz.cvut.fit.sp1.githubreports.service.user.user.UserMapper;
 import cz.cvut.fit.sp1.githubreports.service.user.user.UserSPI;
@@ -29,6 +30,8 @@ import java.util.List;
 public class UserApiDelegateImpl implements UsersApi {
 
     private final UserSPI userSPI;
+
+    private final JwtTokenSPI jwtTokenSPI;
 
     private final UserMapper userMapper;
 
@@ -121,13 +124,8 @@ public class UserApiDelegateImpl implements UsersApi {
     }
 
     @Override
-    public ResponseEntity<Void> refreshToken() {
-        try {
-            userSPI.refreshToken(request, response);
-        } catch (IOException e) {
-            throw new EntityStateException(e.getMessage());
-        }
-        return new ResponseEntity<>(HttpStatus.OK);
+    public ResponseEntity<TokensDTO> refreshToken() {
+        return ResponseEntity.ok(jwtTokenSPI.getRefreshToken(request));
     }
 
 }

@@ -35,8 +35,6 @@ public interface UserSPI {
 
     Collection<Project> getAllUserProjects(String username);
 
-    void refreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException;
-
     void savePhoto(String username, MultipartFile multipartFile);
 
     byte[] getImage(String username);

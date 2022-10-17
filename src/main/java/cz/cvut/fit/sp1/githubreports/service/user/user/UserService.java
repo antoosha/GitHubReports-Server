@@ -11,6 +11,7 @@ import cz.cvut.fit.sp1.githubreports.dao.user.UserJpaRepository;
 import cz.cvut.fit.sp1.githubreports.model.project.Project;
 import cz.cvut.fit.sp1.githubreports.model.user.Role;
 import cz.cvut.fit.sp1.githubreports.model.user.User;
+import cz.cvut.fit.sp1.githubreports.service.jwt.JwtTokenSPI;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.io.IOUtils;
@@ -51,13 +52,8 @@ public class UserService implements UserSPI {
 
     private final RoleJpaRepository roleJpaRepository;
 
-    @Value("${my.secret}")
-    private String secret;
-
     private String baseURL = "localhost:8080"; //TODO
 
-    @Value("${expiration.time.access}")
-    private Integer expirationTimeAccessToken;
 
     private void delegateUserCommentsToDeletedUser(User toDeleteUser, User deletedUser) {
         toDeleteUser.getComments()
@@ -189,43 +185,6 @@ public class UserService implements UserSPI {
         User user = userJpaRepository.findUserByUsername(username).orElseThrow(NoEntityFoundException::new);
         return user.getProjects();
     }
-
-    @Override
-    public void refreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        String authorizationHeader = request.getHeader(AUTHORIZATION);
-        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
-            try {
-                String refresh_token = authorizationHeader.substring("Bearer ".length());
-                Algorithm algorithm = Algorithm.HMAC256(secret.getBytes());
-                JWTVerifier verifier = JWT.require(algorithm).build();
-                DecodedJWT decodedJWT = verifier.verify(refresh_token);
-                String username = decodedJWT.getSubject();
-                User user = readByUsername(username);
-
-                String access_token = JWT.create()
-                        .withSubject(user.getUsername())
-                        .withExpiresAt(new Date(System.currentTimeMillis() + expirationTimeAccessToken))
-                        .withIssuer(request.getRequestURI())
-                        .withClaim("roles", user.getRoles().stream().map(Role::getRoleName).collect(Collectors.toList()))
-                        .sign(algorithm);
-                Map<String, String> tokens = new HashMap<>();
-                tokens.put("access_token", access_token);
-                tokens.put("refresh_token", refresh_token);
-                response.setContentType(APPLICATION_JSON_VALUE);
-                new ObjectMapper().writeValue(response.getOutputStream(), tokens);
-            } catch (Exception e) {
-                response.setHeader("error", e.getMessage());
-                response.setStatus(FORBIDDEN.value());
-                Map<String, String> error = new HashMap<>();
-                error.put("error_message", e.getMessage());
-                response.setContentType(APPLICATION_JSON_VALUE);
-                new ObjectMapper().writeValue(response.getOutputStream(), error);
-            }
-        } else {
-            throw new ResponseStatusException(FORBIDDEN, "Refresh token wasn't found");
-        }
-    }
-
 
     @Override
     public void savePhoto(String username, MultipartFile multipartFile) throws NoEntityFoundException {
