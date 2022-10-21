@@ -13,6 +13,7 @@ import cz.cvut.fit.sp1.githubreports.service.project.repository.RepositorySPI;
 import cz.cvut.fit.sp1.githubreports.service.project.tag.TagSPI;
 import cz.cvut.fit.sp1.githubreports.service.statistic.statistic.StatisticSPI;
 import cz.cvut.fit.sp1.githubreports.service.user.user.UserSPI;
+import java.util.logging.Logger;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -27,6 +28,8 @@ import java.util.Optional;
 @Service("ProjectService")
 public class ProjectService implements ProjectSPI {
 
+    private static final Logger logger = Logger.getLogger(ProjectService.class.getName());
+    
     private final ProjectJpaRepository projectJpaRepository;
 
     private final UserSPI userSPI;
@@ -40,7 +43,11 @@ public class ProjectService implements ProjectSPI {
 
     @Override
     public Project readById(Long id) {
-        return projectJpaRepository.findById(id).orElseThrow(NoEntityFoundException::new);
+        return projectJpaRepository.findById(id)
+            .orElseThrow(() -> {
+                logger.warning("Can't find a project with id: " + id);
+                return new NoEntityFoundException(id.toString());
+            });
     }
 
     @Override
@@ -49,9 +56,10 @@ public class ProjectService implements ProjectSPI {
         project.setAuthor(user);
         project.getUsers().add(user);
 
-        if (project.getAuthor().getProjects()
-                .stream().anyMatch(project1 -> project1.getProjectName().equals(project.getProjectName()))) {
-            throw new EntityStateException();
+        if (project.getAuthor().getProjects().stream()
+            .anyMatch(project1 -> project1.getProjectName().equals(project.getProjectName()))) {
+            logger.warning("User already has a project with such name: " + project);
+            throw new EntityStateException("User already has a project with such name: " + project);
         }
 
         project.setCreatedDate(LocalDateTime.now());
@@ -79,12 +87,14 @@ public class ProjectService implements ProjectSPI {
     @Override
     public Project update(Long id, Project projectToUpdate) throws EntityStateException {
         if (id == null || !projectJpaRepository.existsById(id))
-            throw new EntityStateException();
+            throw new EntityStateException("Can't find a project with id: " + id);
         Project projectFromDB = projectJpaRepository.getById(id);
         if (!projectToUpdate.getProjectName().equals(projectFromDB.getProjectName())) {
-            if (projectFromDB.getAuthor().getProjects()
-                    .stream().anyMatch(project -> project.getProjectName().equals(projectToUpdate.getProjectName()))) {
-                throw new EntityStateException();
+            if (projectFromDB.getAuthor().getProjects().stream().anyMatch(
+                project -> project.getProjectName().equals(projectToUpdate.getProjectName()))) {
+                logger.warning("User already has a project with such name: " + projectToUpdate);
+                throw new EntityStateException(
+                    "User already has a project with such name: " + projectToUpdate);
             }
         }
         projectFromDB.setDescription(projectToUpdate.getDescription());
@@ -94,8 +104,11 @@ public class ProjectService implements ProjectSPI {
 
     @Override
     public void delete(Long id) {
-        if (projectJpaRepository.existsById(id))
-            projectJpaRepository.deleteById(id);
-        else throw new NoEntityFoundException();
+        if (!projectJpaRepository.existsById(id)) {
+            logger.warning("Can't find a project with id: " + id);
+            throw new NoEntityFoundException("Can't find a project with id: " + id);
+        }
+
+        projectJpaRepository.deleteById(id);
     }
 }
