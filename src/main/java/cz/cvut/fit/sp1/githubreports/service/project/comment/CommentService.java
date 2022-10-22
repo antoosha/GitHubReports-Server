@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
-import java.util.Optional;
 
 @AllArgsConstructor
 @Service("CommentService")
@@ -24,13 +23,15 @@ public class CommentService implements CommentSPI {
 
     @Override
     public Comment readById(Long id) {
-        return repository.findById(id).orElseThrow(NoEntityFoundException::new);
+        return repository
+                .findById(id)
+                .orElseThrow(() -> new NoEntityFoundException("Comment with id " + id + " does not exist."));
     }
 
     @Override
     public Comment create(Comment comment) throws EntityStateException {
         if (comment.getCommentId() != null && repository.existsById(comment.getCommentId()))
-            throw new EntityStateException();
+            throw new EntityStateException("Comment with id " + comment.getCommentId() + " already exists.");
         comment.setCreatedDate(LocalDateTime.now());
         comment.setAuthorUsername(comment.getAuthor().getUsername());
         return repository.save(comment);
@@ -49,6 +50,6 @@ public class CommentService implements CommentSPI {
     public void delete(Long id) {
         if (repository.existsById(id))
             repository.deleteById(id);
-        else throw new NoEntityFoundException();
+        else throw new NoEntityFoundException("Comment with id " + id + " does not exist.");
     }
 }

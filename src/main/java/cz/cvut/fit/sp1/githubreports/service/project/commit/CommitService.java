@@ -38,8 +38,9 @@ public class CommitService implements CommitSPI {
 
     private void checkValidation(Commit commit) {
         if (commit.getRepository() == null)
-            throw new EntityStateException();
-        if (commit.getLoginAuthor().isEmpty()) throw new EntityStateException();
+            throw new EntityStateException("Commit does not have repository.");
+        if (commit.getLoginAuthor().isEmpty())
+            throw new EntityStateException("Commit does not have author login.");
     }
 
     @Override
@@ -49,14 +50,15 @@ public class CommitService implements CommitSPI {
 
     @Override
     public Commit readById(Long id) {
-        return commitJpaRepository.findById(id).orElseThrow(NoEntityFoundException::new);
+        return commitJpaRepository.findById(id)
+                .orElseThrow( () -> new NoEntityFoundException("Commit with id " + id + " does not exist."));
     }
 
     @Override
     public Commit create(Commit commit) throws EntityStateException {
         if (commit.getCommitId() != null) {
             if (commitJpaRepository.existsById(commit.getCommitId()))
-                throw new EntityStateException();
+                throw new EntityStateException("Commit with id " + commit.getCommitId() + " already exists.");
         }
         checkValidation(commit);
         return commitJpaRepository.save(commit);
@@ -65,7 +67,7 @@ public class CommitService implements CommitSPI {
     @Override
     public Commit update(Long id, Commit commit) throws EntityStateException {
         if (id == null || !commitJpaRepository.existsById(id))
-            throw new NoEntityFoundException();
+            throw new NoEntityFoundException("Commit with id" + id + " does not exist.");
         checkValidation(commit);
         return commitJpaRepository.save(commit);
     }
@@ -74,7 +76,7 @@ public class CommitService implements CommitSPI {
     public void delete(Long id) {
         if (commitJpaRepository.existsById(id))
             commitJpaRepository.deleteById(id);
-        else throw new NoEntityFoundException();
+        else throw new NoEntityFoundException("Commit with id" + id + " does not exist.");
     }
 
     @Override
@@ -85,7 +87,9 @@ public class CommitService implements CommitSPI {
 
     @Override
     public Commit addComment(Long id, CommentUpdateSlimDTO commentUpdateSlimDTO) {
-        Commit commit = commitJpaRepository.findById(id).orElseThrow(NoEntityFoundException::new);
+        Commit commit = commitJpaRepository
+                .findById(id)
+                .orElseThrow(() -> new NoEntityFoundException("Commit with id" + id + " does not exist."));
         Comment comment = commentMapper.fromUpdateSlimDTO(commentUpdateSlimDTO);
         comment.setAuthor(userSPI.readUserFromToken());
         comment.setCommit(commit);
@@ -95,10 +99,14 @@ public class CommitService implements CommitSPI {
 
     @Override
     public Commit addTag(Long id, Long tagId) {
-        Commit commit = commitJpaRepository.findById(id).orElseThrow(NoEntityFoundException::new);
-        Tag tag = tagJpaRepository.findById(tagId).orElseThrow(NoEntityFoundException::new);
+        Commit commit = commitJpaRepository
+                .findById(id)
+                .orElseThrow(() -> new NoEntityFoundException("Commit with id" + id + " does not exist."));
+        Tag tag = tagJpaRepository
+                .findById(tagId)
+                .orElseThrow(() -> new NoEntityFoundException("Tag with id" + id + " does not exist."));
         if (commit.getTags().contains(tag)) {
-            throw new IncorrectRequestException();
+            throw new IncorrectRequestException("Commit with id " + id + " already have tag with id " + tagId);
         }
         commit.getTags().add(tag);
         return commitJpaRepository.save(commit);
@@ -106,10 +114,15 @@ public class CommitService implements CommitSPI {
 
     @Override
     public Commit deleteComment(Long id, Long commentId) {
-        Commit commit = commitJpaRepository.findById(id).orElseThrow(NoEntityFoundException::new);
-        Comment comment = commentJpaRepository.findById(commentId).orElseThrow(NoEntityFoundException::new);
+        Commit commit = commitJpaRepository
+                .findById(id)
+                .orElseThrow(() -> new NoEntityFoundException("Commit with id" + id + " does not exist."));
+        Comment comment = commentJpaRepository
+                .findById(commentId)
+                .orElseThrow(() -> new NoEntityFoundException("Comment with id" + commentId + " does not exist."));
         if (!commit.getComments().contains(comment)) {
-            throw new IncorrectRequestException();
+            throw new IncorrectRequestException
+                    ("Commit with id " + commentId + " does not have comment with id " + commentId);
         }
         commit.getComments().remove(comment);
         return commitJpaRepository.save(commit);
@@ -117,10 +130,15 @@ public class CommitService implements CommitSPI {
 
     @Override
     public Commit removeTag(Long id, Long tagId) {
-        Commit commit = commitJpaRepository.findById(id).orElseThrow(NoEntityFoundException::new);
-        Tag tag = tagJpaRepository.findById(tagId).orElseThrow(NoEntityFoundException::new);
+        Commit commit = commitJpaRepository
+                .findById(id)
+                .orElseThrow(() -> new NoEntityFoundException("Commit with id" + id + " does not exist."));
+        Tag tag = tagJpaRepository
+                .findById(tagId)
+                .orElseThrow(() -> new NoEntityFoundException("Tag with id" + tagId + " does not exist."));
         if (!commit.getTags().contains(tag)) {
-            throw new IncorrectRequestException();
+            throw new IncorrectRequestException
+                    ("Commit with id " + id + " does not have tag with id " + tagId);
         }
         commit.getTags().remove(tag);
         return commitJpaRepository.save(commit);
