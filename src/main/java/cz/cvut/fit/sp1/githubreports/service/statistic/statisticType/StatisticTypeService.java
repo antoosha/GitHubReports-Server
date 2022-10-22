@@ -24,7 +24,8 @@ public class StatisticTypeService implements StatisticTypeSPI {
 
     @Override
     public StatisticType readById(String id) {
-        return repository.findById(id).orElseThrow(NoEntityFoundException::new);
+        return repository.findById(id).orElseThrow(
+                () -> new NoEntityFoundException("Can't find statistic type with id " + id));
     }
 
     @Override
@@ -38,7 +39,7 @@ public class StatisticTypeService implements StatisticTypeSPI {
     @Override
     public StatisticType update(String id, StatisticType statisticType) throws EntityStateException {
         if (!repository.existsById(id)) {
-            throw new EntityStateException();
+            throw new EntityStateException("Statistic type with id " + id + " does not exist");
         }
         return repository.save(statisticType);
     }
@@ -47,6 +48,6 @@ public class StatisticTypeService implements StatisticTypeSPI {
     public void delete(String id) {
         if (repository.existsById(id))
             repository.deleteById(id);
-        else throw new NoEntityFoundException();
+        else throw new NoEntityFoundException("Can't find statistic type with id " + id);
     }
 }

@@ -85,18 +85,21 @@ public class UserService implements UserSPI {
 
     @Override
     public User readById(Long id) {
-        return userJpaRepository.findById(id).orElseThrow(NoEntityFoundException::new);
+        return userJpaRepository.findById(id).orElseThrow(
+                () -> new NoEntityFoundException("Can't find a user with id " + id));
     }
 
     @Override
     public User readByUsername(String username) {
-        return userJpaRepository.findUserByUsername(username).orElseThrow(NoEntityFoundException::new);
+        return userJpaRepository.findUserByUsername(username).orElseThrow(
+                () -> new NoEntityFoundException("Can't find a user with username " + username));
     }
 
     @Override
     public User readUserFromToken() {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        return userJpaRepository.findUserByUsername(username).orElseThrow(NoEntityFoundException::new);
+        return userJpaRepository.findUserByUsername(username).orElseThrow(
+                () -> new NoEntityFoundException("Can't find a user with username " + username + " from his token"));
     }
 
     private boolean correctPassword(String password) {
@@ -109,9 +112,10 @@ public class UserService implements UserSPI {
 
     @Override
     public User create(User user) throws EntityStateException {
-        if (userJpaRepository.findUserByUsername(user.getUsername()).isPresent() ||
-                userJpaRepository.findUserByEmail(user.getEmail()).isPresent())
-            throw new EntityStateException();
+        if (userJpaRepository.findUserByUsername(user.getUsername()).isPresent())
+            throw new EntityStateException("This username is already taken");
+        if (userJpaRepository.findUserByEmail(user.getEmail()).isPresent())
+            throw new EntityStateException("User with this email already exists");
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setProfilePhotoURL(baseURL + "/" + user.getUsername() + "/photos");
         return userJpaRepository.save(user);
@@ -121,18 +125,19 @@ public class UserService implements UserSPI {
         if (username == null)
             throw new IncorrectRequestException();
 
-        User userOld = userJpaRepository.findUserByUsername(username).orElseThrow(NoEntityFoundException::new);
+        User userOld = userJpaRepository.findUserByUsername(username).orElseThrow(
+                () -> new NoEntityFoundException("Can't find a user with username " + username));
 
         // email address has been changed
         if (!userOld.getEmail().equals(updatedUser.getEmail())) {
             if (userJpaRepository.findUserByEmail(updatedUser.getEmail()).isPresent()) {
-                throw new EntityStateException();
+                throw new EntityStateException("User with this email already exists");
             }
         }
         // username has been changed
         if (!userOld.getUsername().equals(updatedUser.getUsername())) {
             if (userJpaRepository.findUserByUsername(updatedUser.getUsername()).isPresent()) {
-                throw new EntityStateException();
+                throw new EntityStateException("This username is already taken");
             }
         }
 
@@ -146,35 +151,42 @@ public class UserService implements UserSPI {
     @Override
     public User changePassword(String username, String password) {
         if (!correctPassword(password)) {
-            throw new EntityStateException();
+            throw new EntityStateException("Your password does not match requirements");
         }
-        User user = userJpaRepository.findUserByUsername(username).orElseThrow(NoEntityFoundException::new);
+        User user = userJpaRepository.findUserByUsername(username).orElseThrow(
+                () -> new NoEntityFoundException("Can't find a user with username " + username));
         user.setPassword(passwordEncoder.encode(password));
         return userJpaRepository.save(user);
     }
 
     @Override
     public User addRole(String username, String roleName) {
-        User user = userJpaRepository.findUserByUsername(username).orElseThrow(NoEntityFoundException::new);
-        Role role = roleJpaRepository.findById(roleName).orElseThrow(NoEntityFoundException::new);
+        User user = userJpaRepository.findUserByUsername(username).orElseThrow(
+                () -> new NoEntityFoundException("Can't find a user with username " + username));
+        Role role = roleJpaRepository.findById(roleName).orElseThrow(
+                () -> new NoEntityFoundException("Can't find a role with name " + roleName));
         user.getRoles().add(role);
         return userJpaRepository.save(user);
     }
 
     @Override
     public User removeRole(String username, String roleName) {
-        User user = userJpaRepository.findUserByUsername(username).orElseThrow(NoEntityFoundException::new);
-        Role role = roleJpaRepository.findById(roleName).orElseThrow(NoEntityFoundException::new);
+        User user = userJpaRepository.findUserByUsername(username).orElseThrow(
+                () -> new NoEntityFoundException("Can't find a user with username " + username));
+        Role role = roleJpaRepository.findById(roleName).orElseThrow(
+                () -> new NoEntityFoundException("Can't find a role with name " + roleName));
         user.getRoles().remove(role);
         return userJpaRepository.save(user);
     }
 
     @Override
     public void delete(String username) {
-        User userToDelete = userJpaRepository.findUserByUsername(username).orElseThrow(NoEntityFoundException::new);
+        User userToDelete = userJpaRepository.findUserByUsername(username).orElseThrow(
+                () -> new NoEntityFoundException("Can't find a user with username " + username));
         if (!userToDelete.getCreatedProjects().isEmpty())
             throw new HasRelationsException();
-        User deletedUser = userJpaRepository.findUserByUsername("deletedUser").orElseThrow(NoEntityFoundException::new);
+        User deletedUser = userJpaRepository.findUserByUsername("deletedUser").orElseThrow(
+                () -> new NoEntityFoundException("Can't find a user with username " + username));
         delegateUserCommentsToDeletedUser(userToDelete, deletedUser);
         removeAllRelationProjects(userToDelete);
         userJpaRepository.delete(userToDelete);
@@ -182,7 +194,8 @@ public class UserService implements UserSPI {
 
     @Override
     public Collection<Project> getAllUserProjects(String username) {
-        User user = userJpaRepository.findUserByUsername(username).orElseThrow(NoEntityFoundException::new);
+        User user = userJpaRepository.findUserByUsername(username).orElseThrow(
+                () -> new NoEntityFoundException("Can't find a user with username " + username));
         return user.getProjects();
     }
 
@@ -191,7 +204,8 @@ public class UserService implements UserSPI {
         if (multipartFile == null || username == null || username.isEmpty())
             throw new IncorrectRequestException();
         String fileName = StringUtils.cleanPath(Objects.requireNonNull(multipartFile.getOriginalFilename()));
-        User user = userJpaRepository.findUserByUsername(username).orElseThrow(NoEntityFoundException::new);
+        User user = userJpaRepository.findUserByUsername(username).orElseThrow(
+                () -> new NoEntityFoundException("Can't find a user with username " + username));
         String uploadDir = "src/main/resources/serverData/images/userPhotos/" + user.getUserId();
         saveFile(uploadDir, "photo." + fileName.split("\\.")[1], multipartFile);
         userJpaRepository.save(user);
@@ -199,13 +213,14 @@ public class UserService implements UserSPI {
 
     @Override
     public byte[] getImage(String username) {
-        User user = userJpaRepository.findUserByUsername(username).orElseThrow(NoEntityFoundException::new);
+        User user = userJpaRepository.findUserByUsername(username).orElseThrow(
+                () -> new NoEntityFoundException("Can't find a user with username " + username));
         InputStream is = null;
         byte[] bytes = null;
         try {
             is = new FileInputStream("src/main/resources/serverData/images/userPhotos/" + user.getUserId() + "/photo.jpg");
         } catch (FileNotFoundException e) {
-            throw new NoEntityFoundException();
+            throw new NoEntityFoundException("Image file was not found");
         }
         try {
             bytes = IOUtils.toByteArray(is);
