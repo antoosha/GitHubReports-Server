@@ -46,7 +46,7 @@ public class ProjectService implements ProjectSPI {
         return projectJpaRepository.findById(id)
             .orElseThrow(() -> {
                 logger.warning("Can't find a project with id: " + id);
-                return new NoEntityFoundException(id.toString());
+                return new NoEntityFoundException("Can't find a project with id: " + id);
             });
     }
 
