@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.logging.Logger;
 
 @AllArgsConstructor
 @Service("StatisticTypeService")
@@ -16,6 +17,7 @@ public class StatisticTypeService implements StatisticTypeSPI {
 
     private final StatisticTypeJpaRepository repository;
 
+    private static final Logger logger = Logger.getLogger(StatisticTypeService.class.getName());
 
     @Override
     public Collection<StatisticType> readAll() {
@@ -25,7 +27,10 @@ public class StatisticTypeService implements StatisticTypeSPI {
     @Override
     public StatisticType readById(String id) {
         return repository.findById(id).orElseThrow(
-                () -> new NoEntityFoundException("Can't find statistic type with id " + id));
+                () -> {
+                    logger.warning("Can't find statistic type with id " + id);
+                    return new NoEntityFoundException("Can't find statistic type with id " + id);
+                });
     }
 
     @Override
@@ -39,6 +44,7 @@ public class StatisticTypeService implements StatisticTypeSPI {
     @Override
     public StatisticType update(String id, StatisticType statisticType) throws EntityStateException {
         if (!repository.existsById(id)) {
+            logger.warning("Statistic type with id " + id + " does not exist");
             throw new EntityStateException("Statistic type with id " + id + " does not exist");
         }
         return repository.save(statisticType);
@@ -48,6 +54,9 @@ public class StatisticTypeService implements StatisticTypeSPI {
     public void delete(String id) {
         if (repository.existsById(id))
             repository.deleteById(id);
-        else throw new NoEntityFoundException("Can't find statistic type with id " + id);
+        else {
+            logger.warning("Can't find statistic type with id " + id);
+            throw new NoEntityFoundException("Can't find statistic type with id " + id);
+        }
     }
 }

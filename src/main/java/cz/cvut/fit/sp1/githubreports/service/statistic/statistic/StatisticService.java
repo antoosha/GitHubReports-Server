@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
+import java.util.logging.Logger;
 
 
 @AllArgsConstructor
@@ -18,6 +19,7 @@ public class StatisticService implements StatisticSPI {
 
     private final StatisticJpaRepository repository;
 
+    private static final Logger logger = Logger.getLogger(StatisticService.class.getName());
 
     @Override
     public Collection<Statistic> readAll() {
@@ -27,12 +29,16 @@ public class StatisticService implements StatisticSPI {
     @Override
     public Statistic readById(Long id) {
         return repository.findById(id).orElseThrow(
-                () -> new NoEntityFoundException("Can't find statistic with id " + id));
+                () -> {
+                    logger.warning("Can't find statistic with id " + id);
+                    return new NoEntityFoundException("Can't find statistic with id " + id);
+                });
     }
 
     @Override
     public Statistic create(Statistic statistic) throws EntityStateException {
         if (statistic.getStatisticId() != null && repository.existsById(statistic.getStatisticId())) {
+            logger.warning("Statistic with id " + statistic.getStatisticId() + " does not exist");
             throw new EntityStateException("Statistic with id " + statistic.getStatisticId() + " does not exist");
         }
         statistic.setCreatedDate(LocalDateTime.now());
@@ -42,6 +48,7 @@ public class StatisticService implements StatisticSPI {
     @Override
     public Statistic update(Long id, Statistic statistic) throws EntityStateException {
         if (!repository.existsById(id)) {
+            logger.warning("Statistic with id " + id + " does not exist");
             throw new EntityStateException("Statistic with id " + id + " does not exist");
         }
         return repository.save(statistic);
@@ -51,6 +58,9 @@ public class StatisticService implements StatisticSPI {
     public void delete(Long id) {
         if (repository.existsById(id))
             repository.deleteById(id);
-        else throw new NoEntityFoundException("Can't find statistic with id " + id);
+        else {
+            logger.warning("Can't find statistic with id " + id);
+            throw new NoEntityFoundException("Can't find statistic with id " + id);
+        }
     }
 }
