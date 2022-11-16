@@ -85,6 +85,14 @@ public class ProjectService implements ProjectSPI {
     }
 
     @Override
+    public Project addUser(Long id, String username) {
+        Project project = readById(id);
+        User userToAdd = userSPI.readByUsername(username);
+        project.getUsers().add(userToAdd);
+        return projectJpaRepository.save(project);
+    }
+
+    @Override
     public Project update(Long id, Project projectToUpdate) throws EntityStateException {
         if (id == null || !projectJpaRepository.existsById(id))
             throw new EntityStateException("Can't find a project with id: " + id);
@@ -100,6 +108,14 @@ public class ProjectService implements ProjectSPI {
         projectFromDB.setDescription(projectToUpdate.getDescription());
         projectFromDB.setProjectName(projectToUpdate.getProjectName());
         return projectJpaRepository.save(projectFromDB);
+    }
+
+    @Override
+    public Project removeUser(Long id, String username) {
+        Project project = readById(id);
+        User userToAdd = userSPI.readByUsername(username);
+        project.getUsers().remove(userToAdd);
+        return projectJpaRepository.save(project);
     }
 
     @Override

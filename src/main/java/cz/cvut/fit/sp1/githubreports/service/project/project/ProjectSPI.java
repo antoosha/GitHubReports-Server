@@ -24,7 +24,11 @@ public interface ProjectSPI {
 
     Tag createTag(Long id, Tag tag);
 
+    Project addUser(Long id, String username);
+
     Project update(Long id, Project project) throws EntityStateException;
+
+    Project removeUser(Long id, String username);
 
     void delete(Long id);
 

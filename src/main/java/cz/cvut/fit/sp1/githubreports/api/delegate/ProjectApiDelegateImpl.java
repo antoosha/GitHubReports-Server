@@ -11,6 +11,7 @@ import org.openapi.api.ProjectsApi;
 import org.openapi.model.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 
 import java.util.List;
@@ -73,5 +74,15 @@ public class ProjectApiDelegateImpl implements ProjectsApi {
         return ResponseEntity.ok(
                 projectMapper.toDTO(
                         projectSPI.update(id, projectMapper.fromUpdateSlimDTO(projectUpdateSlimDTO))));
+    }
+
+    @Override
+    public ResponseEntity<ProjectDTO> addUser(Long id, String username) {
+        return ResponseEntity.ok(projectMapper.toDTO(projectSPI.addUser(id, username)));
+    }
+
+    @Override
+    public ResponseEntity<ProjectDTO> removeUser(Long id, String username) {
+        return ResponseEntity.ok(projectMapper.toDTO(projectSPI.removeUser(id, username)));
     }
 }
