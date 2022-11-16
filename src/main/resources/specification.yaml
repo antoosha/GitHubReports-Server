@@ -333,7 +333,7 @@ paths:
         - user-controller
       operationId: getUserProjects
       summary: Find user projects
-      description: Find all user ptojects by userID
+      description: Find all user projects by userID
       parameters:
         - name: username
           in: path
@@ -948,6 +948,80 @@ paths:
             'application/json':
               schema:
                 $ref: '#/components/schemas/StatisticDTO'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /projects/{id}/users/{username}:
+    post:
+      tags:
+        - project-controller
+      operationId: addUser
+      parameters:
+        - name: id
+          in: path
+          description: ID of the project
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: username
+          in: path
+          description: Username of the new contributor
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            'application/json':
+              schema:
+                $ref: '#/components/schemas/ProjectDTO'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    delete:
+      tags:
+        - project-controller
+      operationId: removeUser
+      summary: Remove a contributor from the project
+      description: Remove an existing contributor from the project by username
+      parameters:
+        - name: id
+          in: path
+          description: ID of the project
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: username
+          in: path
+          description: Username of the contributor to be removed
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            'application/json':
+              schema:
+                $ref: '#/components/schemas/ProjectDTO'
         '400':
           $ref: '#/components/responses/BadRequest'
         '403':
