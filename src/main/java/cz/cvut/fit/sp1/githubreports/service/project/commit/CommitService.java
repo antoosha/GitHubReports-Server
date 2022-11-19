@@ -118,7 +118,7 @@ public class CommitService implements CommitSPI {
     }
 
     @Override
-    public Commit addComment(Long id, CommentUpdateSlimDTO commentUpdateSlimDTO) {
+    public Comment addComment(Long id, CommentUpdateSlimDTO commentUpdateSlimDTO) {
         Commit commit = commitJpaRepository
                 .findById(id)
                 .orElseThrow(() -> {
@@ -129,7 +129,8 @@ public class CommitService implements CommitSPI {
         comment.setAuthor(userSPI.readUserFromToken());
         comment.setCommit(commit);
         commentSPI.create(comment);
-        return commitJpaRepository.save(commit);
+        commitJpaRepository.save(commit);
+        return comment;
     }
 
     @Override

@@ -1,5 +1,6 @@
 package cz.cvut.fit.sp1.githubreports.service.project.commit;
 import cz.cvut.fit.sp1.githubreports.api.exceptions.EntityStateException;
+import cz.cvut.fit.sp1.githubreports.model.project.Comment;
 import cz.cvut.fit.sp1.githubreports.model.project.Commit;
 import org.openapi.model.CommentDTO;
 import org.openapi.model.CommentUpdateSlimDTO;
@@ -23,7 +24,7 @@ public interface CommitSPI {
 
     void changeIsDeleted(Commit commit, boolean isDeleted);
 
-    Commit addComment(Long id, CommentUpdateSlimDTO commentUpdateSlimDTO);
+    Comment addComment(Long id, CommentUpdateSlimDTO commentUpdateSlimDTO);
 
     Commit addTag(Long id, Long tagId);
 

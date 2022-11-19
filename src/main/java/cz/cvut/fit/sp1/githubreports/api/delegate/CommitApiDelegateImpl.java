@@ -1,5 +1,6 @@
 package cz.cvut.fit.sp1.githubreports.api.delegate;
 
+import cz.cvut.fit.sp1.githubreports.service.project.comment.CommentMapper;
 import cz.cvut.fit.sp1.githubreports.service.project.commit.CommitMapper;
 import cz.cvut.fit.sp1.githubreports.service.project.commit.CommitSPI;
 import lombok.RequiredArgsConstructor;
@@ -22,15 +23,17 @@ public class CommitApiDelegateImpl implements CommitsApi {
 
     private final CommitMapper commitMapper;
 
+    private final CommentMapper commentMapper;
+
     @Override
     public Optional<NativeWebRequest> getRequest() {
         return CommitsApi.super.getRequest();
     }
 
     @Override
-    public ResponseEntity<CommitDTO> addComment(Long id, CommentUpdateSlimDTO commentUpdateSlimDTO) {
-        CommitDTO commitDTO = commitMapper.toDTO(commitSPI.addComment(id, commentUpdateSlimDTO));
-        return ResponseEntity.ok(commitDTO);
+    public ResponseEntity<CommentDTO> addComment(Long id, CommentUpdateSlimDTO commentUpdateSlimDTO) {
+        CommentDTO commentDTO = commentMapper.toDTO(commitSPI.addComment(id, commentUpdateSlimDTO));
+        return ResponseEntity.ok(commentDTO);
     }
 
     @Override

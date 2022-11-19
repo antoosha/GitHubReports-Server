@@ -1150,7 +1150,7 @@ paths:
           content:
             'application/json':
               schema:
-                $ref: '#/components/schemas/CommitDTO'
+                $ref: '#/components/schemas/CommentDTO'
         '400':
           $ref: '#/components/responses/BadRequest'
         '403':
