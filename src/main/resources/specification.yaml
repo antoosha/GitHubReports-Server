@@ -1161,6 +1161,49 @@ paths:
           $ref: '#/components/responses/Conflict'
         '500':
           $ref: '#/components/responses/InternalServerError'
+    get:
+      tags:
+        - commit-controller
+      operationId: getComments
+      parameters:
+        - name: id
+          in: path
+          description: ID of commit
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: page
+          in: query
+          required: true
+          schema:
+            type: integer
+            format: int32
+        - name: size
+          in: query
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: OK
+          content:
+            'application/json':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CommentDTO'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
 
   /commits/{id}/comments/{commentId}:
     delete:

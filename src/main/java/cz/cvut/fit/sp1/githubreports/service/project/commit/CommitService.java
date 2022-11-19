@@ -13,11 +13,15 @@ import cz.cvut.fit.sp1.githubreports.service.project.comment.CommentMapper;
 import cz.cvut.fit.sp1.githubreports.service.project.comment.CommentSPI;
 import cz.cvut.fit.sp1.githubreports.service.user.user.UserSPI;
 import lombok.RequiredArgsConstructor;
+import org.openapi.model.CommentDTO;
 import org.openapi.model.CommentUpdateSlimDTO;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.Collection;
+import java.util.List;
 import java.util.logging.Logger;
 
 @RequiredArgsConstructor
@@ -62,6 +66,17 @@ public class CommitService implements CommitSPI {
                     logger.warning("Commit with id " + id + " does not exist.");
                     return new NoEntityFoundException("Commit with id " + id + " does not exist.");
                 });
+    }
+
+    @Override
+    public List<CommentDTO> readAllCommentsById(Long id, Integer page, Integer size) {
+        Commit commit = readById(id);
+        if (page < 0 || size <= 0) {
+            throw new IncorrectRequestException("Page must be greater than 0 and Size must be greater than or equal to 0.");
+        }
+        Pageable pageable = PageRequest.of(page, size);
+
+        return  commentJpaRepository.readAllByCommit(commit, pageable).stream().map(commentMapper::toDTO).toList();
     }
 
     @Override

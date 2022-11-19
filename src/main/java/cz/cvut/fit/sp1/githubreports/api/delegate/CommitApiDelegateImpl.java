@@ -1,16 +1,17 @@
 package cz.cvut.fit.sp1.githubreports.api.delegate;
 
-import cz.cvut.fit.sp1.githubreports.api.exceptions.NoEntityFoundException;
 import cz.cvut.fit.sp1.githubreports.service.project.commit.CommitMapper;
 import cz.cvut.fit.sp1.githubreports.service.project.commit.CommitSPI;
 import lombok.RequiredArgsConstructor;
 import org.openapi.api.CommitsApi;
+import org.openapi.model.CommentDTO;
 import org.openapi.model.CommentUpdateSlimDTO;
 import org.openapi.model.CommitDTO;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.context.request.NativeWebRequest;
 
+import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -48,6 +49,12 @@ public class CommitApiDelegateImpl implements CommitsApi {
     public ResponseEntity<CommitDTO> getCommit(Long id) {
         CommitDTO commitDTO = commitMapper.toDTO(commitSPI.readById(id));
         return ResponseEntity.ok(commitDTO);
+    }
+
+    @Override
+    public ResponseEntity<List<CommentDTO>> getComments(Long id, Integer page, Integer size) {
+        List<CommentDTO> commentDTOS = commitSPI.readAllCommentsById(id, page, size);
+        return ResponseEntity.ok(commentDTOS);
     }
 
     @Override

@@ -1,16 +1,19 @@
 package cz.cvut.fit.sp1.githubreports.service.project.commit;
 import cz.cvut.fit.sp1.githubreports.api.exceptions.EntityStateException;
 import cz.cvut.fit.sp1.githubreports.model.project.Commit;
+import org.openapi.model.CommentDTO;
 import org.openapi.model.CommentUpdateSlimDTO;
 
 import java.util.Collection;
-import java.util.Optional;
+import java.util.List;
 
 public interface CommitSPI {
 
     Collection<Commit> readAll();
 
     Commit readById(Long id);
+
+    List<CommentDTO> readAllCommentsById(Long id, Integer page, Integer size);
 
     Commit create(Commit commit) throws EntityStateException;
 
